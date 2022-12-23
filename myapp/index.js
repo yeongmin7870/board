@@ -7,7 +7,7 @@ const viewRouter = require('./viewroutes')
 
 
 app.use(express.static('public'));
-app.use('/v1/user', userRouter);
+app.use('/v1', userRouter);
 app.use('/v2',viewRouter);
 
 app.set('view engine','ejs');
