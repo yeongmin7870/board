@@ -1,40 +1,52 @@
 const mysql = require('mysql2');
 const db = require('../config/mysqlconn.js');
-const con = mysql.createConnection(db);
+const con = mysql.createPool(db);
 
 
 module.exports = {
     getUsers: function () {
-        con.connect();
         return new Promise((resolve, reject) => {
-            con.query(
-                'SELECT * FROM user', (err, result, fields) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
+            con.getConnection((err,con)=>{
+                if(err){
+                    console.log(err);
                 }
-            )
+                    con.query(
+                        'SELECT * FROM user', (err, result, fields) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve(result);
+                            }
+                        }
+                    )
+                con.release();
+            });
         });
-        con.end();
     },
 
-    doSignIn: function(id, passwd){
+    doSignIn: function(user_id){
        let values=[
-            [id, passwd]
+            [user_id]
         ];
-        con.connect();
+
+        console.log(user_id);
         return new Promise((resolve, reject) => {
-            con.query(
-               'SELECT * FROM user WHERE user_id=? and user_passwd=?',values, (err, result, fields) =>
-               {
-                   if(err) reject(err);
-                   else resolve(result);
-               }
-           )
+            con.getConnection((err,con) =>{
+                if(err){
+                    console.log(err);
+                }
+                con.query(
+                    "SELECT * FROM user WHERE user_id = ?",values,function(err, result, fields){
+                        if(err){
+                            reject(err);
+                        } else {                        
+                            resolve(result);
+                        }
+                    }
+                )
+                con.release();
+            });
         });
-        con.end();
     },
 
 };

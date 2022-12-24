@@ -5,7 +5,7 @@ const port = 3000;
 const userRouter = require('./userroutes');
 const viewRouter = require('./viewroutes')
 
-
+app.use(express.json());
 app.use(express.static('public'));
 app.use('/v1', userRouter);
 app.use('/v2',viewRouter);

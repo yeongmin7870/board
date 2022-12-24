@@ -9,10 +9,9 @@ module.exports = {
     },
 
     doSignIn: function(req,res,next){
-        // const{user_id, user_passwd} = req.body
-        console.log(req.query);
-        Users.doSignIn(user_id, user_passwd).then((result) => {
-           res.send(result);
+        Users.doSignIn(req.body.user_id);
+        Users.doSignIn().then((result) => {
+            res.send(result);
         });
     },
 }
