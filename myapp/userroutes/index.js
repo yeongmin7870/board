@@ -4,10 +4,10 @@ const UserController = require('../controller/UserController');
 
 
 // 회원정보 가져오기
-router.get('/users',UserController.doGetUser);
+router.get('/users', UserController.doGetUser);
 // 로그인
-router.post('/user/sign-in',UserController.doSignIn)
+router.post('/user/sign-in', UserController.doSignIn)
 // 회원가입
-router.post('/user/sign-up',UserController.doSignUp)
+router.post('/user/sign-up', UserController.doSignUp)
 
 module.exports = router;

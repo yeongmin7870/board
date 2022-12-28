@@ -1,35 +1,38 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
     <link rel="stylesheet" type="text/css" href="/csses/register.css">
 </head>
+
 <body>
-<form action="/v1/user/sign-up" method="post">
-    <div class="container">
-        <h1>Register</h1>
-        <p>Please fill in this form to create an account.</p>
-        <hr>
+    <form action="/v1/user/sign-up" method="post">
+        <div class="container">
+            <h1>Register</h1>
+            <p>Please fill in this form to create an account.</p>
+            <hr>
 
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="user_id" id="email" required>
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="user_id" id="email" required>
 
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="user_passwd" id="psw" required>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="user_passwd" id="psw" required>
 
-        <hr>
+            <hr>
 
-        <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-        <button type="submit" class="registerbtn">Register</button>
-    </div>
+            <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+            <button type="submit" class="registerbtn">Register</button>
+        </div>
 
-    <div class="container signin">
-        <p>Already have an account? <a href="/v2/">Sign in</a>.</p>
-    </div>
-</form>
+        <div class="container signin">
+            <p>Already have an account? <a href="/v2/">Sign in</a>.</p>
+        </div>
+    </form>
 </body>
+
 </html>
