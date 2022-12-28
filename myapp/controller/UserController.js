@@ -9,8 +9,7 @@ module.exports = {
     },
 
     doSignIn: function(req,res,next){
-        Users.doSignIn(req.body.user_id);
-        Users.doSignIn().then((result) => {
+       Users.doSignIn(req.body.user_id).then((result) => {
             res.send(result);
         });
     },

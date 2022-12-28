@@ -36,7 +36,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    sql, 'h2', function(err, result, fields){
+                    sql, values, function(err, result, fields){
                         if(err){
                             reject(err);
                         } else { 
