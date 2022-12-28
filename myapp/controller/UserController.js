@@ -9,8 +9,17 @@ module.exports = {
     },
 
     doSignIn: function(req,res,next){
-       Users.doSignIn(req.body.user_id).then((result) => {
-            res.send(result);
-        });
+       Users.doSignIn(req.body.user_id, req.body.user_passwd).then((result) => {
+            if(result==1){
+                res.render('home');
+            }else{
+                res.send(`
+                    <script>
+                        alert('아이디 또는 비밀번호가 틀렸습니다.');
+                        location.href='/v2/'
+                    </script>
+                `);
+            }
+       });
     },
 }
