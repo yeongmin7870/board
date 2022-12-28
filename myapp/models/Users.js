@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const { user } = require('../config/mysqlconn.js');
 const db = require('../config/mysqlconn.js');
+// const { connect } = require('../userroutes/index.js');
 const con = mysql.createPool(db);
 
 
@@ -54,5 +55,35 @@ module.exports = {
             });
         });
     },
+
+    doSignUp: function(user){
+        let sql = "INSERT INTO user "+
+        "SELECT ? FROM DUAL WHERE "+
+        "NOT EXISTS (SELECT user_id FROM user WHERE user_id= ?)";
+        let values = [
+            [user['user_id'], user['user_passwd']],
+            [user['user_id']]
+        ];
+    
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+               con.query(
+                    sql, values, function(err, result, fields){
+                        if(err){
+                            reject(err);
+                        } else {
+                            if(result['affectedRows']==0){
+                                result=-1 //존재하는 아이디
+                            }else{
+                                result=1 //생성완료
+                            }
+                            resolve(result);
+                        }
+                    }
+               ); 
+               con.release();
+            });
+        });
+    }
 
 };
