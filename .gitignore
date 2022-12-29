@@ -3,3 +3,5 @@
 myapp/node_modules/
 
 myapp/config/
+
+myapp/._config
