@@ -1,5 +1,7 @@
 const express = require('express');
 const Users = require('../models/Users');
+const jwt = require('../modules/jwt');
+const util = require('util');
 
 module.exports = {
     doGetUser: function (req, res, next) {
@@ -9,9 +11,15 @@ module.exports = {
     },
 
     doSignIn: function (req, res, next) {
-        Users.doSignIn(req.body.user_id, req.body.user_passwd).then((result) => {
+        Users.doSignIn(req.body.user_id, req.body.user_passwd).then(async (result) => {
             if (result == 1) {
-                res.render('home');
+                const user = {
+                    'user_id': req.body.user_id,
+                    'user_passwd': req.body.user_passwd
+                }
+                const jwtToken = await jwt.sign(user); //토큰 발급
+                const userToken = { token: jwtToken.token }
+                res.render('home',userToken);
             } else {
                 res.send(`
                     <script>

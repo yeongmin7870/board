@@ -17,5 +17,5 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.listen(port, () => {
-    console.log(`http://localhost:${port}/`);
+    console.log(`http://localhost:${port}/v2`);
 });

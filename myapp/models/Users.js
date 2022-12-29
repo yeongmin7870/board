@@ -4,7 +4,6 @@ const db = require('../config/mysqlconn.js');
 // const { connect } = require('../userroutes/index.js');
 const con = mysql.createPool(db);
 
-
 module.exports = {
     getUsers: function () {
         return new Promise((resolve, reject) => {
