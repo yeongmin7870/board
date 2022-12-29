@@ -7,6 +7,7 @@ let cookieParser = require('cookie-parser');
 const userRouter = require('./routes/userroute');
 const viewRouter = require('./routes/viewroute')
 const cookieRouter = require('./routes/cookieroute');
+const boardRouter = require('./routes/boardroute');
 
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -15,7 +16,9 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/v1', userRouter);
 app.use('/v2', viewRouter);
+app.use('/v3', boardRouter);
 app.use('/cookies', cookieRouter);
+
 
 app.set('view engine', 'ejs');
 app.set('views', './views');

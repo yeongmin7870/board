@@ -21,7 +21,7 @@ module.exports = {
                 const userToken = { token: jwtToken.token }
                 res.cookie("x_auth", userToken, {
                     maxAge: 60 * 60 * 1000  // 1시간 유효 시간
-                }).status(201).render('home'); // 쿠키 넣어놓고 보냄
+                }).status(201).redirect('/v2/home'); // 쿠키 넣어놓고 보냄
             } else {
                 res.send(`
                     <script>
