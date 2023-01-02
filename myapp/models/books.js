@@ -22,4 +22,27 @@ module.exports = {
             });
         });
     },
+    //게시글 작성
+    setBoard: function(board) {
+        let {board_id, user_id, board_title, book_classification_id, board_contents, board_image, board_comment} = board;
+        values=[
+            [board_id, user_id, board_title, book_classification_id,board_contents, board_image, board_comment]
+        ];
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if(err){
+                    console.log(err);
+                }
+                con.query(
+                    'INSERT INTO board VALUES ?', [values],(err, result,fields) => {
+                        if(err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    }
+                );
+                con.release();
+            });
+        })
+    }
 }
