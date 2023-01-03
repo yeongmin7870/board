@@ -14,9 +14,7 @@ router.get('/register', (req, res) => {
     res.render('register');
 });
 // 메인 페이지
-router.get('/home', authUtil, (req, res) => {
-    res.render('home');
-});
+router.get('/home', authUtil, boardcontroller.getAllBoard);
 // 게시판 글 작성 페이지
 router.get('/write', authUtil, boardcontroller.findBybookClassification);
 // 마이페이지

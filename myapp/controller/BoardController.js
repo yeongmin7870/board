@@ -20,11 +20,11 @@ module.exports = {
             res.status(200).render('home');
         });
     },
-    //게시글 전체 가져오기
+    //메인홈페이지 필요한 게시글 전체 가져오기
     getAllBoard: function (req, res) {
         Book.getAllBoard().then((result) => {
             console.log(result);
-            res.status(200).send(result);
+            res.status(200).render('home', { board: { result } });
         });
     },
     // 게시글 찾기

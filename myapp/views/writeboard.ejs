@@ -21,16 +21,15 @@
             </div>
             <br>
             <select class="form-select" aria-label="Default select example" name="book_classification_id" required>
-                <option selected>======== 책 종류 =======</option>
                 <% for(var i=0; i < book.result.length; i++) {%>
                     <option value=<%=book.result[i].book_classification_id%>>
                         <%=book.result[i].book_classification_name%>
                     </option>
-                    <% } %>
+                <% } %>
             </select>
             <br>
             <div class="input-group" style="height: 500px;">
-                <span class="input-group-text">With textarea</span>
+                <span class="input-group-text">내용</span>
                 <textarea class="form-control" aria-label="With textarea" name="board_contents" required></textarea>
             </div>
             <br>
