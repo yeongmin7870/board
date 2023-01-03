@@ -1,25 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const authUtil = require('../middlewares/auth').checkToken;
-const BoardController = require('../controller/BoardController');
-
+const boardcontroller = require('../controller/BoardController');
+/*
+    단순히 페이지를 연결 시켜주는 uri
+*/
+// 로그인 페이지
 router.get('/', (req, res) => {
     res.render('index');
 });
+// 회원 가입 페이지
 router.get('/register', (req, res) => {
     res.render('register');
 });
-
-router.get('/home', authUtil ,(req, res) => {
+// 메인 페이지
+router.get('/home', authUtil, (req, res) => {
     res.render('home');
 });
-
-router.get('/write', authUtil ,(req, res) => {
-    res.render('writeboard');
-});
-
-router.get('/my', authUtil ,(req, res) => {
+// 게시판 글 작성 페이지
+router.get('/write', authUtil, boardcontroller.findBybookClassification);
+// 마이페이지
+router.get('/mypage', authUtil, (req, res) => {
     res.render('mylist');
 });
-
 module.exports = router;

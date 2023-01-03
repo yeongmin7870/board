@@ -18,7 +18,6 @@ const authUtil = {
         if (user.user_id == undefined)
             return res.render('index');
         next();
-
     }
 }
 

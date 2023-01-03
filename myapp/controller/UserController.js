@@ -9,7 +9,7 @@ module.exports = {
             res.send(result);
         });
     },
-
+    
     doSignIn: function (req, res, next) {
         Users.doSignIn(req.body.user_id, req.body.user_passwd).then(async (result) => {
             if (result == 1) {

@@ -1,12 +1,23 @@
 const express = require('express');
 const Book = require('../models/books');
+const jwt = require('../modules/jwt');
 module.exports = {
 
     // 게시판 글 작성
-    doWriteBoard: function (req, res) {
+    doWriteBoard: async function (req, res) {
+        const reg = new RegExp('\.jpg|\.png|\.jpeg|\.gif$', 'i'); // i: 대소문자 구분하지말고, 이미지 확장자를 찾아라
+        if (reg.test(req.body.board_image) == false) {
+            res.status(404).send(`<script>
+            location.href='/v2/write';
+            alert('이미지 파일이 아닙니다 🐱');
+            </script>`);
+            return;
+        }
+        const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
+        req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
         Book.setBoard(req.body).then((result) => {
             console.log(result);
-            res.status(200).send(result);
+            res.status(200).render('home');
         });
     },
     //게시글 전체 가져오기
@@ -26,7 +37,7 @@ module.exports = {
     // 책 카테고리 
     findBybookClassification: function (req, res) {
         Book.getBookClassifications().then((result) => {
-            res.status(200).send(result);
+            res.status(200).render('writeboard', { book: { result } });
         });
     },
 

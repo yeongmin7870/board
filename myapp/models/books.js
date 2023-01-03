@@ -28,6 +28,8 @@ module.exports = {
         values = [
             [board_id, user_id, board_title, book_classification_id, board_contents, board_image, board_comment]
         ];
+        // 토큰 해독
+        
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
