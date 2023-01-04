@@ -15,19 +15,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col">게시글 순서</th>
+                <th scope="col">책 제목</th>
+                <th scope="col">가격</th>
+                <th scope="col">종류</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
+            <% for (var i=0; i < myboard.result.length; i++){ %>
+                <tr>
+                    <th scope="row">
+                        <%=i%>
+                    </th>
+                    <td>
+                        <%=myboard.result[i].board_title%>
+                    </td>
+                    <td>
+                        <%=myboard.result[i].price%>
+                    </td>
+                    <td>
+                        <%=myboard.result[i].book_classification_name%>
+                    </td>
+                </tr>
+                <% } %>
         </tbody>
     </table>
     <hr>

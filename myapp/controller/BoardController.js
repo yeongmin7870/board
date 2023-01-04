@@ -16,22 +16,21 @@ module.exports = {
         const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
         req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
         Book.setBoard(req.body).then((result) => {
-            console.log(result);
-            res.status(200).render('home');
+            res.status(200).redirect('/v2/home');
         });
     },
     //메인홈페이지 필요한 게시글 전체 가져오기
     getAllBoard: function (req, res) {
         Book.getAllBoard().then((result) => {
-            console.log(result);
             res.status(200).render('home', { board: { result } });
         });
     },
-    // 게시글 찾기
-    FindByBoard: function (req, res) {
-        Book.FindByBoard(req.params.board_id).then((result) => {
-            console.log(result);
-            res.status(200).send(result);
+    // 해당 아이디 게시글 찾기
+    FindByAllBoard: async function (req, res) {
+        const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
+        req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+        Book.FindByAllBoard(req.body.user_id).then((result) => {
+            res.status(200).render('mylist', { myboard: { result } });
         });
     },
     // 책 카테고리 
@@ -40,5 +39,10 @@ module.exports = {
             res.status(200).render('writeboard', { book: { result } });
         });
     },
-
+    // 해당 게시글 한 개 찾기
+    FindByBoard: async function (req, res) {
+        Book.FindByBoard(req.params.board_id).then((result) => {
+            res.status(200).render('board', { myboard: { result } });
+        });
+    },
 }

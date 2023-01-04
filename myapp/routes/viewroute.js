@@ -21,4 +21,6 @@ router.get('/write', authUtil, boardcontroller.findBybookClassification);
 router.get('/mypage', authUtil, (req, res) => {
     res.render('mylist');
 });
+// 게시판 
+router.get('/board/page/:board_id', authUtil, boardcontroller.FindByBoard);
 module.exports = router;
