@@ -170,7 +170,7 @@
             <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
             <% for (var i=0; i < board.result.length; i++){ %>
-                <div class="row featurette" onclick="location.href='/v2/board/page/<%=board.result[i].board_id%>'">
+                <div class="row featurette" onclick="location.href='/v2/board/page/<%=board.result[i].board_id%>'" >
                     <div class="col-md-7">
                         <h2 class="featurette-heading fw-normal lh-1">
                             <%=board.result[i].board_title%> <span class="text-muted">
@@ -188,6 +188,7 @@
                             <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
                         </svg>
                     </div>
+                    <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>
                 <hr class="featurette-divider">
                 <% } %>

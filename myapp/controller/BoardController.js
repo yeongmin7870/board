@@ -1,18 +1,40 @@
 const express = require('express');
 const Book = require('../models/books');
 const jwt = require('../modules/jwt');
+const multer = require('multer');
+
+const storage =
+    multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, './public/images/board/');
+            console.log(req);
+        },
+        filename: function (req, file, cb) {
+            const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
+            cb(null, file.fieldname + '_' + uniqueSuffix);
+        }
+    });
+const upload = multer({ storage: storage }).single("board_image");
+
 module.exports = {
 
     // 게시판 글 작성
     doWriteBoard: async function (req, res) {
         const reg = new RegExp('\.jpg|\.png|\.jpeg|\.gif$', 'i'); // i: 대소문자 구분하지말고, 이미지 확장자를 찾아라
-        if (reg.test(req.body.board_image) == false) {
-            res.status(404).send(`<script>
-            location.href='/v2/write';
-            alert('이미지 파일이 아닙니다 🐱');
-            </script>`);
-            return;
-        }
+        // if (reg.test(req.body.board_image) == false) {
+        //     res.status(404).send(`<script>
+        //     location.href='/v2/write';
+        //     alert('이미지 파일이 아닙니다 🐱');
+        //     </script>`);
+        //     return;
+        // }
+
+        upload(req, res, err => {
+            if (err) {
+                res.json({ error: err });
+            };
+        });
+
         const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
         req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
         Book.setBoard(req.body).then((result) => {
@@ -43,6 +65,12 @@ module.exports = {
     FindByBoard: async function (req, res) {
         Book.FindByBoard(req.params.board_id).then((result) => {
             res.status(200).render('board', { myboard: { result } });
+        });
+    },
+    // 해당 게시글 삭제
+    doRmByBoard: async function (req, res) {
+        Book.doRmByBoard(req.params.board_id).then((result) => {
+            res.status(201).redirect('/v2/home');
         });
     },
 }

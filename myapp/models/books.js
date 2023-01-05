@@ -29,7 +29,7 @@ module.exports = {
             [board_id, user_id, board_title, book_classification_id, board_contents, board_image, board_comment, price]
         ];
         // 토큰 해독
-        
+
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
@@ -74,7 +74,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'select * from board b, book_classification bc where '+
+                    'select * from board b, book_classification bc where ' +
                     'user_id=? and b.book_classification_id = bc.book_classification_id;', [user_id], (err, result, fields) => {
                         if (err)
                             reject(err);
@@ -93,7 +93,26 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                   'select * from board where board_id = ?', [board_id], (err, result, fields) => {
+                    'select * from board b,book_classification bc '
+                    + 'where b.board_id = ? and b.book_classification_id = bc.book_classification_id', [board_id], (err, result, fields) => {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    }
+                );
+                con.release();
+            });
+        })
+    },
+    doRmByBoard: function (board_id) {
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) {
+                    console.log(err);
+                }
+                con.query(
+                    'DELETE FROM board WHERE board_id = ?', [board_id], (err, result, fields) => {
                         if (err)
                             reject(err);
                         else

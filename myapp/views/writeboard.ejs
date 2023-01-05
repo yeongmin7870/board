@@ -13,7 +13,7 @@
 <body>
     <hr>
     <div style="display: table; margin-left: auto; margin-right: auto;">
-        <form action="/v3/board" method="post">
+        <form action="/v3/board" method="post" enctype="multipart/form-data">
             <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">제목</span>
                 <input type="text" class="form-control" aria-label="제목을 입력해주세요" aria-describedby="addon-wrapping"
@@ -25,13 +25,13 @@
                     <option value=<%=book.result[i].book_classification_id%>>
                         <%=book.result[i].book_classification_name%>
                     </option>
-                <% } %>
+                    <% } %>
             </select>
             <br>
             <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">가격</span>
-                <input type="number" class="form-control" aria-label="가격을 입력해주세요" aria-describedby="addon-wrapping" placeholder="OO,OOO"
-                    name="price" required>
+                <input type="number" class="form-control" aria-label="가격을 입력해주세요" aria-describedby="addon-wrapping"
+                min="0" max="1000000"  placeholder="OO,OOO" name="price" required>
             </div>
             <br>
             <div class="input-group" style="height: 500px;">

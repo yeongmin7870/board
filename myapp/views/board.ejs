@@ -113,16 +113,23 @@
                 </svg>
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
-                        <%=myboard.result[i].board_title%> <span class="text-muted">
-                                <%=myboard.result[i].book_classification_id%>
-                            </span>
+                        <%=myboard.result[0].board_title%>
                     </h2>
+                    <span class="text-muted">
+                        <%=myboard.result[0].book_classification_name%>
+                    </span>
                     <p class="lead">
-                        <%=myboard.result[i].price%>
+                        <%=myboard.result[0].price%>
                     </p>
                 </div>
+                <p class="lead">
+                    <%=myboard.result[0].board_contents%>
+                </p>
+                <form action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
+                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>"/>
+                    <button type="submit">삭제</button>
+                </form>
             </div>
-
             <hr class="featurette-divider">
             <!-- /END THE FEATURETTES -->
         </div><!-- /.container -->

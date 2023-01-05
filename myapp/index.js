@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 let bodyparser = require('body-parser');
 let cookieParser = require('cookie-parser');
+let methodOverride = require('method-override');
 
 const userRouter = require('./routes/userroute');
 const viewRouter = require('./routes/viewroute')
@@ -14,6 +15,7 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use(express.json());
 app.use(express.static('public'));
+app.use(methodOverride('_method'));
 app.use('/v1', userRouter);
 app.use('/v2', viewRouter);
 app.use('/v3', boardRouter);

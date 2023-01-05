@@ -23,9 +23,9 @@
         </thead>
         <tbody>
             <% for (var i=0; i < myboard.result.length; i++){ %>
-                <tr>
+                <tr onclick="location.href='/v2/board/page/<%=myboard.result[i].board_id%>'">
                     <th scope="row">
-                        <%=i%>
+                        <%=i+1%>
                     </th>
                     <td>
                         <%=myboard.result[i].board_title%>
@@ -37,7 +37,7 @@
                         <%=myboard.result[i].book_classification_name%>
                     </td>
                 </tr>
-                <% } %>
+            <% } %>
         </tbody>
     </table>
     <hr>
