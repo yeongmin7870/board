@@ -104,13 +104,7 @@
             <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
             <div class="col-md-5">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500"
-                    height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500"
-                    preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#eee" />
-                    <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
-                </svg>
+                <img src="/images/board/<%=myboard.result[0].board_image%>" width="500" height="500" />
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <%=myboard.result[0].board_title%>
@@ -119,14 +113,16 @@
                         <%=myboard.result[0].book_classification_name%>
                     </span>
                     <p class="lead">
-                        <%=myboard.result[0].price%>
+                        <% let price=myboard.result[0].price;
+                         price=Number(price).toLocaleString(); %>
+                        <%=price+' 원'%>
                     </p>
                 </div>
                 <p class="lead">
                     <%=myboard.result[0].board_contents%>
                 </p>
                 <form action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
-                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>"/>
+                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
                     <button type="submit">삭제</button>
                 </form>
             </div>

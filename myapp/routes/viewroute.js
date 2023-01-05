@@ -21,6 +21,6 @@ router.get('/write', authUtil, boardcontroller.findBybookClassification);
 router.get('/mypage', authUtil, (req, res) => {
     res.render('mylist');
 });
-// 게시판 
+// 한 개의 게시판 보기
 router.get('/board/page/:board_id', authUtil, boardcontroller.FindByBoard);
 module.exports = router;

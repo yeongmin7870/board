@@ -31,7 +31,9 @@
                         <%=myboard.result[i].board_title%>
                     </td>
                     <td>
-                        <%=myboard.result[i].price%>
+                        <% let price=myboard.result[0].price;
+                        price=Number(price).toLocaleString(); %>
+                       <%=price+' 원'%>
                     </td>
                     <td>
                         <%=myboard.result[i].book_classification_name%>

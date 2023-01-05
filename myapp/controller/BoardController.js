@@ -70,4 +70,5 @@ module.exports = {
             res.status(201).redirect('/v2/home');
         });
     },
+
 }
