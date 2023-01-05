@@ -1,45 +1,27 @@
 const express = require('express');
 const Book = require('../models/books');
 const jwt = require('../modules/jwt');
-const multer = require('multer');
-
-const storage =
-    multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, './public/images/board/');
-            console.log(req);
-        },
-        filename: function (req, file, cb) {
-            const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + '_' + uniqueSuffix);
-        }
-    });
-const upload = multer({ storage: storage }).single("board_image");
+const fs = require('fs');
 
 module.exports = {
 
     // 게시판 글 작성
     doWriteBoard: async function (req, res) {
-        const reg = new RegExp('\.jpg|\.png|\.jpeg|\.gif$', 'i'); // i: 대소문자 구분하지말고, 이미지 확장자를 찾아라
-        // if (reg.test(req.body.board_image) == false) {
-        //     res.status(404).send(`<script>
-        //     location.href='/v2/write';
-        //     alert('이미지 파일이 아닙니다 🐱');
-        //     </script>`);
-        //     return;
-        // }
+        try {
+            req.body.board_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
 
-        upload(req, res, err => {
-            if (err) {
-                res.json({ error: err });
-            };
-        });
-
-        const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
-        req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
-        Book.setBoard(req.body).then((result) => {
-            res.status(200).redirect('/v2/home');
-        });
+            const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
+            req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+            Book.setBoard(req.body).then((result) => {
+                console.log('글 작성됨');
+                res.status(200).redirect('/v2/home');
+            });
+        } catch (e) {
+            res.status(404).send(`<script>
+            location.href='/v2/write';
+            alert('이미지 파일이 아닙니다 🐱');
+            </script>`);
+        }
     },
     //메인홈페이지 필요한 게시글 전체 가져오기
     getAllBoard: function (req, res) {
@@ -69,6 +51,21 @@ module.exports = {
     },
     // 해당 게시글 삭제
     doRmByBoard: async function (req, res) {
+        // 해당 이미지 파일 이름 찾고 삭제하기
+        Book.FindByBoard(req.params.board_id).then((result) => {
+            const image_name = result[0].board_image;
+            if (fs.existsSync('./public/images/board/' + image_name)) {
+                try {
+                    fs.unlinkSync('./public/images/board/' + image_name);
+                    console.log("image delete");
+                } catch (e) {
+                    console.log(e);
+                }
+            } else {
+                console.log("이미지 파일이 존재하지 않음");
+            }
+        });
+        // 디비 게시글 데이터 삭제 
         Book.doRmByBoard(req.params.board_id).then((result) => {
             res.status(201).redirect('/v2/home');
         });

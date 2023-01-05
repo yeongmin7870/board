@@ -55,7 +55,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM board', (err, result, fields) => {
+                    'SELECT * FROM board w ORDER BY board_id DESC', (err, result, fields) => {
                         if (err)
                             reject(err);
                         else
