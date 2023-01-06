@@ -17,4 +17,8 @@ router.get('/board-mypage', authUtil, boardcontroller.FindByAllBoard)
 // 책 분류표 내용 가져오기 
 router.get('/book-class', boardcontroller.findBybookClassification)
 
+// 댓글 작성
+router.post('/board/comment',boardcontroller.setToBoardComment)
+// 해당 게시물 댓글 출력
+router.get('/board/comment', boardcontroller.getByboardComment)
 module.exports = router;

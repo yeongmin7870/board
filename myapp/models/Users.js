@@ -1,7 +1,5 @@
 const mysql = require('mysql2');
-const { user } = require('../config/mysqlconn.js');
 const db = require('../config/mysqlconn.js');
-// const { connect } = require('../userroutes/index.js');
 const con = mysql.createPool(db);
 
 module.exports = {

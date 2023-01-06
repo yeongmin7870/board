@@ -2,6 +2,7 @@ const express = require('express');
 const Book = require('../models/books');
 const jwt = require('../modules/jwt');
 const fs = require('fs');
+const Comment = require('../models/comments');
 
 module.exports = {
 
@@ -24,7 +25,7 @@ module.exports = {
         }
     },
     //메인홈페이지 필요한 게시글 전체 가져오기
-    getAllBoard: function (req, res) {
+    getAllBoard: async function (req, res) {
         Book.getAllBoard().then((result) => {
             res.status(200).render('home', { board: { result } });
         });
@@ -38,7 +39,7 @@ module.exports = {
         });
     },
     // 책 카테고리 
-    findBybookClassification: function (req, res) {
+    findBybookClassification: async function (req, res) {
         Book.getBookClassifications().then((result) => {
             res.status(200).render('writeboard', { book: { result } });
         });
@@ -70,5 +71,21 @@ module.exports = {
             res.status(201).redirect('/v2/home');
         });
     },
+    // 댓글 작성
+    setToBoardComment: async function (req, res) {
+        Comment.setToBoardComment(req.body).then((result) => {
+            console.log('Writing comment is finished');
+            res.send(result);
+        })
+        .catch((err)=>{
+            console.log('Writing comment is failled');
+            res.send(new Error(err));
+        })
+    },
+    // 해당 게시글 댓글 보여주기
+    getByboardComment: async (req,res) => {
+        result = await Comment.
+    },
+    
 
 }
