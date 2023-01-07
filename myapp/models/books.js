@@ -1,6 +1,4 @@
-const mysql = require('mysql2');
-const db = require('../config/mysqlconn.js');
-const con = mysql.createPool(db);
+const con = require('../config/mysqlconn.js');
 
 module.exports = {
     // 책 종류 가져오기
@@ -11,7 +9,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM book_classification', (err, result, fields) => {
+                    'SELECT * FROM book_classification', (err, result) => {
                         if (err)
                             reject(result);
                         else
@@ -99,7 +97,7 @@ module.exports = {
                             reject(err);
                         else
                             resolve(result);
-                    }
+                    } 
                 );
                 con.release();
             });

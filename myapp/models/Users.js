@@ -1,16 +1,12 @@
-const mysql = require('mysql2');
-const db = require('../config/mysqlconn.js');
-const con = mysql.createPool(db);
+const connection = require('../config/mysqlconn.js');
+
 
 module.exports = {
     getUsers: function () {
         return new Promise((resolve, reject) => {
-            con.getConnection((err, con) => {
-                if (err) {
-                    console.log(err);
-                }
+            con.getConnection((err,con) => {
                 con.query(
-                    'SELECT * FROM user', (err, result, fields) => {
+                    'SELECT * FROM user', (err, result) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -30,10 +26,7 @@ module.exports = {
         let sql = "SELECT * FROM user WHERE user_id = ?";
 
         return new Promise((resolve, reject) => {
-            con.getConnection((err, con) => {
-                if (err) {
-                    console.log(err);
-                }
+            con.getConnection((err,con) => {
                 con.query(
                     sql, values, function (err, result, fields) {
                         if (result.length == 0) {

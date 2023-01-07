@@ -79,13 +79,13 @@ module.exports = {
         })
         .catch((err)=>{
             console.log('Writing comment is failled');
-            res.send(new Error(err));
+            res.send(err);
         })
     },
     // 해당 게시글 댓글 보여주기
-    getByboardComment: async (req,res) => {
-        result = await Comment.
-    },
+    // getByboardComment: async (req,res) => {
+    //     result = await Comment.
+    // },
     
 
 }

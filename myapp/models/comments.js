@@ -1,6 +1,4 @@
-const mysql = require('mysql2');
-const db = require('../config/mysqlconn.js');
-const con = mysql.createPool(db);
+const con = require('../config/mysqlconn.js');
 
 module.exports = {
     setToBoardComment: function (comment) {
@@ -29,8 +27,8 @@ module.exports = {
         });
     },
 
-    getByboardComment: (req,res) => {
+    // getByboardComment: (req,res) => {
         
-    },
+    // },
 
 };
