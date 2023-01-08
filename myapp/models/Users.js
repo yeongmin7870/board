@@ -1,4 +1,4 @@
-const connection = require('../config/mysqlconn.js');
+const con = require('../config/mysqlconn.js');
 
 
 module.exports = {

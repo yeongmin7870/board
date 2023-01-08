@@ -74,18 +74,23 @@ module.exports = {
     // 댓글 작성
     setToBoardComment: async function (req, res) {
         Comment.setToBoardComment(req.body).then((result) => {
-            console.log('Writing comment is finished');
+            console.log(`Writing comment is finished`);
             res.send(result);
         })
-        .catch((err)=>{
-            console.log('Writing comment is failled');
-            res.send(err);
-        })
+            .catch((err) => {
+                console.log('Writing comment is failled');
+                res.send(err);
+            })
     },
-    // 해당 게시글 댓글 보여주기
-    // getByboardComment: async (req,res) => {
-    //     result = await Comment.
-    // },
-    
+    //해당 게시글 댓글 보여주기
+    getByboardComment: async (req, res) => {
+        try {
+            let result = await Comment.getByboardComment(req.params.board_id);
+            res.send(result);
+        } catch (err) {
+            res.send(err);
+        }
+    },
+
 
 }

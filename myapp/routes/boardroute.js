@@ -20,5 +20,5 @@ router.get('/book-class', boardcontroller.findBybookClassification)
 // 댓글 작성
 router.post('/board/comment',boardcontroller.setToBoardComment)
 // 해당 게시물 댓글 출력
-// router.get('/board/comment', boardcontroller.getByboardComment)
+router.get('/board/comment/:board_id', boardcontroller.getByboardComment)
 module.exports = router;

@@ -1,4 +1,5 @@
 const con = require('../config/mysqlconn.js');
+const mysql = require('mysql2');
 
 module.exports = {
     setToBoardComment: function (comment) {
@@ -8,15 +9,15 @@ module.exports = {
 
                 if (err) console.log(new Error(err));
                 else {
-                    let sql1 = 'INSERT INTO comment VALUES ?';
-                    let sql2 = 'INSERT INTO user VALUES ?'
-
-                    sql1 = mysql.format(sql1, [comment]);
-                    sql2 = mysql.format(sql2, [comment.comment_id]);
-
+                    var today = new Date();
+                    console.log(today);
+                    values = [
+                        [comment.comment_id, comment.user_id, comment.comment_content, today, comment.board_id]
+                    ]
+                    let sql = "INSERT INTO comment VALUES (?)";
                     con.query(
-                        sql1 + sql2, [coment], (err, result) => {
-                            if (err) reject(new Error(err));
+                        sql, values, (err, result) => {
+                            if (err) reject(err);
                             else resovle(result);
                         }
                     );
@@ -26,9 +27,24 @@ module.exports = {
 
         });
     },
-
-    // getByboardComment: (req,res) => {
-        
-    // },
+    getByboardComment: (board_id) => {
+        return new Promise((resovle, reject) => {
+            con.getConnection((err, con) => {
+                if (err) console.log(new Error(err));
+                else {
+                    let sql = "SELECT * FROM comment WHERE board_id=?";
+                    con.query(
+                        sql, board_id, (err, result) => {
+                            if (err) {
+                                reject(err);
+                                throw err;
+                            }
+                            else resovle(result);
+                        }
+                    );
+                }
+            });
+        });
+    },
 
 };
