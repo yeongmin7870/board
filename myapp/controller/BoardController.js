@@ -15,7 +15,7 @@ module.exports = {
             req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
             Book.setBoard(req.body).then((result) => {
                 console.log('글 작성됨');
-                res.status(200).redirect('/v2/home');
+                res.status(200).redirect('/v2/home/1');
             });
         } catch (e) {
             res.status(404).send(`<script>
@@ -36,9 +36,11 @@ module.exports = {
         if (result.length % front_board != 0) {
             page_sum = Math.floor(result.length / 3) + 1; // 페이지 수
             console.log('페이지수' + page_sum);
+        } else {
+            page_sum = result.length / 3; // 페이지 수
+            console.log('페이지수' + page_sum);
         }
         for (var i = (current_page - 1) * front_board; i < front_board * current_page; i++) {
-            console.log(result[i]);
             if (result[i] === undefined) break;
             page.push(result[i]);
         }
