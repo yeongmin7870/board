@@ -122,11 +122,11 @@
                 </div>
                 <div class="carousel-item">
                     <img src="https://pixabay.com/get/g8b661d4c2304baddb5e481923f14726bee764ee1024050e4330292272baf46a12f195ed26f2965726fbe5893860aa0cec6d48aebe4012c2185dcb1d75de1933ef632aee6ffc4f35fe347849efcb9823f_640.jpg"
-                     width="100%" height="100%" />
+                        width="100%" height="100%" />
                 </div>
                 <div class="carousel-item">
                     <img src="https://pixabay.com/get/gdf9eb2cec7b2ef5a1457fca45640e7169eeecdeecb0770b8e4d380dfa81dc342acec0e5b82d88152cee0f02e321f72d21dbac48e5bc0d6fd2d59909cd68de9908dc0208d0f409e023b1babace25ff8a4_640.jpg"
-                     width="100%" height="100%" />
+                        width="100%" height="100%" />
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
@@ -144,26 +144,28 @@
         <div class="container marketing">
             <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
-            <% for (var i=0; i < board.result.length; i++){ %>
-                <div class="row featurette" onclick="location.href='/v2/board/page/<%=board.result[i].board_id%>'">
+            <% for (var i=0; i < board.page.length; i++){ %>
+                <div class="row featurette" onclick="location.href='/v2/board/page/<%=board.page[i].board_id%>'">
                     <div class="col-md-7">
                         <h2 class="featurette-heading fw-normal lh-1">
-                            <%=board.result[i].board_title%> <span class="text-muted">
-                                    <%=board.result[i].book_classification_id%>
+                            <%=board.page[i].board_title%> <span class="text-muted">
+                                    <%=board.page[i].book_classification_id%>
                                 </span>
                         </h2>
                         <p class="lead">
-                            <% let price=board.result[0].price; price=Number(price).toLocaleString(); %>
+                            <% let price=board.page[0].price; price=Number(price).toLocaleString(); %>
                                 <%=price+' 원'%>
                         </p>
                     </div>
                     <div class="col-md-5">
-                        <img src="/images/board/<%=board.result[i].board_image%>" width="500" height="500" />
+                        <img src="/images/board/<%=board.page[i].board_image%>" width="500" height="500" />
                     </div>
-                    <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
+                    <input type="hidden" id="board_id" value=<%=board.page[i].board_id%>>
                 </div>
                 <hr class="featurette-divider">
                 <% } %>
+                <h4><%=current_page.current_page%></h4>
+                <h4><%=page_sum.page_sum%></h4>
                     <!-- /END THE FEATURETTES -->
         </div><!-- /.container -->
         <!-- FOOTER -->

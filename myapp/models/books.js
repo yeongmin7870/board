@@ -22,9 +22,9 @@ module.exports = {
     },
     //게시글 작성
     setBoard: function (board) {
-        let { board_id, user_id, board_title, book_classification_id, board_contents, board_image, board_comment, price } = board;
+        let { board_id, user_id, board_title, book_classification_id, board_contents, board_image, price } = board;
         values = [
-            [board_id, user_id, board_title, book_classification_id, board_contents, board_image, board_comment, price]
+            [board_id, user_id, board_title, book_classification_id, board_contents, board_image, price, 0]
         ];
         // 토큰 해독
 
@@ -34,7 +34,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'INSERT INTO board VALUES ?', [values], (err, result, fields) => {
+                    'INSERT INTO board VALUES ?', [values], (err, result) => {
                         if (err)
                             reject(err);
                         else
@@ -53,7 +53,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM board w ORDER BY board_id DESC', (err, result, fields) => {
+                    'SELECT * FROM board w ORDER BY board_id DESC', (err, result) => {
                         if (err)
                             reject(err);
                         else
@@ -97,11 +97,28 @@ module.exports = {
                             reject(err);
                         else
                             resolve(result);
-                    } 
+                    }
                 );
                 con.release();
             });
         })
+    },
+    view_count: (board_id) => {
+        return new Promise((resovle, reject) => {
+            con.getConnection((err, con) => {
+                if (err) throw err;
+                else {
+                    con.query(
+                        "UPDATE board a, (SELECT view_count+1 as 'view_count' FROM board WHERE board_id=?) b SET " +
+                        "a.view_count=b.view_count WHERE board_id=?", [board_id, board_id], (err, result) => {
+                            if (err) reject(err);
+                            else resovle(result);
+                        }
+                    );
+                }
+                con.release();
+            });
+        });
     },
     doRmByBoard: function (board_id) {
         return new Promise((resolve, reject) => {
@@ -110,7 +127,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'DELETE FROM board WHERE board_id = ?', [board_id], (err, result, fields) => {
+                    'DELETE FROM board WHERE board_id = ?', [board_id], (err, result) => {
                         if (err)
                             reject(err);
                         else

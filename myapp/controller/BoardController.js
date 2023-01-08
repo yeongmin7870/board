@@ -26,9 +26,25 @@ module.exports = {
     },
     //메인홈페이지 필요한 게시글 전체 가져오기
     getAllBoard: async function (req, res) {
-        Book.getAllBoard().then((result) => {
-            res.status(200).render('home', { board: { result } });
-        });
+        const result = await Book.getAllBoard();
+
+        let page_sum = 0; // 페이지 수
+        let front_board = 3; // 보여지는 게시글 수
+        let current_page = req.params.page; //현재 페이지
+        let page = []; // 게시글 내용 바구니
+
+        if (result.length % front_board != 0) {
+            page_sum = Math.floor(result.length / 3) + 1; // 페이지 수
+            console.log('페이지수' + page_sum);
+        }
+        for (var i = (current_page - 1) * front_board; i < front_board * current_page; i++) {
+            console.log(result[i]);
+            if (result[i] === undefined) break;
+            page.push(result[i]);
+        }
+
+        console.log('page 내용:' + page.length);
+        res.status(200).render('home', { board: { page }, page_sum: { page_sum }, current_page: { current_page } });
     },
     // 해당 아이디 게시글 찾기
     FindByAllBoard: async function (req, res) {
@@ -46,9 +62,13 @@ module.exports = {
     },
     // 해당 게시글 한 개 찾기
     FindByBoard: async function (req, res) {
-        Book.FindByBoard(req.params.board_id).then((result) => {
+        try {
+            await Book.view_count(req.params.board_id); // 조회수 +1
+            const result = await Book.FindByBoard(req.params.board_id);
             res.status(200).render('board', { myboard: { result } });
-        });
+        } catch (err) {
+            console.log(err);
+        }
     },
     // 해당 게시글 삭제
     doRmByBoard: async function (req, res) {
@@ -91,6 +111,14 @@ module.exports = {
             res.send(err);
         }
     },
-
-
+    // 해당 게시물 댓글 삭제
+    removeComment: async (req, res) => {
+        try {
+            let result = await Comment.removeComment(req.params.comment_id);
+            console.log('댓글이 삭제되었습니다.');
+            res.send('댓글이 삭제되었습니다.');
+        } catch (err) {
+            res.send(err);
+        }
+    },
 }

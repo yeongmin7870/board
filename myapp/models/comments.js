@@ -23,6 +23,7 @@ module.exports = {
                     );
 
                 }
+                con.release();
             });
 
         });
@@ -43,8 +44,28 @@ module.exports = {
                         }
                     );
                 }
+                con.release();
             });
         });
     },
-
+    removeComment: (comment_id) => {
+        return new Promise((resovle, reject) => {
+            con.getConnection((err, con) => {
+                if (err) console.log(err);
+                else {
+                    let sql = "DELETE FROM comment WHERE comment_id=?";
+                    con.query(
+                        sql, [comment_id], (err, result) => {
+                            if (err) {
+                                reject(err);
+                                throw err;
+                            }
+                            else resovle(result);
+                        }
+                    );
+                }
+                con.release();
+            });
+        });
+    },
 };
