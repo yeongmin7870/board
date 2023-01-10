@@ -90,7 +90,7 @@ module.exports = {
         });
         // 디비 게시글 데이터 삭제 
         Book.doRmByBoard(req.params.board_id).then((result) => {
-            res.status(201).redirect('/v2/home');
+            res.status(201).redirect('/v2/home/1');
         });
     },
     // 댓글 작성
