@@ -66,11 +66,30 @@
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
-    </script>
+        var socket = io('/a');
+        var messages = document.getElementById('messages');
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
 
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value); //서버로 신호보내기
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', msg => { // 서버에서 신호 받기 
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+
+    </script>
 </body>
 
 </html>
