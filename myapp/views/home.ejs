@@ -167,8 +167,29 @@
                 </div>
                 <hr class="featurette-divider">
                 <% } %>
-                <h4><%=current_page.current_page%></h4>
-                <h4><%=page_sum.page_sum%></h4>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group me-2" role="group" aria-label="First group">
+
+                        <%
+                        let d = 0;
+                        if(current_page.current_page == (page_sum.page_sum-1)){
+                            console.log(current_page.current_page);
+                            console.log(page_sum.page_sum);
+
+                            if (current_page.current_page==(page_sum.page_sum+d)/2){
+                                d+=1
+                            }
+                        }
+                        for(var i =0+d; i < (page_sum.page_sum + d) / 2; i++ ) {%>
+                            <button type="button" class="btn btn-primary" onclick="location.href='/v2/home/<%=i+1%>'"><%=i+1%></button>
+                        <%} %>
+                    </div>
+
+                    </div>
+
+                    <h4>
+                        현재 페이지: <%=current_page.current_page%>
+                    </h4>
                     <!-- /END THE FEATURETTES -->
         </div><!-- /.container -->
         <!-- FOOTER -->
