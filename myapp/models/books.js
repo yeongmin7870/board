@@ -45,15 +45,34 @@ module.exports = {
             });
         })
     },
-    //게시글 내용 전체 가져오기
-    getAllBoard: function () {
+    //전체 게시물 카운트 수
+    getCntFindAll: function (startPage, endPage) {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM board w ORDER BY board_id DESC', (err, result) => {
+                    'SELECT COUNT(*) as cnt FROM board', (err, result) => {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    }
+                );
+                con.release();
+            });
+        })
+    },
+    //게시글 내용 전체 가져오기
+    getAllBoard: function (startColumn, columnSize) {
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) {
+                    console.log(err);
+                }
+                con.query(
+                    'SELECT * FROM board w LIMIT ? OFFSET ?',[columnSize,startColumn],(err, result) => {
                         if (err)
                             reject(err);
                         else

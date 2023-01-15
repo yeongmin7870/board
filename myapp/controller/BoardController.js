@@ -24,29 +24,41 @@ module.exports = {
             </script>`);
         }
     },
-    //메인홈페이지 필요한 게시글 전체 가져오기
+    //메인홈페이지 페이징 처리
     getAllBoard: async function (req, res) {
-        const result = await Book.getAllBoard();
+        let current_page = req.params.page // 현재 페이지
 
-        let page_sum = 0; // 페이지 수
-        let front_board = 3; // 보여지는 게시글 수
-        let current_page = req.params.page; //현재 페이지
-        let page = []; // 게시글 내용 바구니
+        let columnSize = 4; // 컬럼 사이즈
+        let startColumn = (current_page * columnSize); //시작하는 컬럼
+        const result = await Book.getAllBoard(startColumn, columnSize); // 현재 페이지 컬럼 가져오기 
 
-        if (result.length % front_board != 0) {
-            page_sum = Math.floor(result.length / 3) + 1; // 페이지 수
-            console.log('페이지수' + page_sum);
+        let prevPage = true;   // 이전 페이지 유무
+        let nexPage = true;    // 다음 페이지 유무 
+
+        let cnt_column = await Book.getCntFindAll(); // 전체 컬럼 개수
+        let total_page = Math.ceil(cnt_column[0].cnt / columnSize); // 전체 페이지 개수
+
+        let page_size = 4; // 보여질 페이지 수
+        let start_page = 0;
+        let end_page = 0;
+        if (current_page - page_size <= 0) { // 현재페이지 - 4 가 음수일때  시작페이지는  0으로 고정
+            start_page = 0;
+        } else { // 음수가 아니라면 현재페이지 - 4를 시작페이지로
+            start_page = current_page - page_size
+        }
+        if (current_page + page_size >= total_page) { //현재페이지 + 4 가 전체 페이지 보다 크거나 같으면 끝나는 페이지를, 전체페이지로 고정
+            end_page = total_page;
         } else {
-            page_sum = result.length / 3; // 페이지 수
-            console.log('페이지수' + page_sum);
+            end_page = current_page + page_size;
         }
-        for (var i = (current_page - 1) * front_board; i < front_board * current_page; i++) {
-            if (result[i] === undefined) break;
-            page.push(result[i]);
-        }
+        console.log('\\');
+        console.log('total:' + total_page);
+        console.log('start:' + start_page);
+        console.log('end:' + end_page);
 
-        console.log('page 내용:' + page.length);
-        res.status(200).render('home', { board: { page }, page_sum: { page_sum }, current_page: { current_page } });
+        if (start_page == 0) prevPage = false;
+        else if (end_page == total_page) nexPage = false;
+        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
     },
     // 해당 아이디 게시글 찾기
     FindByAllBoard: async function (req, res) {
