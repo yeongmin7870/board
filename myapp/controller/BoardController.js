@@ -38,26 +38,27 @@ module.exports = {
         let cnt_column = await Book.getCntFindAll(); // 전체 컬럼 개수
         let total_page = Math.ceil(cnt_column[0].cnt / columnSize); // 전체 페이지 개수
 
-        let page_size = 4; // 보여질 페이지 수
-        let start_page = 0;
-        let end_page = 0;
-        if (current_page - page_size <= 0) { // 현재페이지 - 4 가 음수일때  시작페이지는  0으로 고정
+        let page_size = 5; // 보여질 페이지 수
+
+        let start_page = current_page - Math.ceil(page_size / 2);
+        if (start_page <= 0) {
+            prevPage = false;
             start_page = 0;
-        } else { // 음수가 아니라면 현재페이지 - 4를 시작페이지로
-            start_page = current_page - page_size
         }
-        if (current_page + page_size >= total_page) { //현재페이지 + 4 가 전체 페이지 보다 크거나 같으면 끝나는 페이지를, 전체페이지로 고정
+
+        let end_page = start_page + page_size;
+        if (end_page >= total_page) {
+            nexPage = false;
             end_page = total_page;
-        } else {
-            end_page = current_page + page_size;
         }
+
         console.log('\\');
         console.log('total:' + total_page);
         console.log('start:' + start_page);
         console.log('end:' + end_page);
+        console.log(prevPage);
+        console.log(nexPage);
 
-        if (start_page == 0) prevPage = false;
-        else if (end_page == total_page) nexPage = false;
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
     },
     // 해당 아이디 게시글 찾기

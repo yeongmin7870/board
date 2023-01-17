@@ -167,15 +167,19 @@
                 </div>
                 <hr class="featurette-divider">
                 <% } %>
-                    <%if(page.prevPage===true){%>
-                        <button onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page) - page.page_size , 0)%>';"><<</button>
+                    <%if(page.prevPage == true){%>
+                        <button onclick="location.href='/v2/home/<%=Number(page.current_page)-1%>';"><<</button>
                     <%}%>
-                    <%for(var i = page.start_page; i < page.end_page; i++) { %>
-                        <button onclick="location.href='/v2/home/<%=i%>'"><%=i%></button>
-                    <%}%>
+                    <%for(var i = page.start_page; i < page.end_page; i++) {
+                        if(page.current_page == i){%>
+                            <button style="color:red" onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
+                        <%} else {%>
+                            <button onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
+                        <%}
+                      }%>
 
-                    <%if(page.nexPage===true){%>
-                        <button onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page) + page.page_size , page.total_page)%>';">>></button>
+                    <%if(page.nexPage == true){%>
+                        <button onclick="location.href='/v2/home/<%=Number(page.current_page)+1%>';">>></button>
                     <%}%>
                             <!-- /END THE FEATURETTES -->
         </div><!-- /.container -->
