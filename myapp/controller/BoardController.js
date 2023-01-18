@@ -33,22 +33,24 @@ module.exports = {
         let cnt_column = await Book.getCntFindAll(); // 전체 컬럼 개수
         let total_page = Math.ceil(cnt_column[0].cnt / columnSize); // 전체 페이지 개수
 
+        if (current_page < 0 || current_page >= total_page) current_page = 0; // 만약 현재 페이지 범위가 벗어나면 현재페이지를 0으로 고정
+
         let startColumn = (current_page * columnSize); //시작하는 컬럼
         const result = await Book.getAllBoard(startColumn, columnSize); // 현재 페이지 컬럼 가져오기 
 
         let prevPage = true;   // 이전 페이지 유무
         let nexPage = true;    // 다음 페이지 유무 
 
-        let page_size = 5; // 보여질 페이지 수
+        let page_size = 4; // 보여질 페이지 수
 
-        let start_page = current_page - Math.ceil(page_size / 2);
-        if (start_page <= 0) {
+        let start_page = current_page - Math.ceil(page_size / 2);   // 시작페이지 = 현재페이지 - (올림(보여질 페이지 수 / 2))
+        if (start_page <= 0) {      // 시작페이지가 0이거나 작을때
             prevPage = false;
             start_page = 0;
         }
 
-        let end_page = start_page + page_size;
-        if (end_page >= total_page) {
+        let end_page = start_page + page_size; // 끝페이지 = 시작페이지 + 보여질 페이지 수
+        if (end_page >= total_page) {   // 끝페이지가 전체페이지랑 같거나 클때
             nexPage = false;
             end_page = total_page;
         }

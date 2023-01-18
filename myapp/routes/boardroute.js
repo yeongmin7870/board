@@ -16,7 +16,8 @@ router.get('/board/main-contents', boardcontroller.getAllBoard)
 router.get('/board-mypage', authUtil, boardcontroller.FindByAllBoard)
 // 책 분류표 내용 가져오기 
 router.get('/book-class', boardcontroller.findBybookClassification)
-
+// 한 개의 게시판 보기
+router.get('/board/page/:board_id', boardcontroller.FindByBoard);
 
 router.post('/board/comment', boardcontroller.setToBoardComment)         // 댓글 작성
     .get('/board/comment/:board_id', boardcontroller.getByboardComment)  // 해당 게시물 댓글 출력

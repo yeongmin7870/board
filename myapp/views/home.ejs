@@ -70,7 +70,7 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">전공책 싸게 사자</a>
+                <a class="navbar-brand" href="/v2/home/0">전공책 싸게 사자</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -78,7 +78,7 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="/v2/home/0">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" onclick="location.href='/v3/board-mypage'"
@@ -91,15 +91,10 @@
                             <a class="nav-link" style="cursor: pointer;">나의대화</a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
                 </div>
                 <div>
-                    <button class="btn btn-outline-success" type="submit"
-                        onclick="location.href='/cookies/cookie-remove';">Sign
-                        out</button>
+                    <button id="btn_signout" class="btn btn-outline-danger" type="submit" onclick="location.href='/cookies/cookie-remove';">Sign out</button>                   
+                    <button id="btn_signin" class="btn btn-outline-success" type="submit" onclick="location.href='/v2/login';">Sign In</button>
                 </div>
             </div>
         </nav>
@@ -114,22 +109,22 @@
                 <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
                 <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
-            <div class="carousel-inner">
+            <div class="carousel-inner" style="text-align: center; background-color: rgb(74, 73, 73);">
                 <div class="carousel-item active">
                     <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
                         aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
                         <rect width="100%" height="100%" fill="#777" />
                     </svg> -->
-                    <img src="https://pixabay.com/get/ge18e6d44fd9303761cb1d98c325e4de9a3b25893dc866e3589f6134b37c51d946aaf077295bdd6d1f7b1c9ad50cfa53362144b7ec7520d5ed0804edeff15f9b9e2d65a83bf248a055afaf8e1e5a0cafa_640.jpg"
-                        width="100%" height="100%" />
+                    <img src="/images/bookstore.jpg"
+                        width="40%" height="100%" />
                 </div>
                 <div class="carousel-item">
-                    <img src="https://pixabay.com/get/g8b661d4c2304baddb5e481923f14726bee764ee1024050e4330292272baf46a12f195ed26f2965726fbe5893860aa0cec6d48aebe4012c2185dcb1d75de1933ef632aee6ffc4f35fe347849efcb9823f_640.jpg"
-                        width="100%" height="100%" />
+                    <img src="/images/forest.jpg"
+                        width="40%" height="100%" />
                 </div>
                 <div class="carousel-item">
-                    <img src="https://pixabay.com/get/gdf9eb2cec7b2ef5a1457fca45640e7169eeecdeecb0770b8e4d380dfa81dc342acec0e5b82d88152cee0f02e321f72d21dbac48e5bc0d6fd2d59909cd68de9908dc0208d0f409e023b1babace25ff8a4_640.jpg"
-                        width="100%" height="100%" />
+                    <img src="/images/sky_blue.jpg"
+                        width="40%" height="100%"/>
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
@@ -145,19 +140,45 @@
     ================================================== -->
         <!-- Wrap the rest of the page in another container to center all the content. -->
         <div class="container marketing">
+            <div>
+                <!-- 검색기능 -->
+                <form class="d-flex" role="search" style="margin-left: 30%;margin-right: 20%; width: 40%;">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <br>
+            <div style="text-align: center;">
+                <!-- << -->
+                <%if(page.prevPage == true){%>
+                    <button class="btn btn-outline-secondary" onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-page.page_size,0)%>';"><<</button>
+                <%}%>
+                <!-- [1 2 3 4 5] -->
+                <%for(var i = page.start_page; i < page.end_page; i++) {
+                    if(page.current_page == i){%>
+                        <button class="btn btn-outline-primary" style="color:red" onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
+                    <%} else {%>
+                        <button class="btn btn-outline-primary" onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
+                    <%}
+                  }%>
+                <!-- >> -->
+                <%if(page.nexPage == true){%>
+                    <button class="btn btn-outline-secondary" onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+page.page_size,page.total_page-1)%>';">>></button>
+                <%}%>
+                        <!-- /페이징 처리 -->
+            </div>            
             <!-- START THE FEATURETTES -->
-            <hr class="featurette-divider">
+            <hr>
             <% for (var i=0; i < board.result.length; i++){ %>
-                <div class="row featurette" onclick="location.href='/v2/board/page/<%=board.result[i].board_id%>'">
+                <div class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
                     <div class="col-md-7">
                         <h2 class="featurette-heading fw-normal lh-1">
-                            <%=board.result[i].board_title%> <span class="text-muted">
-                                    <%=board.result[i].book_classification_id%>
-                                </span>
+                            <%=board.result[i].board_title%> 
+                            <span class="text-muted"><%=board.result[i].book_classification_id%></span>
                         </h2>
                         <p class="lead">
                             <% let price=board.result[0].price; price=Number(price).toLocaleString(); %>
-                                <%=price+' 원'%>
+                            <%=price+' 원'%>
                         </p>
                     </div>
                     <div class="col-md-5">
@@ -166,29 +187,33 @@
                     <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>
                 <hr class="featurette-divider">
-                <% } %>
-                    <%if(page.prevPage == true){%>
-                        <button onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-page.page_size,0)%>';"><<</button>
-                    <%}%>
-                    <%for(var i = page.start_page; i < page.end_page; i++) {
-                        if(page.current_page == i){%>
-                            <button style="color:red" onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
-                        <%} else {%>
-                            <button onclick="location.href='/v2/home/<%=i%>'"><%=i+1%></button>
-                        <%}
-                      }%>
+            <% } %>
 
-                    <%if(page.nexPage == true){%>
-                        <button onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+page.page_size,page.total_page-1)%>';">>></button>
-                    <%}%>
-                            <!-- /END THE FEATURETTES -->
         </div><!-- /.container -->
         <!-- FOOTER -->
-        <footer class="container">
-            <p class="float-end"><a href="#">Back to top</a></p>
-            <p>&copy; 2017–2022 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-        </footer>
     </main>
+    <script>
+        value = document.cookie;
+        value = value.split(';');
+        x_auth=[];
+
+        btn_signin = document.getElementById('btn_signin');
+        btn_signout = document.getElementById('btn_signout');
+
+        for(var i=0; i<value.length; i++){
+            value_1 = value[i];
+            if(value_1.substring(0,7) === 'x_auth=') { // 쿠키에 토큰이 있다면
+                                                   // <로그인 상태>
+                btn_signout.style.display = 'block'; // 로그아웃 버튼 활성화
+                btn_signin.style.display = 'none'; // 로그인 버튼 비활성화
+                break;
+            } else {                                // <로그인이 안된 상태>
+                btn_signin.style.display = 'block'; // 로그인 버튼 활성화
+                btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
+                break;
+            }
+        }
+    </script>
     <script src="/javascripts/home/bootstrap.bundle.min.js"></script>
 </body>
 

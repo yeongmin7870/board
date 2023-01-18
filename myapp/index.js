@@ -41,5 +41,5 @@ app.get('/chat', (req, res) => {
 chatfnc(app); // 채팅 함수 호출
 
 http.listen(port, () => {
-    console.log(`http://localhost:${port}/v2/`);
+    console.log(`http://localhost:${port}/v2/home/0`);
 });

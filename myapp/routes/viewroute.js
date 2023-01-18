@@ -6,7 +6,7 @@ const boardcontroller = require('../controller/BoardController');
     단순히 페이지를 연결 시켜주는 uri
 */
 // 로그인 페이지
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
     res.render('index');
 });
 // 회원 가입 페이지
@@ -21,6 +21,5 @@ router.get('/write', authUtil, boardcontroller.findBybookClassification);
 router.get('/mypage', authUtil, (req, res) => {
     res.render('mylist');
 });
-// 한 개의 게시판 보기
-router.get('/board/page/:board_id', authUtil, boardcontroller.FindByBoard);
+
 module.exports = router;

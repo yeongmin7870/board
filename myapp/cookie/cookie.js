@@ -12,6 +12,6 @@ module.exports={
     },
 
     removeCookie: function(req,res){
-        res.clearCookie('x_auth').status(201).redirect('/v2/');
+        res.clearCookie('x_auth').status(201).redirect('/v2/login');
     },
 }

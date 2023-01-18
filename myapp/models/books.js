@@ -72,7 +72,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM board w LIMIT ? OFFSET ?',[columnSize,startColumn],(err, result) => {
+                    'SELECT * FROM board w  ORDER BY board_id DESC LIMIT ? OFFSET ?',[columnSize,startColumn],(err, result) => {
                         if (err)
                             reject(err);
                         else
