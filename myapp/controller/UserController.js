@@ -2,6 +2,7 @@ const express = require('express');
 const Users = require('../models/Users');
 const jwt = require('../modules/jwt');
 const util = require('util');
+const mailer = require('../modules/mail');
 
 module.exports = {
     doGetUser: function (req, res, next) {
@@ -55,5 +56,24 @@ module.exports = {
                 `)
             }
         });
+    },
+
+    // 승인코드 보내기 
+    doAuthMail: function (req, res) {
+        const { receiverEmail } = req.body;
+        let randCode = "";
+
+        for (let i = 0; i < 6; i++) {
+            randCode += Math.floor(Math.random() * 10).toString() 
+        };
+
+        console.log(randCode);
+        let emailParam = {
+            toMail: receiverEmail,
+            subject: "전공책 싸게 사자 승인 코드 입니다.",
+            html: "<h4>" + randCode + " 승인코드입니다. </h4>",
+        };
+        mailer.sendMail(emailParam);
+        res.status(200).send('finsih')
     },
 }

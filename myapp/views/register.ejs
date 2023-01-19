@@ -7,7 +7,9 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/csses/register.css">
 </head>
 
@@ -29,11 +31,19 @@
 
             <label for="Email"><b>이메일</b></label>
             <input type="email" placeholder="이메일을 입력하세요" name="user_email" id="email" required>
-            
-            <button type="button" id="checkEmailBtn"  onclick="emailCheck();">이메일 인증</button>
-            <button type="button" id="checkCodeBtn"  onclick="emailCheck();">승인코드 인증</button>
 
-            <input type="text" placeholder="승인코드를 입력하세요" name="emailCheck" id="emailCheck" required>
+            <button type="button" id="checkEmailBtn" onclick="btnCheckEmail();"
+                style="display: block; width: fit-content;">이메일
+                확인받기</button>
+            <button type="button" id="checkCodeBtn" onclick="btnCheckCode();"
+                style="display: none; width: fit-content;">승인코드 입력 완료</button>
+
+            <button type="button" id="resendCode" onclick="resendBtn();"
+                style="display: none; width: fit-content;">승인코드 다시 받기</button>
+
+            <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p>
+
+            <input type="text" placeholder="승인코드를 입력하세요" name="emailCheck" id="codeBox" style="display: none;" required>
 
             <hr>
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
@@ -46,8 +56,58 @@
         </div>
     </form>
     <script>
-        function emailCheck(){
-            alert('email check');
+        let checkEmailBtn = document.getElementById('checkEmailBtn'); // 이메일 확인 버튼
+        let checkCodeBtn = document.getElementById('checkCodeBtn'); // 승인코드 확인 버튼
+        let codeTimer = document.getElementById('codeTimer');       // 유효코드 타이머 
+        let resendcodeBtn = document.getElementById('resendCode');  // 다시 승인코드 보내는 버튼
+
+        let auth_code = false;
+
+        function btnCheckEmail() {
+            let codeTimeCheck = false; // 승인코드 입력 제시간 여부 (true 일때만 승인코드가 정상적으로 인증할 수 있음)
+
+            if (checkEmailBtn.style.display == 'block') {   // 이메일 체크버튼을 눌렀을때 이메일 체크 버튼이 있다면 
+                checkEmailBtn.style.display = 'none';       //  이메일 버튼 -> 숨기기 && 승인코드 버튼 -> 생성 && 타이머 -> 생성
+                checkCodeBtn.style.display = 'block'
+                codeBox.style.display = 'block'
+
+                codeTimer.style.display = 'block'
+                authTimer(); // 승인 코드 타이머
+            }
+
+        }
+        // 승인코드 타이머
+        function authTimer() {
+            let time = 10;
+            let min = 0;
+            let sec = 0;
+
+            console.log(codeTimer);
+            let timer = setInterval(() => {
+
+                auth_code = true;
+
+                min = parseInt(time / 60);
+                sec = time % 60;
+                time -= 1;
+
+                codeTimer.innerText = min + "분" + sec + "초";
+
+                if (time <= 0) {
+                    clearInterval(timer) // setInterval() exit
+                    codeTimer.innerText = "승인코드를 다시 받으세요."
+                    auth_code = false;
+
+                    checkCodeBtn.style.display = 'none'
+                    resendcodeBtn.style.display = 'block'
+                }
+            }, 1000);
+        }
+
+        function resendBtn() { // 승인코드 다시 보내주기 버튼을 누른다면
+            checkCodeBtn.style.display = 'block'; 
+            resendcodeBtn.style.display = 'none';
+            authTimer();
         }
     </script>
 </body>

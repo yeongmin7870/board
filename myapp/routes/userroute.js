@@ -11,5 +11,7 @@ router.get('/users', UserController.doGetUser);
 router.post('/user/sign-in', UserController.doSignIn)
 // 회원가입
 router.post('/user/sign-up',UserController.doSignUp)
+// 이메일 인증
+router.get('/mail', UserController.doAuthMail)
 
 module.exports = router;
