@@ -19,38 +19,64 @@
             <h1>회원가입</h1>
             <p>빈칸을 채워주세요</p>
             <hr>
+            <div>
+                <label for="id"><b>아이디</b></label>
+                <input type="text" placeholder="아이디를 입력하세요" name="user_id" id="id" required>
+            </div>
+            <div>
+                <label for="psw"><b>비밀번호</b></label>
+                <input type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
+            </div>
+            <div>
+                <label for="address"><b>주소</b></label>
+                <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" required>
+            </div>
+            <div>
+                <label for="Email"><b>이메일</b></label>
+                <input type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
+                @
+                <select id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
+                    <option selected>이메일 선택</option>
+                    <option value="@naver.com">naver</option>
+                    <option value="@gmail.com">gmail</option>
+                    <option value="@daum.com">daum</option>
+                    <option value="@kakao.com.com">kakao</option>
+                    <option value="@cyworld.com">cyworld</option>
+                    <option value="@hanmail.com">hanmail</option>
+                    <option value="@outlook.com">outlook</option>
+                    <option value="@tistory.com">tistory</option>
+                    <option value="@yahoo.com">yahoo</option>
+                    <option value="null">직접입력</option>
+                </select>
+                <input type="text" value="" id="directEmail" name="directEmail" onkeyup="directEmailOption()"
+                    style="display: none;" placeholder="example.com" required disabled> <!-- 직접입력 칸 -->
 
-            <label for="id"><b>아이디</b></label>
-            <input type="text" placeholder="아이디를 입력하세요" name="user_id" id="id" required>
-
-            <label for="psw"><b>비밀번호</b></label>
-            <input type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
-
-            <label for="address"><b>주소</b></label>
-            <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" required>
-
-            <label for="Email"><b>이메일</b></label>
-            <input type="email" placeholder="이메일을 입력하세요" name="user_email" id="email" required>
+                <input type="text" id="user_email" value="" name="user_email" style="display: none;" required>
+                <!-- 서버로 보내줄 이메일 조합 칸 -->
+                <br>
+            </div>
 
             <button type="button" id="checkEmailBtn" onclick="btnCheckEmail();"
                 style="display: block; width: fit-content;">이메일
                 확인받기</button>
+
             <button type="button" id="checkCodeBtn" onclick="btnCheckCode();"
                 style="display: none; width: fit-content;">승인코드 입력 완료</button>
 
-            <button type="button" id="resendCode" onclick="resendBtn();"
-                style="display: none; width: fit-content;">승인코드 다시 받기</button>
+            <button type="button" id="resendCode" onclick="resendBtn();" style="display: none; width: fit-content;">승인코드
+                다시 받기</button>
 
-            <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p>
+            <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p> <!-- 승인 타이머 -->
 
-            <input type="text" placeholder="승인코드를 입력하세요" name="emailCheck" id="codeBox" style="display: none;" required>
-
+            <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
+            <!-- 승인 코드 입력 칸  -->
             <hr>
+
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
-            <button type="submit" class="registerbtn">Register</button>
+            <button type="submit" class="registerbtn" onclick="codeBoxSomething()">회원가입</button>
 
             <div class="container signin">
-                <p>이미 계정이 있으신가요? <a href="/v2/login">Sign in</a>.</p>
+                <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
             </div>
 
         </div>
@@ -61,28 +87,39 @@
         let codeTimer = document.getElementById('codeTimer');       // 유효코드 타이머 
         let resendcodeBtn = document.getElementById('resendCode');  // 다시 승인코드 보내는 버튼
 
+        let emailFront = document.getElementById('emailFront'); // email @ 앞자리
+        let selectEmail = document.getElementById('selectEmail'); // email 뒷자리 option 선택
+        let user_email = document.getElementById('user_email'); // 서버로 보내줄 user_email 칸
+        let directEmail = document.getElementById('directEmail'); // 직접입력
+        let codeBox = document.getElementById('codeBox'); // 승인 코드 입력 칸
+
         let auth_code = false;
+
+        let directEmail_controlClick = false; // 직접 입력 옵션 클릭 여부
 
         function btnCheckEmail() {
             let codeTimeCheck = false; // 승인코드 입력 제시간 여부 (true 일때만 승인코드가 정상적으로 인증할 수 있음)
 
-            if (checkEmailBtn.style.display == 'block') {   // 이메일 체크버튼을 눌렀을때 이메일 체크 버튼이 있다면 
+            if (checkEmailBtn.style.display == 'block' && user_email.value.search(/@/) != -1) {   // 이메일 확인 버튼이 있고 @을 포함해서 뒷자리까지 입력했다면
                 checkEmailBtn.style.display = 'none';       //  이메일 버튼 -> 숨기기 && 승인코드 버튼 -> 생성 && 타이머 -> 생성
                 checkCodeBtn.style.display = 'block'
-                codeBox.style.display = 'block'
 
+                codeBox.style.display = 'block'
                 codeTimer.style.display = 'block'
                 authTimer(); // 승인 코드 타이머
+                sendCode(); // 승인코드 보내기
+
+            } else {
+                alert("이메일을 입력해주세요!");
             }
 
         }
         // 승인코드 타이머
         function authTimer() {
-            let time = 10;
+            let time = 300;
             let min = 0;
             let sec = 0;
 
-            console.log(codeTimer);
             let timer = setInterval(() => {
 
                 auth_code = true;
@@ -94,8 +131,8 @@
                 codeTimer.innerText = min + "분" + sec + "초";
 
                 if (time <= 0) {
-                    clearInterval(timer) // setInterval() exit
-                    codeTimer.innerText = "승인코드를 다시 받으세요."
+                    clearInterval(timer); // setInterval() exit
+                    codeTimer.innerText = "승인코드를 다시 받으세요.";
                     auth_code = false;
 
                     checkCodeBtn.style.display = 'none'
@@ -105,9 +142,55 @@
         }
 
         function resendBtn() { // 승인코드 다시 보내주기 버튼을 누른다면
-            checkCodeBtn.style.display = 'block'; 
+            checkCodeBtn.style.display = 'block';
             resendcodeBtn.style.display = 'none';
             authTimer();
+        }
+
+        function autoEmail() { // 유저가 이메일 선택한거 정리
+            user_email.value = emailFront.value + selectEmail.value;
+            directEmailBtn(); // 직접 입력 선택 여부
+        }
+
+
+        function directEmailOption() {  // 직접 입력 칸 입력시 서버보내줄 칸으로 값들어가기
+            user_email.value = emailFront.value + "@" + directEmail.value;
+        }
+
+        function directEmailBtn() { // 직접 입력 선택 여부
+            if (selectEmail.value == "null") { // 직접 입력선택을 눌렀다면
+                directEmail.style.display = "block";
+                directEmail.disabled = false;
+            } else {
+                directEmail.style.display = "none";
+                directEmail.disabled = true;
+            }
+        }
+
+        function codeBoxSomething() { // 승인코드 입력 칸 입력했는지 안했는지
+            if (codeBox.value == "") {
+                alert("이메일 인증해주세요.");
+            }
+        }
+
+        function btnCheckCode() { // 승인완료 코드 
+            console.log("승인완료");
+        }
+
+        function sendCode() { //승인코드 보내기
+            console.log("승인코드를 보냈습니다.");
+
+            const data = { receiverEmail: user_email.value };
+
+            fetch('http://localhost:3000/v1/mail', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then((data) => console.log(data))
+                .catch((err) => console.log(err));
         }
     </script>
 </body>

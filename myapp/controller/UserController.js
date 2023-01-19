@@ -61,19 +61,22 @@ module.exports = {
     // 승인코드 보내기 
     doAuthMail: function (req, res) {
         const { receiverEmail } = req.body;
+        let today = new Date();
+        let key_randCode = [];
         let randCode = "";
 
         for (let i = 0; i < 6; i++) {
-            randCode += Math.floor(Math.random() * 10).toString() 
+            randCode += Math.floor(Math.random() * 10).toString()
         };
+        
+        req.session.key_randCode[i] = randCode; //세션 저장
 
-        console.log(randCode);
         let emailParam = {
             toMail: receiverEmail,
             subject: "전공책 싸게 사자 승인 코드 입니다.",
             html: "<h4>" + randCode + " 승인코드입니다. </h4>",
         };
-        mailer.sendMail(emailParam);
-        res.status(200).send('finsih')
+        // let response = mailer.sendMail(emailParam);
+        res.status(200).send(response);
     },
 }
