@@ -71,13 +71,13 @@
             <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
             <!-- 승인 코드 입력 칸  -->
 
-            <input type="text" placeholder="" name="codeInfo" id="codeInfo" style="display: block;"  readonly>
+            <input type="text" placeholder="" name="codeInfo" id="codeInfo" style="display: block;" readonly>
             <!-- 승인 여부 확인 박스 -->
             <hr>
 
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
             <button type="submit" class="registerbtn" onclick="codeBoxSomething()">회원가입</button>
-
+            <input type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
             <div class="container signin">
                 <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
             </div>
@@ -96,9 +96,9 @@
         let directEmail = document.getElementById('directEmail'); // 직접입력
         let codeBox = document.getElementById('codeBox'); // 승인 코드 입력 칸
 
-        let auth_code = false; //승인코드 보내는 여부
-
+        let auth_code = false; // 승인코드 완료 여부
         let directEmail_controlClick = false; // 직접 입력 옵션 클릭 여부
+        let timer = "" //승인코드 타이머
 
         function btnCheckEmail() {
 
@@ -122,7 +122,7 @@
             let min = 0;
             let sec = 0;
 
-            let timer = setInterval(() => {
+            timer = setInterval(() => {
 
                 min = parseInt(time / 60);
                 sec = time % 60;
@@ -168,8 +168,10 @@
         }
 
         function codeBoxSomething() { // 승인코드 입력 칸 입력했는지 안했는지
-            if (codeBox.value == "") {
+            if (codeBox.value == "" || auth_code == false) { // 승인코드가 빈칸이거나 이메일 인증 미완료 
                 alert("이메일 인증해주세요.");
+            } else {
+
             }
         }
 
@@ -185,6 +187,9 @@
                         codeBox.style.display = "none"; // 코드 입력칸 숨기기
                         checkCodeBtn.style.display = "none"; // 입력완료버튼 숨기기
                         codeTimer.style.display = "none";  // 시간타이머 숨기기
+                        clearInterval(timer); //타이머 끄기
+                        auth_code = true; // 승인코드 완료 여부
+                        checkEmailReg.value = "checked";
                     } else {
                         codeInfo.value = "인증실패했습니다.";
                         codeInfo.style.color = "blue";

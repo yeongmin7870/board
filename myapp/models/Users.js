@@ -4,7 +4,7 @@ const con = require('../config/mysqlconn.js');
 module.exports = {
     getUsers: function () {
         return new Promise((resolve, reject) => {
-            con.getConnection((err,con) => {
+            con.getConnection((err, con) => {
                 con.query(
                     'SELECT * FROM user', (err, result) => {
                         if (err) {
@@ -26,7 +26,7 @@ module.exports = {
         let sql = "SELECT * FROM user WHERE user_id = ?";
 
         return new Promise((resolve, reject) => {
-            con.getConnection((err,con) => {
+            con.getConnection((err, con) => {
                 con.query(
                     sql, values, function (err, result, fields) {
                         if (result.length == 0) {
@@ -51,7 +51,7 @@ module.exports = {
             "SELECT ? FROM DUAL WHERE " +
             "NOT EXISTS (SELECT user_id FROM user WHERE user_id= ?)";
         let values = [
-            [user['user_id'], user['user_passwd']],
+            [user['user_id'], user['user_passwd'], user['user_email'], user['user_profile'], user['user_address']],
             [user['user_id']]
         ];
 

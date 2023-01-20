@@ -28,7 +28,7 @@ module.exports = {
                 res.send(`
                     <script>
                         alert('아이디 또는 비밀번호가 틀렸습니다.');
-                        location.href='/v2/'
+                        location.href='/v2/0'
                     </script>
                 `);
             }
@@ -38,7 +38,9 @@ module.exports = {
     doSignUp: function (req, res) {
         let user = {
             user_id: req.body.user_id,
-            user_passwd: req.body.user_passwd
+            user_passwd: req.body.user_passwd,
+            user_address: req.body.user_address,
+            user_email: req.body.user_email
         };
         Users.doSignUp(user).then((result) => {
             if (result == -1) {
@@ -52,7 +54,7 @@ module.exports = {
                 res.send(`
                     <script>
                         alert('회원가입 되었습니다.');
-                        location.href='/v2/'
+                        location.href='/v2/home/0'
                     </script>
                 `)
             }
