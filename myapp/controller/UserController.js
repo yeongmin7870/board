@@ -3,6 +3,7 @@ const Users = require('../models/Users');
 const jwt = require('../modules/jwt');
 const util = require('util');
 const mailer = require('../modules/mail');
+const { promise } = require('../config/mysqlconn');
 
 module.exports = {
     doGetUser: function (req, res, next) {
@@ -62,21 +63,33 @@ module.exports = {
     doAuthMail: function (req, res) {
         const { receiverEmail } = req.body;
         let today = new Date();
-        let key_randCode = [];
         let randCode = "";
-
+        let randCodeInfo = ""; //디비 세션에 저장해 둘 정보
         for (let i = 0; i < 6; i++) {
             randCode += Math.floor(Math.random() * 10).toString()
         };
-        
-        req.session.key_randCode[i] = randCode; //세션 저장
 
         let emailParam = {
             toMail: receiverEmail,
             subject: "전공책 싸게 사자 승인 코드 입니다.",
             html: "<h4>" + randCode + " 승인코드입니다. </h4>",
         };
-        // let response = mailer.sendMail(emailParam);
-        res.status(200).send(response);
+        mailer.sendMail(emailParam);
+        req.session.code = randCode;
+        console.log(today + " " + receiverEmail + " 님의 승인코드는 " + randCode);
+        res.status(200).send(randCode);
+    },
+
+    findCode: function (req, res) {
+        if (req.params.data == req.session.code) {
+            return res.json({
+                msg: "Good"
+            })
+        } else {
+            return res.json({
+                msg: "Bad"
+            })
+        }
+
     },
 }

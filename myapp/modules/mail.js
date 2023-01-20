@@ -20,8 +20,6 @@ const mailSender = {
             text: param.text,
             html: param.html
         };
-        console.log(mailOptions);
-
         transporter.sendMail(mailOptions, function(err, info){
             if(err) {
                 console.log(err);

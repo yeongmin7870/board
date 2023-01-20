@@ -70,6 +70,9 @@
 
             <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
             <!-- 승인 코드 입력 칸  -->
+
+            <input type="text" placeholder="" name="codeInfo" id="codeInfo" style="display: block;"  readonly>
+            <!-- 승인 여부 확인 박스 -->
             <hr>
 
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
@@ -93,12 +96,11 @@
         let directEmail = document.getElementById('directEmail'); // 직접입력
         let codeBox = document.getElementById('codeBox'); // 승인 코드 입력 칸
 
-        let auth_code = false;
+        let auth_code = false; //승인코드 보내는 여부
 
         let directEmail_controlClick = false; // 직접 입력 옵션 클릭 여부
 
         function btnCheckEmail() {
-            let codeTimeCheck = false; // 승인코드 입력 제시간 여부 (true 일때만 승인코드가 정상적으로 인증할 수 있음)
 
             if (checkEmailBtn.style.display == 'block' && user_email.value.search(/@/) != -1) {   // 이메일 확인 버튼이 있고 @을 포함해서 뒷자리까지 입력했다면
                 checkEmailBtn.style.display = 'none';       //  이메일 버튼 -> 숨기기 && 승인코드 버튼 -> 생성 && 타이머 -> 생성
@@ -122,8 +124,6 @@
 
             let timer = setInterval(() => {
 
-                auth_code = true;
-
                 min = parseInt(time / 60);
                 sec = time % 60;
                 time -= 1;
@@ -133,7 +133,6 @@
                 if (time <= 0) {
                     clearInterval(timer); // setInterval() exit
                     codeTimer.innerText = "승인코드를 다시 받으세요.";
-                    auth_code = false;
 
                     checkCodeBtn.style.display = 'none'
                     resendcodeBtn.style.display = 'block'
@@ -145,6 +144,7 @@
             checkCodeBtn.style.display = 'block';
             resendcodeBtn.style.display = 'none';
             authTimer();
+            sendCode(); // 승인코드 보내기
         }
 
         function autoEmail() { // 유저가 이메일 선택한거 정리
@@ -173,15 +173,27 @@
             }
         }
 
-        function btnCheckCode() { // 승인완료 코드 
-            console.log("승인완료");
+        function btnCheckCode() { // 승인완료 코드
+            let data = codeBox.value;
+            fetch(`http://localhost:3000/v1/checkemail/${data}`)
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.msg == "Good") { // 승인완료된다면
+                        codeInfo.value = "인증완료되었습니다.";
+                        codeInfo.style.color = "red";
+
+                        codeBox.style.display = "none"; // 코드 입력칸 숨기기
+                        checkCodeBtn.style.display = "none"; // 입력완료버튼 숨기기
+                        codeTimer.style.display = "none";  // 시간타이머 숨기기
+                    } else {
+                        codeInfo.value = "인증실패했습니다.";
+                        codeInfo.style.color = "blue";
+                    }
+                });
         }
 
-        function sendCode() { //승인코드 보내기
-            console.log("승인코드를 보냈습니다.");
-
+        function sendCode() { //승인코드 고객께 보내기
             const data = { receiverEmail: user_email.value };
-
             fetch('http://localhost:3000/v1/mail', {
                 method: 'post',
                 headers: {
@@ -189,7 +201,7 @@
                 },
                 body: JSON.stringify(data),
             })
-                .then((data) => console.log(data))
+                .then((result) => console.log(result))
                 .catch((err) => console.log(err));
         }
     </script>

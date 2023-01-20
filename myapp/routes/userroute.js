@@ -13,5 +13,7 @@ router.post('/user/sign-in', UserController.doSignIn)
 router.post('/user/sign-up',UserController.doSignUp)
 // 이메일 인증
 router.post('/mail', UserController.doAuthMail)
+// 이메일 승인코드 확인
+router.get('/checkemail/:data', UserController.findCode)
 
 module.exports = router;
