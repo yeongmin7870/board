@@ -72,7 +72,9 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'SELECT * FROM board w  ORDER BY board_id DESC LIMIT ? OFFSET ?',[columnSize,startColumn],(err, result) => {
+                    'SELECT * FROM board b, user u, book_classification bc' +
+                    ' WHERE b.user_id = u.user_id AND b.book_classification_id = bc.book_classification_id' +
+                    ' ORDER BY board_id DESC LIMIT ?  OFFSET ?;', [columnSize, startColumn], (err, result) => {
                         if (err)
                             reject(err);
                         else
@@ -110,8 +112,9 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'select * from board b,book_classification bc '
-                    + 'where b.board_id = ? and b.book_classification_id = bc.book_classification_id', [board_id], (err, result, fields) => {
+                    'SELECT * FROM board b, book_classification bc' +
+                    ' WHERE b.board_id =? AND b.book_classification_id = bc.book_classification_id'
+                    , [board_id], (err, result, fields) => {
                         if (err)
                             reject(err);
                         else

@@ -40,7 +40,8 @@ module.exports = {
             user_id: req.body.user_id,
             user_passwd: req.body.user_passwd,
             user_address: req.body.user_address,
-            user_email: req.body.user_email
+            user_email: req.body.user_email,
+            nickname: req.body.nickname
         };
         Users.doSignUp(user).then((result) => {
             if (result == -1) {
@@ -93,5 +94,14 @@ module.exports = {
             })
         }
 
+    },
+    findEmail: async function (req, res) {
+        try {
+            let msg = await Users.findEmail(req.params.data);
+            res.send(msg);
+        }
+        catch (err) {
+            res.send(err);
+        }
     },
 }

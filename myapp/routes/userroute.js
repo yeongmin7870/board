@@ -15,5 +15,6 @@ router.post('/user/sign-up',UserController.doSignUp)
 router.post('/mail', UserController.doAuthMail)
 // 이메일 승인코드 확인
 router.get('/checkemail/:data', UserController.findCode)
-
+// 닉네임 체크
+router.get('/checknickname/:data',UserController.findEmail)
 module.exports = router;

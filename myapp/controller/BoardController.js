@@ -15,7 +15,7 @@ module.exports = {
             req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
             Book.setBoard(req.body).then((result) => {
                 console.log('글 작성됨');
-                res.status(200).redirect('/v2/home/1');
+                res.status(200).redirect('/v2/home/0');
             });
         } catch (e) {
             res.status(404).send(`<script>
@@ -54,7 +54,6 @@ module.exports = {
             nexPage = false;
             end_page = total_page;
         }
-
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
     },
     // 해당 아이디 게시글 찾기
@@ -99,7 +98,7 @@ module.exports = {
         });
         // 디비 게시글 데이터 삭제 
         Book.doRmByBoard(req.params.board_id).then((result) => {
-            res.status(201).redirect('/v2/home/1');
+            res.status(201).redirect('/v2/home/0');
         });
     },
     // 댓글 작성
@@ -117,9 +116,9 @@ module.exports = {
     getByboardComment: async (req, res) => {
         try {
             let result = await Comment.getByboardComment(req.params.board_id);
-            res.send(result);
+            res.send({msg:result});
         } catch (err) {
-            res.send(err);
+            res.send({msg:err});
         }
     },
     // 해당 게시물 댓글 삭제

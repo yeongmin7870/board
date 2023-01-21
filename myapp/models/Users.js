@@ -51,7 +51,7 @@ module.exports = {
             "SELECT ? FROM DUAL WHERE " +
             "NOT EXISTS (SELECT user_id FROM user WHERE user_id= ?)";
         let values = [
-            [user['user_id'], user['user_passwd'], user['user_email'], user['user_profile'], user['user_address']],
+            [user['user_id'], user['user_passwd'], user['user_email'], user['user_profile'], user['user_address'], user['nickname']],
             [user['user_id']]
         ];
 
@@ -74,6 +74,26 @@ module.exports = {
                 con.release();
             });
         });
-    }
+    },
+    findEmail: function (nickname) {
+
+        let sql = "SELECT * FROM user WHERE nickname = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                con.query(
+                    sql, [nickname], function (err, result) {
+                        if (err) new Error(err);
+                        if (result.length == 0) {
+                            resolve({ msg: "ok" })  // 해당 닉네임이 없음
+                        } else {
+                            reject({ msg: "no" })
+                        }
+                    }
+                )
+                con.release();
+            });
+        });
+    },
 
 };

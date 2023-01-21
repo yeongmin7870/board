@@ -103,38 +103,91 @@
         <div class="container marketing">
             <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
-            <div class="col-md-5">
+            <div style="float: left; width: 50%;">
                 <img src="/images/board/<%=myboard.result[0].board_image%>" width="500" height="500" />
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
+                        <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
                         <%=myboard.result[0].board_title%>
                     </h2>
-                    <span class="text-muted">
+                    <p class="text-muted" style="font-size: 25px;">
                         <%=myboard.result[0].book_classification_name%>
-                    </span>
+                    </p>
+                    <p class="text-muted" style="font-size: 20px;">
+                        <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
+                            <%=price+' 원'%>
+                    </p>
                     <p class="lead">
-                        <% let price=myboard.result[0].price;
-                         price=Number(price).toLocaleString(); %>
-                        <%=price+' 원'%>
+                        <%=myboard.result[0].board_contents%>
                     </p>
                 </div>
-                <p class="lead">
-                    <%=myboard.result[0].board_contents%>
-                </p>
+
                 <form action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
                     <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
-                    <button type="submit">삭제</button>
+                    <button class="btn btn-danger" type="submit">삭제</button>
+                </form>
+                <hr class="featurette-divider">
+            </div>
+
+            <div style="float: left; width: 50%;">
+                <h4>Comment</h4>
+                <form action="#" method="get">
+                    <div>
+                        <input type="text" placeholder="댓글을 작성해주세요"
+                            style="height:100px; width: 600px; text-align: center;" maxlength="50" required><br>
+                        <button type="submit">댓글작성완료</button>
+                    </div>
+                    <div>
+                        <div id="comment_user_id"></div>
+                        <div id="comment_content"></div>
+                        <div id="comment_time"></div>
+                        <hr>
+                    </div>
                 </form>
             </div>
-            <hr class="featurette-divider">
-            <!-- /END THE FEATURETTES -->
+
         </div><!-- /.container -->
-        <!-- FOOTER -->
-        <footer class="container">
-            <p class="float-end"><a href="#">Back to top</a></p>
-            <p>&copy; 2017–2022 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-        </footer>
+
     </main>
+    <script>
+        let url = window.location.pathname;
+        url = url.split('/');
+        let board_id = url[4];  // 게시판 아이디 가져오기
+
+        /** 댓글 가져오기 **/
+        async function getComment() {
+            let response = await fetch(`http://localhost:3000/v3/board/comment/${board_id}`)
+            let comment = await response.json();
+            for (let i = 0; i < comment.msg.length; i++) {
+                let time = comment.msg[i].comment_time;
+                time = new Date(time);
+
+                let user_id ="<hr>"
+                    + "<h5> 아이디: " + comment.msg[i].user_id + "</h5>"
+                    + "<h2>" + comment.msg[i].comment_content + "</h2>"
+                    + "<p>" + time.toLocaleString() + "</p>";
+
+                document.querySelector("#comment_user_id").insertAdjacentHTML("beforeend", user_id);
+                // document.querySelector("#comment_content").insertAdjacentHTML("beforeend", content);
+                // document.querySelector("#comment_time").insertAdjacentHTML("beforeend", comment_time);
+
+            }
+        };
+
+        function setComment() {
+            fetch(`http://localhost:3000/v3/board/comment/${board_id}`,
+                {
+                    method: post,
+                    headers,
+                })
+                .then((res) => res.json())
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+        }
+
+        getComment();
+
+    </script>
     <script src="/javascripts/home/bootstrap.bundle.min.js"></script>
 </body>
 
