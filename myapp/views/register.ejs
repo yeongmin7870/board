@@ -266,8 +266,11 @@
                     info = "불가능"
                     checkedNickname.value = "";
                 }
-                nicknameInfo.value = info;
+            } else { // 빈칸이면 닉네임 중복여부 알림이도 빈칸
+                info = "";
+                checkedNickname.value = "";
             }
+            nicknameInfo.value = info;
         }
     </script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>>
