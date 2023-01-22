@@ -14,8 +14,7 @@ let methodOverride = require('method-override');
 /*session을 사용하기 위한 mysql2*/
 let mysql2 = require('mysql2/promise');
 let options = require('./config/mysql2options.json')
-let connection = mysql2.createPool(options);
-let sessionStore = new MySQLStore({}, connection);
+
 
 const userRouter = require('./routes/userroute');
 const viewRouter = require('./routes/viewroute')
@@ -23,17 +22,6 @@ const cookieRouter = require('./routes/cookieroute');
 const boardRouter = require('./routes/boardroute');
 const chatfnc = require('./chat/chat');
 
-app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        maxAge: 10000 * 5, //5분동안 인증코드 유효
-    },
-}));
 
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: false }));

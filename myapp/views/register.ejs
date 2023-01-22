@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <form action="/v1/user/sign-up" method="post">
+    <form id="createUser" action="/v1/user/sign-up" method="post">
         <div class="container" style="margin-left: 30%;margin-right: 30%;">
             <h1>회원가입</h1>
             <p>빈칸을 채워주세요</p>
@@ -28,15 +28,19 @@
                 <input type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
             </div>
             <div>
-                <label for="nickname"><b>닉네임</b></label>
-                <input type="text" placeholder="최대6 글자 별명을 입력하세요" name="nickname" id="nickname" maxlength="6"
-                    onkeyup="checkNickname()" required>
-                <input style="background-color: white;" type="text" id="nicknameInfo" value="" readonly>
+                <div style="float: left; width: 50%;">
+                    <label for="nickname"><b>닉네임</b></label>
+                    <input type="text" placeholder="최대6 글자 별명을 입력하세요" name="nickname" id="nickname" maxlength="6"
+                        onkeyup="checkNickname()" required>
+                </div>
+                <div style="float: left; width: 50%">
+                    <input style="background-color: white;" type="text" id="nicknameInfo" value="" readonly>
+                </div>
                 <input value="" id="checkedNickname" type="text" style="display: none;" required>
             </div>
             <div>
                 <label for="address"><b>주소</b></label>
-                <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" required>
+                <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" readonly required>
             </div>
             <div>
                 <label for="Email"><b>이메일</b></label>
@@ -74,16 +78,15 @@
                 다시 받기</button>
 
             <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p> <!-- 승인 타이머 -->
-
             <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
             <!-- 승인 코드 입력 칸  -->
-
-            <input type="text" placeholder="" name="codeInfo" id="codeInfo" style="display: block;" readonly>
+            <input type="text" placeholder="" name="codeInfo" id="codeInfo"
+                style="display: block; background-color: white;" readonly>
             <!-- 승인 여부 확인 박스 -->
             <hr>
 
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
-            <button type="submit" class="registerbtn" onclick="codeBoxSomething()">회원가입</button>
+            <button type="button" class="registerbtn" id="btn_register" onclick="btn_register_event()">회원가입</button>
             <input type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
             <div class="container signin">
                 <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
@@ -103,11 +106,18 @@
         let directEmail = document.getElementById('directEmail'); // 직접입력
         let codeBox = document.getElementById('codeBox'); // 승인 코드 입력 칸
         let checkedNickname = document.getElementById('checkedNickname'); // 닉네임 중복이면 값이 없게 끔 만들어서 회원가입을 못하게 함
+        let address = document.getElementById("address"); // 주소입력칸
+        let nickname = document.getElementById("nickname"); // 닉네임 칸 
+        let nicknameInfo = document.getElementById("nicknameInfo"); // 닉네임 중복여부 알림 
+        let btn_register = document.getElementById("btn_register"); //회원가입 버튼
+        let createUser = document.getElementById("createUser"); //회원가입 form
 
         let auth_code = false; // 승인코드 완료 여부
         let directEmail_controlClick = false; // 직접 입력 옵션 클릭 여부
         let timer = ""; //승인코드 타이머
         let info = "";  // 회원 닉네임 여부  1. 없는 닉네임 입니다. 2. 이미 있는 닉네임 입니다. 
+        let emailcode = ""; // 서버로 부터 반환 받은 이메일 코드
+        let backForbiden = true; // 뒤로가기 후 회원가입 방지
 
         function btnCheckEmail() {
 
@@ -127,7 +137,7 @@
         }
         // 승인코드 타이머
         function authTimer() {
-            let time = 300;
+            let time = 60;
             let min = 0;
             let sec = 0;
 
@@ -145,6 +155,7 @@
 
                     checkCodeBtn.style.display = 'none'
                     resendcodeBtn.style.display = 'block'
+                    emailcode.value = ""; // 서버로부터 받은 승인코드 초기화
                 }
             }, 1000);
         }
@@ -176,35 +187,48 @@
             }
         }
 
-        function codeBoxSomething() { // 승인코드 입력 칸 입력했는지 안했는지
-            if(checkedNickname.value == ""){
-                alert("닉네임이 중복되었습니다.");
-            }
-            if (codeBox.value == "" || auth_code == false) { // 승인코드가 빈칸이거나 이메일 인증 미완료 
+        function btn_register_event() { // 회원가입 눌렀을때
+
+            // 승인코드 입력 칸 입력했는지 안했는지
+            if (checkedNickname.value == "") {
+                alert("다시 확인해주세요");
+                return;
+            } else if (codeBox.value == "" || auth_code == false) { // 승인코드가 빈칸이거나 이메일 인증 미완료 
                 alert("이메일 인증해주세요.");
+                return;
             }
+
+            btn_register.addEventListener("click", e => {
+                e.preventDefault();
+                if (auth_code == true) {
+                    auth_code = false; // 회원가입을 했으므로 다시 인증받게 이메일 인증 false (뒤로가기 악용 방지)
+                    createUser.submit();
+                }
+            })
+
+
         }
 
         function btnCheckCode() { // 승인완료 코드
             let data = codeBox.value;
-            fetch(`http://localhost:3000/v1/checkemail/${data}`)
-                .then((res) => res.json())
-                .then((res) => {
-                    if (res.msg == "Good") { // 승인완료된다면
-                        codeInfo.value = "인증완료되었습니다.";
-                        codeInfo.style.color = "red";
 
-                        codeBox.style.display = "none"; // 코드 입력칸 숨기기
-                        checkCodeBtn.style.display = "none"; // 입력완료버튼 숨기기
-                        codeTimer.style.display = "none";  // 시간타이머 숨기기
-                        clearInterval(timer); //타이머 끄기
-                        auth_code = true; // 승인코드 완료 여부
-                        checkEmailReg.value = "checked";
-                    } else {
-                        codeInfo.value = "인증실패했습니다.";
-                        codeInfo.style.color = "blue";
-                    }
-                });
+            if (emailcode == data) { // 승인완료된다면
+                codeInfo.value = "완료";
+                codeInfo.style.color = "red";
+
+                codeBox.style.display = "none"; // 코드 입력칸 숨기기
+                checkCodeBtn.style.display = "none"; // 입력완료버튼 숨기기
+                codeTimer.style.display = "none";  // 시간타이머 숨기기
+                clearInterval(timer); //타이머 끄기
+                auth_code = true; // 승인코드 완료 여부
+                checkEmailReg.value = "checked";
+
+                emailcode.value = ""; // 서버로 부터 받은 코드 초기화
+            } else {
+                codeInfo.value = "실패";
+                codeInfo.style.color = "blue";
+            }
+
         }
         function sendCode() { //승인코드 고객께 보내기
             const data = { receiverEmail: user_email.value };
@@ -215,36 +239,47 @@
                 },
                 body: JSON.stringify(data),
             })
-                .then((result) => console.log(result))
-                .catch((err) => console.log(err));
+                .then((result) => result.json())
+                .then((result) => {
+                    emailcode = result.randcode;
+                })
+                .catch((err) => alert('알맞지 않은 인증 메일입니다.'));
         }
         /** 닉네임 중복 실시간 체크 **/
         async function checkNickname() {
-            let nickname = document.getElementById("nickname");
-            let nicknameInfo = document.getElementById("nicknameInfo");
 
-            nickname = nickname.value
+            let nickname_v = nickname.value;
 
-            if (nickname != "") {
-                let check = await fetch(`http://localhost:3000/v1/checknickname/${nickname}`)
+            if (nickname_v != "") {
+                let check = await fetch(`http://localhost:3000/v1/checknickname/${nickname_v}`)
                 let checkNickname = await check.json();
                 let nicknameInfo = document.querySelector("#nicknameInfo");
 
 
                 if (checkNickname.msg == "ok") {
                     nicknameInfo.style.color = "blue"
-                    info = "없는 닉네임 입니다.";
+                    info = "가능";
                     checkedNickname.value = "Good";
                 }
                 else {
                     nicknameInfo.style.color = "red"
-                    info = "이미 있는 닉네임 입니다."
+                    info = "불가능"
                     checkedNickname.value = "";
                 }
                 nicknameInfo.value = info;
             }
         }
-
+    </script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>>
+    <script>
+        // 카카오 주소 검색 API
+        address.addEventListener("click", function () {
+            new daum.Postcode({
+                oncomplete: (data) => {
+                    address.value = data.address;
+                }
+            }).open();
+        });
     </script>
 </body>
 

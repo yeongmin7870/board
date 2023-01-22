@@ -4,7 +4,7 @@ const jwt = require('../modules/jwt');
 const util = require('util');
 const mailer = require('../modules/mail');
 const { promise } = require('../config/mysqlconn');
-
+const crypto = require('../modules/crypto');
 module.exports = {
     doGetUser: function (req, res, next) {
         Users.getUsers().then((result) => {
@@ -12,37 +12,58 @@ module.exports = {
         });
     },
 
-    doSignIn: function (req, res, next) {
-        Users.doSignIn(req.body.user_id, req.body.user_passwd).then(async (result) => {
-            if (result == 1) {
-                const user = {
+    doSignIn: async function (req, res, next) {
+        Users.doSignIn(req.body.user_id).then(async (result) => {
+
+            const user = { "password": req.body.user_passwd, "salt": result[0].user_salt };
+
+            const client_pass = await crypto.createHashedPassword(user); // 받은 비번을 솔트랑 같이 해시 함수 돌려보기 
+
+            if (result[0].user_passwd == client_pass.password) {
+
+                const user_token = {
                     'user_id': req.body.user_id,
                     'user_passwd': req.body.user_passwd
                 }
-                const jwtToken = await jwt.sign(user); //토큰 발급
+
+                const jwtToken = await jwt.sign(user_token); //토큰 발급
                 const userToken = { token: jwtToken.token }
                 res.cookie("x_auth", userToken, {
                     maxAge: 60 * 60 * 1000  // 1시간 유효 시간
                 }).status(201).redirect('/v2/home/0'); // 쿠키 넣어놓고 보냄
+
             } else {
                 res.send(`
-                    <script>
-                        alert('아이디 또는 비밀번호가 틀렸습니다.');
-                        location.href='/v2/0'
-                    </script>
-                `);
+                        <script>
+                            alert('비밀번호가 틀렸습니다.');
+                            location.href='/v2/login'
+                        </script>
+                    `);
             }
+        }).catch((err) => {
+            res.send(`
+            <script>
+                alert('없는 사용자 입니다.');
+                location.href='/v2/login'
+            </script>
+        `);
         });
     },
 
-    doSignUp: function (req, res) {
+    doSignUp: async function (req, res) {
+        let client = { "password": req.body.user_passwd }
+        
+        const { password, salt } = await crypto.createHashedPassword(client); // 비밀번호 해시값, 소금값
+
         let user = {
             user_id: req.body.user_id,
-            user_passwd: req.body.user_passwd,
+            user_passwd: password,
+            user_salt: salt,
             user_address: req.body.user_address,
             user_email: req.body.user_email,
             nickname: req.body.nickname
         };
+
         Users.doSignUp(user).then((result) => {
             if (result == -1) {
                 res.send(`
@@ -55,7 +76,7 @@ module.exports = {
                 res.send(`
                     <script>
                         alert('회원가입 되었습니다.');
-                        location.href='/v2/home/0'
+                        location.href='/v2/login'
                     </script>
                 `)
             }
@@ -67,7 +88,6 @@ module.exports = {
         const { receiverEmail } = req.body;
         let today = new Date();
         let randCode = "";
-        let randCodeInfo = ""; //디비 세션에 저장해 둘 정보
         for (let i = 0; i < 6; i++) {
             randCode += Math.floor(Math.random() * 10).toString()
         };
@@ -77,27 +97,15 @@ module.exports = {
             subject: "전공책 싸게 사자 승인 코드 입니다.",
             html: "<h4>" + randCode + " 승인코드입니다. </h4>",
         };
+
         mailer.sendMail(emailParam);
-        req.session.code = randCode;
         console.log(today + " " + receiverEmail + " 님의 승인코드는 " + randCode);
-        res.status(200).send(randCode);
+        res.status(200).send({ "randcode": randCode });
     },
 
-    findCode: function (req, res) {
-        if (req.params.data == req.session.code) {
-            return res.json({
-                msg: "Good"
-            })
-        } else {
-            return res.json({
-                msg: "Bad"
-            })
-        }
-
-    },
-    findEmail: async function (req, res) {
+    findNickname: async function (req, res) {
         try {
-            let msg = await Users.findEmail(req.params.data);
+            let msg = await Users.findNickname(req.params.data);
             res.send(msg);
         }
         catch (err) {
