@@ -24,7 +24,11 @@ module.exports = {
             </script>`);
         }
     },
-    //메인홈페이지 페이징 처리
+    /**
+     * 메인홈 게시판 목록 출력
+     * @param {*} page 현재 페이지 0부터 시작
+     *  
+     */
     getAllBoard: async function (req, res) {
         let current_page = req.params.page // 현재 페이지
 

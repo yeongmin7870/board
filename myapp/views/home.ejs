@@ -180,16 +180,19 @@
                     <div class="col-md-7">
                         <h3 class="featurette-heading fw-normal lh-1">
                             <span style="font-size: small;">조회수:<%=board.result[i].view_count%></span><br><br>
-                            <%=board.result[i].board_title%>
+                            <%=board.result[i].board_title%> <!-- 조회수 -->
                                 <span class="text-muted" style="font-size: 20px;">
-                                    <%=board.result[i].book_classification_name%>
+                                    <%=board.result[i].book_classification_name%>   <!-- 책종류 -->
                                 </span><br>
                                 <span class="text-muted" style="font-size: 25px;">
-                                    <%=board.result[i].user_address%>
+                                    <% let locals = board.result[i].user_address.split(' ');
+                                       locals = locals[0]+' '+locals[1];
+                                    %>   
+                                    <%=locals%> <!-- 주소 -->
                                 </span><br>
                                 <span class="lead" style="font-size: 20px;">
-                                    <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>
-                                    <%=price+' 원'%>
+                                    <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>    <!-- 가격 숫자로 변환(, 찍어줄려고 한 모양) -->
+                                        <%=price+' 원'%>    <!-- 가격 -->
                                 </span>
                         </h3>
                     </div>

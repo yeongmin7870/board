@@ -8,13 +8,7 @@ const port = process.env.PORT || 3000;
 let bodyparser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let session = require('express-session');
-let MySQLStore = require('express-mysql-session')(session);
 let methodOverride = require('method-override');
-
-/*session을 사용하기 위한 mysql2*/
-let mysql2 = require('mysql2/promise');
-let options = require('./config/mysql2options.json')
-
 
 const userRouter = require('./routes/userroute');
 const viewRouter = require('./routes/viewroute')
@@ -26,8 +20,8 @@ const chatfnc = require('./chat/chat');
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
-app.use(express.json()); 
-app.use(express.urlencoded( {extended : false } ));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
 

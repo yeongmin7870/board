@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const authUtil = require('../middlewares/auth').checkToken;
+/**게시판 Controller */
 const boardcontroller = require('../controller/BoardController');
+/**파일 업로드 하기 위한 Multer 라이브러리*/
 const { upload } = require('../middlewares/multer');
-/*
-    게시판 관련 uri
-*/
+
 // 게시판 작성하기
 router.post('/board', [authUtil, upload.single("board_image")], boardcontroller.doWriteBoard)
 // 게시판 삭제하기

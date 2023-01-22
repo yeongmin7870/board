@@ -18,7 +18,12 @@ module.exports = {
             });
         });
     },
-    // 로그인 
+    /**로그인
+     *  @param user_id 아이디
+     *  @return 
+     *   해당하는 아이디의 user테이블 정보\
+     *   전부 리턴
+     */
     doSignIn: function (user_id) {
         let values = [
             [user_id]
@@ -27,7 +32,7 @@ module.exports = {
 
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
-                if(err) new Error(err);
+                if (err) new Error(err);
                 con.query(
                     sql, values, function (err, result) {
                         if (err) reject(err);
@@ -38,7 +43,14 @@ module.exports = {
             });
         });
     },
-
+    /**
+     * 회원가입 디비
+     * @param {object} user 객체
+     * @returns 
+     *  result 
+     *      -1  존재하는 아이디
+     *      1   user 테이블 회원정보 삽입 완료
+     */
     doSignUp: function (user) {
         let sql = "INSERT INTO user " +
             "SELECT ? FROM DUAL WHERE " +
@@ -68,6 +80,14 @@ module.exports = {
             });
         });
     },
+    /** 닉네임 찾기
+     * 
+     * @params nickname 닉네임 객체
+     *  @returns 
+     *  msg:\
+     *      "ok"    해당하는 닉네임을 가진 회원정보 전부 조회 성공\
+     *      "no"    해당하는 닉네임을 가진 회원정보 전부 조회 실패
+     */
     findNickname: function (nickname) {
 
         let sql = "SELECT * FROM user WHERE nickname = ?";
