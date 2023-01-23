@@ -5,5 +5,8 @@ myapp/node_modules/
 myapp/config/
 
 myapp/._config
-
+// 서버 이미지 폴더
 myapp/public/images/
+
+// 로그폴더
+myapp/logs/
