@@ -4,6 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const cors = require('cors'); // cors - 클라이언트에서 ajax로 요청 시 CORS(다중 서버 접속) 지원
 const port = process.env.PORT || 3000;
+const { logger } = require('./modules/logger');
 
 let bodyparser = require('body-parser');
 let cookieParser = require('cookie-parser');
@@ -44,5 +45,5 @@ app.get('/chat', (req, res) => {
 chatfnc(app); // 채팅 함수 호출
 
 http.listen(port, () => {
-    console.log(`http://localhost:${port}/v2/home/0`);
+    logger.info(`http://localhost:${port}/v2/home/0 주소로 서버가 시작되었습니다.`);
 });

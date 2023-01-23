@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "/Volumes/PARK/ReadyOffice/board/myapp/logs/.f60a693dbed0d1ca2b4172f1c6c5549d23013695-audit.json",
+    "files": [
+        {
+            "date": 1674448806303,
+            "name": "/Volumes/PARK/ReadyOffice/board/myapp/logs/2023-01-23.log",
+            "hash": "4711990535dec95b28d9caa49de64840c598058dc7cb03452613a35662ccab8d"
+        }
+    ],
+    "hashType": "sha256"
+}

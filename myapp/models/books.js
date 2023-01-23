@@ -109,7 +109,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
-                    console.log(err);
+                    new Error(err);
+                    return;
                 }
                 con.query(
                     'SELECT * FROM board b, book_classification bc' +
@@ -128,7 +129,10 @@ module.exports = {
     view_count: (board_id) => {
         return new Promise((resovle, reject) => {
             con.getConnection((err, con) => {
-                if (err) throw err;
+                if (err) {
+                    new Error(err);
+                    return;
+                }
                 else {
                     con.query(
                         "UPDATE board a, (SELECT view_count+1 as 'view_count' FROM board WHERE board_id=?) b SET " +
