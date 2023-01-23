@@ -103,6 +103,10 @@
         <div class="container marketing">
             <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
+            <form action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
+                <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
+                <button class="btn btn-danger" type="submit">게시물 지우기</button>
+            </form>
             <div style="float: left; width: 50%;">
                 <img src="/images/board/<%=myboard.result[0].board_image%>" width="500" height="500" />
                 <div class="col-md-7">
@@ -117,15 +121,21 @@
                         <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
                             <%=price+' 원'%>
                     </p>
+                    <hr>
+                    <p class="text-muted" style="font-size: 17px;">
+                        닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
+                    </p>
+                    <p class="text-muted" style="font-size: 25px;">
+                        <% let locals=myboard.result[0].user_address.split(' ');
+                        locals = locals[0]+' '+locals[1];
+                     %>   
+                     <%=locals%> <!-- 주소 -->
+                    </p>                      
+                    <hr>
                     <p class="lead">
                         <%=myboard.result[0].board_contents%>
                     </p>
                 </div>
-
-                <form action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
-                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
-                    <button class="btn btn-danger" type="submit">삭제</button>
-                </form>
                 <hr class="featurette-divider">
             </div>
 
@@ -162,7 +172,7 @@
                 let time = comment.msg[i].comment_time;
                 time = new Date(time);
 
-                let user_id ="<hr>"
+                let user_id = "<hr>"
                     + "<h5> 아이디: " + comment.msg[i].user_id + "</h5>"
                     + "<h2>" + comment.msg[i].comment_content + "</h2>"
                     + "<p>" + time.toLocaleString() + "</p>";

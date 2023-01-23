@@ -182,17 +182,22 @@
                             <span style="font-size: small;">조회수:<%=board.result[i].view_count%></span><br><br>
                             <%=board.result[i].board_title%> <!-- 조회수 -->
                                 <span class="text-muted" style="font-size: 20px;">
-                                    <%=board.result[i].book_classification_name%>   <!-- 책종류 -->
+                                    <%=board.result[i].book_classification_name%> <!-- 책종류 -->
                                 </span><br>
-                                <span class="text-muted" style="font-size: 25px;">
-                                    <% let locals = board.result[i].user_address.split(' ');
+                                <span class="lead" style="font-size: 20px;">
+                                    <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>
+                                        <!-- 가격 숫자로 변환(, 찍어줄려고 한 모양) -->
+                                        <%=price+' 원'%> <!-- 가격 -->
+                                </span>
+                                <hr>
+                                <span class="lead" style="font-size: 18px;">
+                                    닉네임 : <%=board.result[i].nickname%><!-- 닉네임 -->
+                                </span><br>
+                                <span class="text-muted" style="font-size: 20px;">
+                                    <% let locals=board.result[i].user_address.split(' ');
                                        locals = locals[0]+' '+locals[1];
                                     %>   
                                     <%=locals%> <!-- 주소 -->
-                                </span><br>
-                                <span class="lead" style="font-size: 20px;">
-                                    <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>    <!-- 가격 숫자로 변환(, 찍어줄려고 한 모양) -->
-                                        <%=price+' 원'%>    <!-- 가격 -->
                                 </span>
                         </h3>
                     </div>
@@ -209,26 +214,21 @@
     </main>
     <script>
         let value = document.cookie;
-        value = value.split(';');
-
-        btn_signin = document.getElementById('btn_signin');
-        btn_signout = document.getElementById('btn_signout');
-
-        for (var i = 0; i < value.length; i++) {
-            value_1 = value[i];
-            if (value_1.substring(0, 7) === 'x_auth=') { // 쿠키에 토큰이 있다면
-                // <로그인 상태>
-                btn_signout.style.display = 'block'; // 로그아웃 버튼 활성화
-                btn_signin.style.display = 'none'; // 로그인 버튼 비활성화
-                break;
-            } else {                                // <로그인이 안된 상태>
-                btn_signin.style.display = 'block'; // 로그인 버튼 활성화
-                btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
-                break;
-            }
+        value = value.split(' ;'); btn_signin = document.getElementById('btn_signin');
+        btn_signout = document.getElementById('btn_signout'); for (var i = 0; i <
+            value.length; i++) {
+                value_1 = value[i]; if (value_1.substring(0, 7) === 'x_auth=') { // 쿠키에 토큰이 있다면 // <로그인 상태>
+                    btn_signout.style.display = 'block'; // 로그아웃 버튼 활성화
+                    btn_signin.style.display = 'none'; // 로그인 버튼 비활성화
+                    break;
+                } else { // <로그인이 안된 상태>
+                    btn_signin.style.display = 'block'; // 로그인 버튼 활성화
+                    btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
+                    break;
+                }
         }
     </script>
-    <script src="/javascripts/home/bootstrap.bundle.min.js"></script>
+                                            <script src="/javascripts/home/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

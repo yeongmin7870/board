@@ -574,3 +574,19 @@ TypeError: insert_label is not a function
     at Server.emit (node:events:525:35)
     at emitListeningNT (node:net:1519:10)
     at process.processTicksAndRejections (node:internal/process/task_queues:81:21)]
+[error]:[ 2023-01-23 13:59:13 ] ► [중고책 거래 사이트] ▷ [uncaughtException: Unexpected token ','
+/Volumes/PARK/ReadyOffice/board/myapp/models/books.js:118
+                    , [board_id], (err, result, fields) => {
+                    ^
+
+SyntaxError: Unexpected token ','
+    at Object.compileFunction (node:vm:360:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1088:15)
+    at Module._compile (node:internal/modules/cjs/loader:1123:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1213:10)
+    at Module.load (node:internal/modules/cjs/loader:1037:32)
+    at Module._load (node:internal/modules/cjs/loader:878:12)
+    at Module.require (node:internal/modules/cjs/loader:1061:19)
+    at require (node:internal/modules/cjs/helpers:103:18)
+    at Object.<anonymous> (/Volumes/PARK/ReadyOffice/board/myapp/controller/BoardController.js:2:14)
+    at Module._compile (node:internal/modules/cjs/loader:1159:14)]
