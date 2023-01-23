@@ -3,6 +3,7 @@ const Book = require('../models/books');
 const jwt = require('../modules/jwt');
 const fs = require('fs');
 const Comment = require('../models/comments');
+let logger = require('../modules/logger');
 
 module.exports = {
 
@@ -105,16 +106,30 @@ module.exports = {
             res.status(201).redirect('/v2/home/0');
         });
     },
-    // 댓글 작성
+    /**댓글 작성
+     * 
+     * @body Comment object 입력받음
+     *  입력받은 것을 디비에 넣고
+     * @response 
+     *  결과를 응답에 보내주는 함수
+    */
     setToBoardComment: async function (req, res) {
+        const user = await jwt.verify(req.cookies.x_auth.token); // 토큰 해독
+
+        /** request user_id가 현재 null 이므로  */
+        req.body.user_id = user.user_id;
+
         Comment.setToBoardComment(req.body).then((result) => {
-            console.log(`Writing comment is finished`);
+
+            /** 누가 어디에 댓글 달았는지 로그 */
+            // logger.info(`${req.body.user_id} 님이 ${req.body.board_id} 게시판에서 ${req.body.comment_content} 댓글을 작성했습니다.`);
+
             res.send(result);
         })
-            .catch((err) => {
-                console.log('Writing comment is failled');
-                res.send(err);
-            })
+        .catch((err) => {
+            // logger.info(`${req.body.user_id} 님이 ${req.body.board_id} 게시판에서 ${req.body.comment_content} 댓글 작성을 실패했습니다.`);
+            res.send(err);
+        })
     },
     //해당 게시글 댓글 보여주기
     getByboardComment: async (req, res) => {

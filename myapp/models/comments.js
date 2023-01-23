@@ -7,18 +7,17 @@ module.exports = {
 
             con.getConnection((err, con) => {
 
-                if (err) console.log(new Error(err));
+                if (err) new Error(err);
                 else {
                     var today = new Date();
-                    console.log(today);
                     values = [
                         [comment.comment_id, comment.user_id, comment.comment_content, today, comment.board_id]
                     ]
                     let sql = "INSERT INTO comment VALUES (?)";
                     con.query(
                         sql, values, (err, result) => {
-                            if (err) reject(err);
-                            else resovle(result);
+                            if (err) reject({msg:'Bad'});
+                            else resovle({msg:'Finsh'});
                         }
                     );
 
@@ -33,7 +32,7 @@ module.exports = {
             con.getConnection((err, con) => {
                 if (err) console.log(new Error(err));
                 else {
-                    let sql = "SELECT * FROM comment WHERE board_id=?";
+                    let sql = "SELECT * FROM comment WHERE board_id=? ORDER BY comment_id DESC";
                     con.query(
                         sql, board_id, (err, result) => {
                             if (err) {
