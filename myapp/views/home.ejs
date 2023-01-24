@@ -84,7 +84,7 @@
                             <a class="nav-link" onclick="location.href='/v3/board-mypage'"
                                 style="cursor: pointer;">MyPage</a>
                         </li>
-                        <li class="nav-item" onclick="location.href='/v2/write'">
+                        <li id="write" class="nav-item">
                             <a class="nav-link" style="cursor: pointer;">Write</a>
                         </li>
                         <li class="nav-item" onclick="location.href='/chat'">
@@ -207,29 +207,35 @@
                     <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>
                 <hr class="featurette-divider">
-                <% } %>
+            <% } %>
 
         </div><!-- /.container -->
         <!-- FOOTER -->
+            <form id="token_form" action="" style="display: none;"  method="post">
+                <input type="hidden" id="input_token" name="token" value="">
+            </form>
     </main>
+    <script src="/javascripts/board/cookie.js" type="text/javascript"></script>
     <script>
-        let value = document.cookie;
-        value = value.split(' ;'); btn_signin = document.getElementById('btn_signin');
+        let token = getCookie('x_auth');
+        btn_signin = document.getElementById('btn_signin');
         btn_signout = document.getElementById('btn_signout');
-        /**
-         *  쿠키에서 x_auth라는 이름을 가진 토큰 확인 후
-         *  로그인, 로그아웃 버튼을 나눠서 보여주는 for문
-         * */ 
-        for (var i = 0; i < value.length; i++) {
-            value_1 = value[i]; if (value_1.substring(0, 7) === 'x_auth=') { // 쿠키에 토큰이 있다면 // <로그인 상태>
-                btn_signout.style.display = 'block'; // 로그아웃 버튼 활성화
-                btn_signin.style.display = 'none'; // 로그인 버튼 비활성화
-                break;
-            } else { // <로그인이 안된 상태>
-                btn_signin.style.display = 'block'; // 로그인 버튼 활성화
-                btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
-                break;
-            }
+        let write = document.getElementById('write'); 
+        let token_form = document.getElementById('token_form'); //토큰 보내는 form
+        let input_token = document.getElementById('input_token'); // 토큰 보내는 input 
+
+        write.addEventListener('click', event =>{
+            token_form.action = "/v2/write?_method=GET"
+            input_token.value = token;
+            token_form.submit();
+        });
+        
+        if (token) { // 쿠키에 토큰이 있다면 // <로그인 상태>
+            btn_signout.style.display = 'block'; // 로그아웃 버튼 활성화
+            btn_signin.style.display = 'none'; // 로그인 버튼 비활성화
+        } else { // <로그인이 안된 상태>
+            btn_signin.style.display = 'block'; // 로그인 버튼 활성화
+            btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
         }
     </script>
     <script src="/javascripts/home/bootstrap.bundle.min.js"></script>

@@ -5,6 +5,7 @@ const util = require('util');
 const mailer = require('../modules/mail');
 const { promise } = require('../config/mysqlconn');
 const crypto = require('../modules/crypto');
+const { logger } = require('../modules/logger');
 module.exports = {
     doGetUser: function (req, res, next) {
         Users.getUsers().then((result) => {
@@ -36,8 +37,11 @@ module.exports = {
                 }
 
                 const jwtToken = await jwt.sign(user_token); //토큰 발급
-                const userToken = { token: jwtToken.token }
-                res.cookie("x_auth", userToken, {
+
+                logger.info(`'${req.body.user_id}' 님이 토큰을 발급받고 로그인 했습니다.`);
+
+
+                res.cookie("x_auth", jwtToken.token, {
                     maxAge: 60 * 60 * 1000  // 1시간 유효 시간
                 }).status(201).redirect('/v2/home/0'); // 쿠키 넣어놓고 보냄
 
@@ -92,6 +96,7 @@ module.exports = {
                     </script>
                 `)
             } else if (result == 1) {
+                logger.info(`"${req.body.user_id}" 아이디로 계정을 생성했습니다.`);
                 res.send(`
                     <script>
                         alert('회원가입 되었습니다.');

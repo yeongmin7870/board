@@ -38,7 +38,7 @@ module.exports = {
                         if (err)
                             reject(err);
                         else
-                            resolve(result);
+                            resolve(result.insertId);
                     }
                 );
                 con.release();
@@ -116,7 +116,7 @@ module.exports = {
                     'SELECT * FROM board b, book_classification bc, user u' +
                     ' WHERE b.board_id =? AND b.book_classification_id = bc.book_classification_id AND'+
                     ' b.user_id = u.user_id'
-                    , [board_id], (err, result, fields) => {
+                    , [board_id], (err, result) => {
                         if (err)
                             reject(err);
                         else

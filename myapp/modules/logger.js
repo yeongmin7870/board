@@ -7,8 +7,9 @@ const { combine, timestamp, label, printf } = winston.format;
 const logDir = `${process.cwd()}/logs`;
 /** 로그 출력 포맷 리턴 함수  */
 const logFormat = printf(({ level, message, label, timestamp }) => {
-    return `[${level}]:[${timestamp}] ► [${label}] ▷ [${message}]`
+    return `[ ${level} ]:[${timestamp}] ► [ ${label} ] ▷ [ ${message} ]`
 });
+
 /** 로그 출력 형식 정의 */
 const logger = winston.createLogger({
     format: combine(
@@ -55,11 +56,11 @@ if (process.env.NODE_ENV != 'production') {
     logger.add(
         new winston.transports.Console({
             format: winston.format.combine(
-                winston.format.colorize(),  // log level별로 색상 적용하기
+                winston.format.colorize({ all: true }),  // log level별로 색상 적용하기
                 logFormat,
             ),
         }),
     );
 }
 
-module.exports = {logger};
+module.exports = { logger };
