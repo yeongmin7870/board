@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const senderInfo = require('../config/senderInfo.json');
-
+const {logger} = require('../modules/logger');
 // 메일 발송 객체
 
 const mailSender = {
@@ -22,9 +22,9 @@ const mailSender = {
         };
         transporter.sendMail(mailOptions, function(err, info){
             if(err) {
-                console.log(err);
+                logger.error(err);
             } else {
-                console.log("finish, send Email" + info);
+                logger.info("승인코드가 성공적으로 보내졌습니다.");
             }
         })
     }

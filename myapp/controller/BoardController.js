@@ -15,7 +15,7 @@ module.exports = {
             req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
             Book.setBoard(req.body).then((result) => {
-                logger.info(`${req.body.user_id} 님이 ${result} 번 게시글을 작성했습니다.`)
+                logger.info(`'${req.body.user_id}' 님이 '${result}' 번 게시글을 작성했습니다.`)
                 res.status(200).send(
                     `
                     <script>
@@ -122,7 +122,7 @@ module.exports = {
                 if (fs.existsSync(file_path)) {
                     try {
                         fs.unlinkSync(file_path);
-                        logger.info(`${user_id} 님이 ${req.params.board_id} 게시물 삭제 수행중에 ${image_name} 이미지를 삭제했습니다.`);
+                        logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
                     } catch (e) {
                         logger.error(e);
                         res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
@@ -135,7 +135,7 @@ module.exports = {
 
                 // 디비 게시글 데이터 삭제 
                 Book.doRmByBoard(req.params.board_id).then((result) => {
-                    logger.info(`${user_id} 님이 ${req.params.board_id} 게시물을 성공적으로 삭제했습니다.`);
+                    logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물을 성공적으로 삭제했습니다.`);
                     res.status(201).send(`
                         <script>
                             alert("게시글이 삭제되었습니다.");
@@ -168,7 +168,7 @@ module.exports = {
             res.send(result);
         })
             .catch((err) => {
-                logger.error(`${req.body.user_id} 님이 ${req.body.board_id} 게시판에서 "${req.body.comment_content}" 댓글 작성을 실패했습니다.`);
+                logger.error(`'${req.body.user_id}' 님이 '${req.body.board_id}' 게시판에서 "${req.body.comment_content}" 댓글 작성을 실패했습니다.`);
                 res.send(err);
             })
     },
@@ -204,7 +204,7 @@ module.exports = {
                 `);
         } else {
             let result = await Comment.removeComment(req.params.comment_id);
-            logger.info(`${user_id} 님이 ${comment_result[0].board_id} 게시물의 "${comment_result[0].comment_content}" 댓글을 성공적으로 삭제했습니다.`);
+            logger.info(`'${user_id}' 님이 '${comment_result[0].board_id}' 게시물의 "${comment_result[0].comment_content}" 댓글을 성공적으로 삭제했습니다.`);
             res.send(`<script>
                 alert('댓글이 삭제 되었습니다.');
                 location.href = document.referrer;

@@ -107,7 +107,12 @@ module.exports = {
         });
     },
 
-    // 승인코드 보내기 
+    /** 이메일 인증코드 보내기
+     * 
+     *  수신 코드를 입력 받고
+     *  해당 이메일로 승인코드를 보내줌
+     * 
+     *  */ 
     doAuthMail: function (req, res) {
         const { receiverEmail } = req.body;
         let today = new Date();
@@ -122,8 +127,9 @@ module.exports = {
             html: "<h4>" + randCode + " 승인코드입니다. </h4>",
         };
 
+        logger.info(`'${receiverEmail}' 이메일을 가진 누군가가 승인코드를 성공적으로 요청했습니다. `);
+
         mailer.sendMail(emailParam);
-        console.log(today + " " + receiverEmail + " 님의 승인코드는 " + randCode);
         res.status(200).send({ "randcode": randCode });
     },
     /**
