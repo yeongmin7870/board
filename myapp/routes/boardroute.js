@@ -20,10 +20,7 @@ router.get('/book-class', boardcontroller.findBybookClassification)
 router.get('/board/page/:board_id', boardcontroller.FindByBoard);
 
 router.post('/board/comment', authUtil, boardcontroller.setToBoardComment)         // 댓글 작성
-    .get('/board/comment/:board_id', boardcontroller.getByboardComment)  // 해당 게시물 댓글 출력
+    .get('/board/comment/:board_id/:page',boardcontroller.getAllComment)          // 해당 게시물 댓글 출력
     .delete('/board/comment/:comment_id', boardcontroller.removeComment)         // 댓글 삭제
-
-/** 게시판 댓글 출력 - 페이지 처리 */
-router.get('/board/comments/:board_id/:page',boardcontroller.getAllComment)
 
 module.exports = router;

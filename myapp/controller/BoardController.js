@@ -93,7 +93,7 @@ module.exports = {
                 let columnSize = showPage.columnSize;
                 current_page = showPage.current_page;
             /** 현재 페이지 컬럼 내용들 */
-            let result = await Book.getAllBoard(startColumn, columnSize);
+            let result = await Comment.getByboardComment(req.params.board_id,columnSize,startColumn);
     
             /** pagination 처리 함수 */
             let Pagination = await Page.Pagination(current_page, 5, total_page);  
