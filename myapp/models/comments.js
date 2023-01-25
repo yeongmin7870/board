@@ -87,4 +87,27 @@ module.exports = {
             });
         });
     },
+    /** 해당 게시물 아이디를 입력받으면
+     *  게시물 댓글 총 개수 출력 
+     */
+    getCountComment:(board_id) => {
+        return new Promise((resovle, reject) => {
+            con.getConnection((err, con) => {
+                if (err) console.log(err);
+                else {
+                    let sql = "SELECT COUNT(*) as cnt FROM comment WHERE board_id=?";
+                    con.query(
+                        sql, [board_id], (err, result) => {
+                            if (err) {
+                                reject(err);
+                                throw err;
+                            }
+                            else resovle(result[0].cnt);
+                        }
+                    );
+                }
+                con.release();
+            });
+        });
+    },
 };

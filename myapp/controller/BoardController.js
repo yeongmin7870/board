@@ -4,6 +4,8 @@ const jwt = require('../modules/jwt');
 const fs = require('fs');
 const Comment = require('../models/comments');
 const { logger } = require('../modules/logger');
+const Page = require('../modules/page');
+const { start } = require('repl');
 
 module.exports = {
 
@@ -34,40 +36,80 @@ module.exports = {
     },
     /**
      * 메인홈 게시판 목록 출력
-     * @param {*} page 현재 페이지 0부터 시작
-     *  
+     * @params 현재 페이지 입력받으면
+     *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
-        let current_page = req.params.page // 현재 페이지
+        /** 현재페이지 */
+        let current_page = req.params.page
+        /**전체 컬럼 개수  */
+        let count_column = await Book.getCntFindAll();
 
-        let columnSize = 4; // 컬럼 사이즈
+        /** 페이지 처리함수 */
+        let showPage = await Page.showPage(current_page, 4, count_column);
+            /**전체 페이지 개수 */
+            let total_page = showPage.total_page;
+            /**시작하는 컬럼 순서 */
+            let startColumn = showPage.startColumn;
+            /**컬럼 사이즈 */
+            let columnSize = showPage.columnSize;
+            current_page = showPage.current_page;
+        /** 현재 페이지 컬럼 내용들 */
+        let result = await Book.getAllBoard(startColumn, columnSize);
 
-        let cnt_column = await Book.getCntFindAll(); // 전체 컬럼 개수
-        let total_page = Math.ceil(cnt_column[0].cnt / columnSize); // 전체 페이지 개수
-
-        if (current_page < 0 || current_page >= total_page) current_page = 0; // 만약 현재 페이지 범위가 벗어나면 현재페이지를 0으로 고정
-
-        let startColumn = (current_page * columnSize); //시작하는 컬럼
-        const result = await Book.getAllBoard(startColumn, columnSize); // 현재 페이지 컬럼 가져오기 
-
-        let prevPage = true;   // 이전 페이지 유무
-        let nexPage = true;    // 다음 페이지 유무 
-
-        let page_size = 4; // 보여질 페이지 수
-
-        let start_page = current_page - Math.ceil(page_size / 2);   // 시작페이지 = 현재페이지 - (올림(보여질 페이지 수 / 2))
-        if (start_page <= 0) {      // 시작페이지가 0이거나 작을때
-            prevPage = false;
-            start_page = 0;
-        }
-
-        let end_page = start_page + page_size; // 끝페이지 = 시작페이지 + 보여질 페이지 수
-        if (end_page >= total_page) {   // 끝페이지가 전체페이지랑 같거나 클때
-            nexPage = false;
-            end_page = total_page;
-        }
+        /** pagination 처리 함수 */
+        let Pagination = await Page.Pagination(current_page, 5, total_page);  
+            /** 시작 페이지 인덱스 */
+            let start_page = Pagination.start_page;
+            /** 끝페이지 인덱스 */
+            let end_page = Pagination.end_page;
+            /** 이전버튼여부 */
+            let prevPage = Pagination.prevPage;
+            /** 다음버튼 여부 */
+            let nexPage = Pagination.nexPage;
+            /** 페이지 사이즈 */
+            let page_size = Pagination.page_size;
+            
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
     },
+    /**
+     * 게시판 댓글 페이지처리
+     * @params 현재 댓글페이지 입력받으면
+     *   알맞은 페이지 내용을 출력함
+     */
+        getAllComment: async function (req, res) {
+            /** 현재페이지 */
+            let current_page = req.params.page
+            /**전체 컬럼 개수  */
+            let count_column = await Comment.getCountComment(req.params.board_id);
+    
+            /** 페이지 처리함수 */
+            let showPage = await Page.showPage(current_page, 4, count_column);
+                /**전체 페이지 개수 */
+                let total_page = showPage.total_page;
+                /**시작하는 컬럼 순서 */
+                let startColumn = showPage.startColumn;
+                /**컬럼 사이즈 */
+                let columnSize = showPage.columnSize;
+                current_page = showPage.current_page;
+            /** 현재 페이지 컬럼 내용들 */
+            let result = await Book.getAllBoard(startColumn, columnSize);
+    
+            /** pagination 처리 함수 */
+            let Pagination = await Page.Pagination(current_page, 5, total_page);  
+                /** 시작 페이지 인덱스 */
+                let start_page = Pagination.start_page;
+                /** 끝페이지 인덱스 */
+                let end_page = Pagination.end_page;
+                /** 이전버튼여부 */
+                let prevPage = Pagination.prevPage;
+                /** 다음버튼 여부 */
+                let nexPage = Pagination.nexPage;
+                /** 페이지 사이즈 */
+                let page_size = Pagination.page_size;
+                
+            res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
+        },    
     // 해당 아이디 게시글 찾기
     FindByAllBoard: async function (req, res) {
         const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독

@@ -57,7 +57,7 @@ module.exports = {
                         if (err)
                             reject(err);
                         else
-                            resolve(result);
+                            resolve(result[0].cnt);
                     }
                 );
                 con.release();
