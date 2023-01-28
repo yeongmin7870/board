@@ -2,11 +2,11 @@ const con = require('../config/mysqlconn.js');
 
 
 module.exports = {
-    getUsers: function () {
+    getUser: function (user_id) {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 con.query(
-                    'SELECT * FROM user', (err, result) => {
+                    'SELECT * FROM user WHERE user_id = ?', [user_id] ,(err, result) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -109,4 +109,25 @@ module.exports = {
         });
     },
 
+    /** 유저 프로파일 등록 */
+    uploadProfile: function (user) {
+
+        let sql = "UPDATE SET user user_profile = ? WHERE user_id = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                con.query(
+                    sql, [user.user_profile, user.user_id], function (err, result) {
+                        if (err) new Error(err);
+                        if (result.length == 0) {
+                            resolve({ msg: "ok" })
+                        } else {
+                            reject({ msg: "no" })
+                        }
+                    }
+                )
+                con.release();
+            });
+        });
+    },
 };

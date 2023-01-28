@@ -5,7 +5,7 @@ const fs = require('fs');
 const Comment = require('../models/comments');
 const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
-const { start } = require('repl');
+const Users = require('../models/Users');
 
 module.exports = {
 
@@ -107,16 +107,31 @@ module.exports = {
                 let nexPage = Pagination.nexPage;
                 /** 페이지 사이즈 */
                 let page_size = Pagination.page_size;
-                
-            res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
+
+                res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
         },    
-    // 해당 아이디 게시글 찾기
+    /** 마이페이지 
+     *      user_id 를 입력받으면 
+     *      게시물을 올린적 있다면 유저정보, 게시물 정보를 리턴
+     *      없다면 유저정보만 리턴해주는 함수
+     */
     FindByAllBoard: async function (req, res) {
-        const decode = await jwt.verify(req.cookies.x_auth.token); //토큰 해독
-        req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
-        Book.FindByAllBoard(req.body.user_id).then((result) => {
-            res.status(200).render('mylist', { myboard: { result } });
-        });
+        const decode = await jwt.verify(req.body.token); //토큰 해독
+        let user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+
+    
+        Book.FindByAllBoard(user_id).then((result) => {
+
+            if(result == ""){
+
+                Users.getUser(user_id).then((result) => {
+                    return res.status(200).render('mylist', { board: {result} });
+                });
+            } else {
+                return res.status(200).render('mylist', { board: {result} } );
+            }
+
+        })
     },
     // 책 카테고리 
     findBybookClassification: async function (req, res) {
@@ -254,4 +269,5 @@ module.exports = {
             `);
         }
     },
+
 }

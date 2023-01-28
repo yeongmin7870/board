@@ -11,42 +11,65 @@
 </head>
 
 <body>
-    <hr>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">게시글 순서</th>
-                <th scope="col">책 제목</th>
-                <th scope="col">가격</th>
-                <th scope="col">종류</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for (var i=0; i < myboard.result.length; i++){ %>
-                <tr onclick="location.href='/v2/board/page/<%=myboard.result[i].board_id%>'">
-                    <th scope="row">
-                        <%=i+1%>
-                    </th>
-                    <td>
-                        <%=myboard.result[i].board_title%>
-                    </td>
-                    <td>
-                        <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
-                            <%=price+' 원'%>
-                    </td>
-                    <td>
-                        <%=myboard.result[i].book_classification_name%>
-                    </td>
-                </tr>
-                <% } %>
-        </tbody>
-    </table>
-    <hr>
-    <button type="button" class="btn btn-link" onClick="location.href='/v2/home/0'">돌아가기</button>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
+    <% let address=board.result[0].user_address.split(' ');
+            address = address[0]+' '+address[1]+' '+address[2];    
+        %> <!-- 주소 자르기 -->
+        <div style="text-align: left; margin-left: 10%; margin-right: 10%; margin-top: 5%;">
+            <h4>마이페이지</h4>
+            <hr>
+            <% if(board.result[0].user_profile) { %>
+                <span>
+                    <img style="width: 10%; height: 10%;" src="<%=board.result[0].user_profile%>">
+                </span> <!-- 프로파일 -->
+            <% } else { %>
+                <span><img style="width:  10%; height: 10%;" src="/images/profile.png">
+                    <button class="btn btn-outline-secondary">수정</button>
+                </span>
+            <% } %> 
+            <ul>
+                <li><%=board.result[0].nickname%></li> <!-- 닉네임 -->
+                <li><%=address%></li>  <!-- 주소 -->
+            </ul>
+            <hr>
+    <%  
+        if(board.result[0].board_id){ 
+    %>
+            <p>🐈 판매상품보기</p>
+            <button type="button" class="btn btn-outline-success" disabled>전체</button>
+            <button type="button" class="btn btn-outline-success">판매중</button>
+            <button type="button" class="btn btn-outline-success">예약중</button>
+            <button type="button" class="btn btn-outline-success">판매완료</button>
+            <hr>
+            <div style="text-align: center;">
+                <table>
+                    <thead>
+                        <%for(let i=0; i < board.result.length; i++) { %>
+                            <tr>
+                                <th scope="col"></th>
+                            </tr>
+                        <% } %>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <%for(let i=0; i < board.result.length; i++) { %>
+                                <td>
+                                    <img src="/images/board/<%=board.result[i].board_image%>" style="width:30%; height:30%;">
+                                    <p><%=board.result[i].board_title%></p>
+                                </td>
+                            <% } %>
+                        </tr>
+                    </tbody>            
+                </table>
+            </div>    
+    <%} else {%>
+        <h4> 데이터가 없습니다 </h4>
+    <% } %>
+        <hr>
+        <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">돌아가기</button>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>

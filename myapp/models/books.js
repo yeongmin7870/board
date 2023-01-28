@@ -93,12 +93,15 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    'select * from board b, book_classification bc where ' +
-                    'user_id=? and b.book_classification_id = bc.book_classification_id;', [user_id], (err, result, fields) => {
-                        if (err)
+                    'select * from board b, book_classification bc,user u where ' +
+                    'b.user_id=? and b.book_classification_id = bc.book_classification_id and '+
+                    'b.user_id = u.user_id', [user_id], (err, result, fields) => {
+                        if (err){
                             reject(err);
-                        else
+                        }
+                        else {
                             resolve(result);
+                        }
                     }
                 );
                 con.release();

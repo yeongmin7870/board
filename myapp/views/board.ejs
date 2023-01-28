@@ -10,106 +10,16 @@
     <title>홈화면</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/carousel/">
     <link href="/csses/home/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
 
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        .b-example-divider {
-            height: 3rem;
-            background-color: rgba(0, 0, 0, .1);
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-        }
-
-        .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 100vh;
-        }
-
-        .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-        }
-
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
-
-        .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-    </style>
     <!-- Custom styles for this template -->
-    <link href="/csses/carousel.css" rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/v2/home/0">전공책 싸게 사자</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/v2/home/0">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" onclick="location.href='/v3/board-mypage'"
-                                style="cursor: pointer;">MyPage</a>
-                        </li>
-                        <li class="nav-item" onclick="location.href='/v2/write'">
-                            <a class="nav-link" style="cursor: pointer;">Write</a>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-        </nav>
-    </header>
-
     <main>
-
-
-        <!-- Marketing messaging and featurettes
-    ================================================== -->
-        <!-- Wrap the rest of the page in another container to center all the content. -->
         <div class="container marketing">
-            <!-- START THE FEATURETTES -->
             <hr class="featurette-divider">
-            <form id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
-                <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
-                <input id="board_delete_token" name=token type="hidden" value="">
-                <button class="btn btn-danger" id="btn_delete_board"  type="submit">게시물 지우기</button>
-            </form>
             <div style="float: left; width: 50%;">
-                <img src="/images/board/<%=myboard.result[0].board_image%>" width="500" height="500" />
+                <img src="/images/board/<%=myboard.result[0].board_image%>" width="90%" height="90%" />
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
@@ -120,7 +30,7 @@
                     </p>
                     <p class="text-muted" style="font-size: 20px;">
                         <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
-                            <%=price+' 원'%>
+                        <%=price+' 원'%>
                     </p>
                     <hr>
                     <p class="text-muted" style="font-size: 17px;">
@@ -128,7 +38,7 @@
                     </p>
                     <p class="text-muted" style="font-size: 25px;">
                         <% let locals=myboard.result[0].user_address.split(' ');
-                        locals = locals[0]+' '+locals[1];
+                        locals = locals[0]+' '+locals[1]+' '+locals[2];
                      %>   
                      <%=locals%> <!-- 주소 -->
                     </p>                      
@@ -137,205 +47,43 @@
                         <%=myboard.result[0].board_contents%>
                     </p>
                 </div>
-                <hr class="featurette-divider">
+                <hr>
+                <form style="float: left; margin-right: 2%;" id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
+                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
+                    <input id="board_delete_token" name=token type="hidden" value="">
+                    <button class="btn btn-outline-danger" id="btn_delete_board"  type="submit">게시물 삭제</button>
+                </form>
+                <button type="button" class="btn btn-outline-success" onclick="location.href='/v2/home/0'">홈으로</button>
+                <hr>
             </div>
 
             <div style="float: left; width: 50%;">
                 <h4>Comment</h4>
                 <form action="#" method="get">
-                    <div>
+                    <div style="text-align:center;">
                         <form id="comment_form">
                             <input type="text" id="input_comment_content" placeholder="댓글을 작성해주세요"
                                 style="height:100px; width: 600px; text-align: center;" maxlength="50" required><br>
-                            <button type="submit" id="btn_comment">댓글작성완료</button>
+                            <button type="submit" id="btn_comment" class="btn btn-outline-primary" >댓글작성완료</button>
                         </form>
                     </div>
                     <div>
-                        <div id="comment_div"></div> <!-- 댓글 -->
+                        <div id="comment_div" style="text-align:left;"></div> <!-- 댓글 -->
                         <hr>
-                        <div id="comment_page"></div> <!-- 댓글 페이징처리 -->
+                        <div id="comment_page" style="text-align:center;"></div> <!-- 댓글 페이징처리 -->
                     </div>
                 </form>
             </div>
-
-
         </div><!-- /.container -->
 
     </main>
-    <script  src="/javascripts/board/cookie.js" type="text/javascript"></script>
-    <script src="/javascripts/board/fetch.js" type="text/javascript"></script>
+    <script  src="/javascripts/cookie.js" type="text/javascript"></script>
+    <script src="/javascripts/fetch.js" type="text/javascript"></script>
     <script>
-        /**댓글 제출 버튼*/
-        let btn_comment = document.getElementById("btn_comment");
-        /**댓글 입력 input*/
-        let input_comment_content = document.getElementById("input_comment_content");
-        /**부모 댓글 div*/
-        let comment_div = document.getElementById("comment_div");
-        /**게시판 지울때 사용하는 토큰*/
-        let board_delete_token = document.getElementById("board_delete_token");
-        /**게시판 삭제 form*/
-        let delete_board_form = document.getElementById("delete_board_form");
-        /**게시판 삭제 버튼*/
-        let btn_delete_board = document.getElementById("btn_delete_board");
-        /**자식 댓글 div*/
-        let c_newDiv = "";
-        /**댓글 페이징 처리 div */
-        let comment_page_div = document.getElementById("comment_page");
         /**token값*/
         let token = getCookie('x_auth');
-
-        let url = window.location.pathname;
-        url = url.split('/');
-        /**borard_id 가져올려고 url입력 후 짜름*/
-        let board_id = url[4];
-        /**comment 페이지 */
-        let page_num = 0;
-        /** 댓글 페이징 처리 div*/
-        let page_newDiv =0;
-        /**현재 댓글 페이지 */
-        let page = 0;
-        /** 댓글 마지막 페이지 */
-        let end_page =0;
-
-        /** 서버에서 해당 게시물 아이디 내용물 가져옴
-         * 
-         *   아이디, 내용, 날짜 html에 찍어줌
-         * 
-         */
-        async function getComment(page_num) {
-            page = page_num;
-            let comment = await Get_pathVar(`http://localhost:3000/v3/board/comment/${board_id}/${page}`);
-            end_page = comment.page.end_page;
-
-            for (let i = 0; i < comment.comment.result.length; i++) {
-                let time = comment.comment.result[i].comment_time;
-                time = new Date(time); // 시간을 보기 좋게 변경
-
-                let comment_html = "<hr>"
-                    + "<h5> 아이디: " + comment.comment.result[i].user_id + "</h5>"
-                    + "<h2>" + comment.comment.result[i].comment_content + "</h2>"
-                    + "<p>" + time.toLocaleString() + "</p>"
-                    +`<form type="hidden" method="post" action="/v3/board/comment/${comment.comment.result[i].comment_id}?_method=DELETE">`
-                        + `<input type="hidden" name="token" value="${token}">`
-                        + `<button type=submit>` + "삭제" + "</button>";
-                    + "</form>"
-                c_newDiv = document.createElement("div");
-
-                c_newDiv.innerHTML = comment_html;
-
-                c_newDiv.setAttribute("id","comment_div_child");
-
-                comment_div.appendChild(c_newDiv);
-
-            }
-
-            let comment_html = "";
-            /**페이징 처리 화면 */
-            for (let i = comment.page.start_page; i < comment.page.end_page; i++) {
-
-                comment_html +=
-                    `
-                        <button id="comment_page_btn" value="${i}" onclick="btn_comment_paging(this.value);">${i + 1}</button>
-                    `
-            }
-                let comment_state = `
-                    <hr>
-                    <p>[ ${Number(page) + 1} ] 페이지 </p>
-                `
-                let prev_btn = `
-                    <button onclick="btn_comment_paging(${Number(page) -1});"> 이전페이지 </button>
-                `
-                let next_btn = `
-                    <button onclick="btn_comment_paging(${Number(page) + 1});"> 다음페이지 </button>
-                `
-
-                page_newDiv = document.createElement("div");
-
-                page_newDiv.innerHTML = prev_btn + comment_html + next_btn + comment_state;
-
-                page_newDiv.setAttribute("id","comment_page_div");
-
-                comment_page_div.appendChild(page_newDiv);
-            
-        };
-
-        /** 
-         *  기존 html 한번 지워주고
-         *  해당 댓글 페이지 값 넣어서
-         *  다시 출력하는 함수
-        */
-        function btn_comment_paging(value) {
-            /**현재 페이지가 0~마지막 페이지를 벗어났을 떄 */
-            if(value < 0) {
-                value = 0;
-            }else if(value >= end_page) {
-                value = end_page-1;
-            }
-            reloadComment_Check();
-            getComment(value);     
-        };
-
-        /**
-         * 댓글 작성 버튼 클릭하면 
-         * 댓글 내용 입력받아서
-         *  서버로 댓글 작성완료 응답을 받음
-        */
-        btn_comment.addEventListener('click', async () => {
-            if(input_comment_content.value == ""){
-                alert("댓글을 작성해주세요!");
-                return;
-            }
-            let url = 'http://localhost:3000/v3/board/comment';
-            let data = {
-                "comment_id":0,
-                "user_id":"",
-                "comment_content":`${input_comment_content.value}`,
-                "board_id":`${board_id}`,
-                "token":`${token}`,
-            };
-            let response = await Post_body(url,data);
-
-            reloadComment_Check();
-            
-            getComment(page_num); //댓글 다시 불러오기
-
-            input_comment_content.value="";
-
-            alert("댓글이 작성되었습니다.");
-        })
-        /** 댓글 내용, 댓글 페이징 처리 버튼 리로드 해주는 기능*/
-        function reloadComment_Check() {
-
-            //기존에 댓글이 있다면 한번 지워주는 if문
-            if(c_newDiv!=""){
-            let parent = c_newDiv.parentElement; // 해당 자식태그 부모요소 가져오기
-                while(parent.firstChild){
-                    parent.removeChild(parent.lastChild); // 부모요소 안 자식태그 삭제
-                }
-            }
-            /**기존에 넣어준 페이징 처리 버튼이 있으면 삭제*/
-            if(page_newDiv!=""){
-                let comment_parent_page = page_newDiv.parentElement;
-                while(comment_parent_page.firstChild){
-                    comment_parent_page.removeChild(comment_parent_page.lastChild);
-                }
-            }
-        }
-
-        /**게시판 삭제 클릭시 토큰도 같이 body
-         * 에 넘어가게 하기
-        */
-        board_delete_token.value=token;
-
-        
-        /**
-         * 페이지 처음 시작 시
-         * 댓글 출력
-         * 
-        */
-        getComment(page_num);
-
     </script>
+    <script type="text/javascript" src="/javascripts/board.js"></script>
 </body>
 
 </html>

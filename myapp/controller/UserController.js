@@ -151,4 +151,43 @@ module.exports = {
             res.send(err);
         }
     },
+    /** 토큰의 유효성을 판단해주는 함수 */
+    verifyToken: async function (req , res){
+        const decode = await jwt.verify(req.body.data); //토큰 해독
+        console.log(decode);
+        if(decode == -2 || decode == -3){
+            res.send({state:"not login"});
+        } else {
+            res.send({state:"login"})
+        }
+    },
+    /** 유저 프로필 업로드 함수*/
+    uploadProfile: async function(req, res) {
+        try{
+            const decode = await jwt.verify(req.body.token); //토큰 해독
+            let user_id = decode.user_id;
+            let filename = req.file.filename
+            let user = {
+                user_id: user_id,
+                user_profile: filename
+            }
+            let result = await Users.uploadProfile(user);
+            if(result.msg == "ok"){
+                logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
+                res.status(200).send(
+                    `
+                    <script>
+                        alert("프로파일을 성공적으로 수정했어요!");
+                        location.href="/v2/home/0";
+                    </script>
+                    `
+                );
+            }
+        } catch (err){
+            res.status(404).send(`<script>
+            location.href='/v2/home/0';
+            alert('이미지 파일이 아닙니다 🐱');
+            </script>`);
+        }
+    }
 }
