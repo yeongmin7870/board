@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="form_profile" action="/v1/upload-profile" method="post" enctype="multipart/form-data">
+        <input id="token" type="hidden" name=token value="">
+        <input id="profile" type="file" name="profile" required>
+        <button id="btn_profile_submit" type="submit" class="btn btn-outline-secondary">수정</button>
+    </form>
+    <script src="/javascripts/cookie.js" type="text/javascript"></script>
+    <script>
+        let token = getCookie('x_auth'); //토큰 꺼내기
+        document.getElementById("token").value = token
+</script>
+</body>
+
+</html>

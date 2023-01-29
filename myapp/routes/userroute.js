@@ -20,6 +20,8 @@ router.post('/mail', UserController.doAuthMail)
 router.get('/checknickname/:data', UserController.findNickname)
 // 토큰 유효성 체크
 router.post('/verify', UserController.verifyToken);
+// 닉네임만 가져오기
+router.get('/getnickname', UserController.getNickname);
 // 유저 프로파일 등록
-router.post('/upload-profile', upload.single("board_image"), UserController.uploadProfile)
+router.post('/upload-profile', upload.single("profile"), UserController.uploadProfile)
 module.exports = router;

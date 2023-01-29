@@ -196,6 +196,12 @@
                                 </span>
                                 <hr>
                                 <span class="lead" style="font-size: 18px;">
+                                    <% if(board.result[i].user_profile) { %>
+                                        <img width="10%" height="10%"; src="/images/board/<%=board.result[i].user_profile%>">
+                                        <!-- 프로파일 -->
+                                    <% } else { %>
+                                        <img style="width:10%; height:10%;" src="/images/profile.png">
+                                    <% } %> 
                                     닉네임 : <%=board.result[i].nickname%><!-- 닉네임 -->
                                 </span><br>
                                 <span class="text-muted" style="font-size: 15px;">

@@ -17,5 +17,8 @@ router.get('/register', (req, res) => {
 router.get('/home/:page', boardcontroller.getAllBoard);
 // 게시판 글 작성 페이지
 router.get('/write', authUtil, boardcontroller.findBybookClassification);
-
+// 프로파일 업로드 화면
+router.get('/profile-popup', (req,res) =>{
+    res.render('profile_popup');
+})
 module.exports = router;

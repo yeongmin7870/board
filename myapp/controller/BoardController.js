@@ -69,7 +69,7 @@ module.exports = {
             let nexPage = Pagination.nexPage;
             /** 페이지 사이즈 */
             let page_size = Pagination.page_size;
-            
+                        
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
     },
     /**

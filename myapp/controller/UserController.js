@@ -166,7 +166,7 @@ module.exports = {
         try{
             const decode = await jwt.verify(req.body.token); //토큰 해독
             let user_id = decode.user_id;
-            let filename = req.file.filename
+            let filename = req.file.filename;
             let user = {
                 user_id: user_id,
                 user_profile: filename
@@ -178,16 +178,35 @@ module.exports = {
                     `
                     <script>
                         alert("프로파일을 성공적으로 수정했어요!");
-                        location.href="/v2/home/0";
+                        opener.parent.location.reload();
+                        window.close();
                     </script>
                     `
                 );
+            } else {
+                res.status(200).send(
+                    `
+                    <script>
+                        alert("프로파일 수정을 실패했습니다!");
+                        window.close();
+                    </script>
+                    `
+                );               
             }
         } catch (err){
             res.status(404).send(`<script>
-            location.href='/v2/home/0';
             alert('이미지 파일이 아닙니다 🐱');
+            window.close();
             </script>`);
         }
-    }
+    },
+    /** 토큰을 입력받고 
+     *  닉네임만 리턴해주는 함수
+     */
+    getNickname: async function (req , res){
+        const decode = await jwt.verify(req.body.data); //토큰 해독
+        let user_id = decode.user_id;
+        const nickname = await Users.getNickname(user_id);
+        res.send({nickname: nickname[0].nickname});
+    },
 }

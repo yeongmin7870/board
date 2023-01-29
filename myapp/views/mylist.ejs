@@ -17,15 +17,16 @@
         <div style="text-align: left; margin-left: 10%; margin-right: 10%; margin-top: 5%;">
             <h4>마이페이지</h4>
             <hr>
-            <% if(board.result[0].user_profile) { %>
                 <span>
-                    <img style="width: 10%; height: 10%;" src="<%=board.result[0].user_profile%>">
-                </span> <!-- 프로파일 -->
-            <% } else { %>
-                <span><img style="width:  10%; height: 10%;" src="/images/profile.png">
-                    <button class="btn btn-outline-secondary">수정</button>
+                <% if(board.result[0].user_profile) { %>
+                    <img style="width: 30%; height: 30%;" src="/images/board/<%=board.result[0].user_profile%>">
+                    <!-- 프로파일 -->
+                <% } else { %>
+                    <img style="width:  30%; height: 30%;" src="/images/profile.png">
+                <% } %> 
+                <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>"> <!-- 현재 누구의 마이페이지를 보고 있는지 -->
+                <button id="btn_profile"  class="btn btn-outline-secondary">수정</button>
                 </span>
-            <% } %> 
             <ul>
                 <li><%=board.result[0].nickname%></li> <!-- 닉네임 -->
                 <li><%=address%></li>  <!-- 주소 -->
@@ -67,9 +68,28 @@
         <hr>
         <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">돌아가기</button>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-            crossorigin="anonymous"></script>
+        <script src="/javascripts/cookie.js" type="text/javascript"></script>
+        <script src="/javascripts/fetch.js" type="text/javascript"></script>
+        <script>
+            let token = getCookie('x_auth'); //토큰 꺼내기
+            let btn_profile = document.getElementById("btn_profile"); // 수정버튼
+            const nowNickname = document.getElementById("nowNickname"); //현재 닉네임 input
+            const mypageNickname = nowNickname.value; //마이페이지 닉네임
+            
+            /** 토큰을 받으면 닉네임으로 프로필 수정권한을 체크 해주고
+             *  맞다면 수정 팝업창을 보여주는 함수
+             */
+            btn_profile.addEventListener("click", async () => {
+                const t = await Post_body("/v1/getnickname?_method=GET",{data:token}); // 토큰으로 가져온 닉네임
+                const tokenNickname = t.nickname;
+                if(tokenNickname == mypageNickname){
+                    window.open("/v2/profile-popup", "프로파일 수정", "width=400, height=300, top=10, left=10");
+                } else {
+                    alert("자신의 마이페이지가 아니기 때문에 프로파일을 수정할 수 없습니다.");
+                }
+            })
+            
+        </script>
 </body>
 
 </html>

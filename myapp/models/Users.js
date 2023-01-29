@@ -110,20 +110,43 @@ module.exports = {
     },
 
     /** 유저 프로파일 등록 */
-    uploadProfile: function (user) {
-
-        let sql = "UPDATE SET user user_profile = ? WHERE user_id = ?";
+    uploadProfile: function (user) {``
+        console.log(user);
+        let sql = "UPDATE user SET user_profile = ? WHERE user_id = ?";
 
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 con.query(
                     sql, [user.user_profile, user.user_id], function (err, result) {
                         if (err) new Error(err);
-                        if (result.length == 0) {
-                            resolve({ msg: "ok" })
+                        if (result) {
+                            resolve({ msg: "ok" });
                         } else {
-                            reject({ msg: "no" })
+                            console.log(err);
+                            reject({ msg: "no" });
                         }
+                    }
+                )
+                con.release();
+            });
+        });
+    },
+    /** 아이디를 입력받고 
+     * 닉네임만 리턴해주는 함수
+     */
+    getNickname: function (user_id) {
+        let values = [
+            [user_id]
+        ];
+        let sql = "SELECT nickname FROM user WHERE user_id = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) new Error(err);
+                con.query(
+                    sql, values, function (err, result) {
+                        if (err) reject(err);
+                        else resolve(result);
                     }
                 )
                 con.release();

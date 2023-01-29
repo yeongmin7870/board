@@ -18,7 +18,6 @@ async function Post_body(url,data) {
         body: JSON.stringify(data)
     });
     response = await response.json();
-    console.log(response);
     return response;
 }
 /**
