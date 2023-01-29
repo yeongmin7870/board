@@ -6,6 +6,9 @@ const mailer = require('../modules/mail');
 const { promise } = require('../config/mysqlconn');
 const crypto = require('../modules/crypto');
 const { logger } = require('../modules/logger');
+const utcnow = new Date();
+const timedelta = require('time-delta');
+
 module.exports = {
     doGetUser: function (req, res, next) {
         Users.getUsers().then((result) => {
@@ -30,19 +33,20 @@ module.exports = {
             const client_pass = await crypto.createHashedPassword(user); // 받은 비번을 솔트랑 같이 해시 함수 돌려보기 
 
             if (result[0].user_passwd == client_pass.password) {
-
                 const user_token = {
-                    'user_id': req.body.user_id,
-                    'user_passwd': req.body.user_passwd
+                    "iss": "ym_bookstore.kro.kr",  //토큰 발급자
+                    "exp": Math.floor(utcnow / 1000)+ 60 * 30, // 현재시간으로부터 + 30분 만료 시간 
+                    "http://ym_bookstore.kro.kr/jwt_claims/is_admin": true, //공개 클레임 , 충돌을 방지하기 위해 uri 형식
+                    "user_id": req.body.user_id,    // 비공개 클레임
+                    "user_nickname": result[0].nickname, //비공개 클레임
                 }
-
                 const jwtToken = await jwt.sign(user_token); //토큰 발급
 
                 logger.info(`'${req.body.user_id}' 님이 토큰을 발급받고 로그인 했습니다.`);
 
 
                 res.cookie("x_auth", jwtToken.token, {
-                    maxAge: 60 * 60 * 1000  // 1시간 유효 시간
+                    maxAge: 60 * 30 * 1000  // 30분 유효 시간
                 }).status(201).redirect('/v2/home/0'); // 쿠키 넣어놓고 보냄
 
             } else {
@@ -54,6 +58,7 @@ module.exports = {
                     `);
             }
         }).catch((err) => {
+            console.log(err);
             res.send(`
             <script>
                 alert('없는 사용자 입니다.');
@@ -112,7 +117,7 @@ module.exports = {
      *  수신 코드를 입력 받고
      *  해당 이메일로 승인코드를 보내줌
      * 
-     *  */ 
+     *  */
     doAuthMail: function (req, res) {
         const { receiverEmail } = req.body;
         let today = new Date();
@@ -152,18 +157,18 @@ module.exports = {
         }
     },
     /** 토큰의 유효성을 판단해주는 함수 */
-    verifyToken: async function (req , res){
+    verifyToken: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
         console.log(decode);
-        if(decode == -2 || decode == -3){
-            res.send({state:"not login"});
+        if (decode == -2 || decode == -3) {
+            res.send({ state: "not login" });
         } else {
-            res.send({state:"login"})
+            res.send({ state: "login" })
         }
     },
     /** 유저 프로필 업로드 함수*/
-    uploadProfile: async function(req, res) {
-        try{
+    uploadProfile: async function (req, res) {
+        try {
             const decode = await jwt.verify(req.body.token); //토큰 해독
             let user_id = decode.user_id;
             let filename = req.file.filename;
@@ -172,7 +177,7 @@ module.exports = {
                 user_profile: filename
             }
             let result = await Users.uploadProfile(user);
-            if(result.msg == "ok"){
+            if (result.msg == "ok") {
                 logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
                 res.status(200).send(
                     `
@@ -191,9 +196,9 @@ module.exports = {
                         window.close();
                     </script>
                     `
-                );               
+                );
             }
-        } catch (err){
+        } catch (err) {
             res.status(404).send(`<script>
             alert('이미지 파일이 아닙니다 🐱');
             window.close();
@@ -203,10 +208,10 @@ module.exports = {
     /** 토큰을 입력받고 
      *  닉네임만 리턴해주는 함수
      */
-    getNickname: async function (req , res){
+    getNickname: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
         let user_id = decode.user_id;
         const nickname = await Users.getNickname(user_id);
-        res.send({nickname: nickname[0].nickname});
+        res.send({ nickname: nickname[0].nickname });
     },
 }

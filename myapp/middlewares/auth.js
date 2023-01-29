@@ -14,7 +14,7 @@ const authUtil = {
             console.log('토큰이 없습니다.');
             return res.send(`
             <script>
-                console.log('로그인을 해주세요!');
+                alert('로그인을 해주세요!');
                 location.href = '/v2/login';
             </script>
             `);
@@ -25,7 +25,7 @@ const authUtil = {
                 console.log('토큰 유효기간 끝났습니다.');
                 return res.send(`
             <script>
-                console.log('로그인을 한지 오래되었습니다.');
+                alert('로그인을 한지 오래되었습니다.');
                 location.href = '/v2/login';
             </script>
             `);
@@ -33,7 +33,7 @@ const authUtil = {
                 console.log('토큰이 유효하지 않습니다.');
                 return res.send(`
             <script>
-                console.log('정상적인 로그인을 해주세요!');
+                alert('정상적인 로그인을 해주세요!');
                 location.href = '/v2/login';
             </script>
             `);

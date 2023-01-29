@@ -7,14 +7,13 @@ const TOKEN_INVALID = -2;
 
 module.exports = {
     sign: async (user) => {
-        const payload = {
-            user_id: user.user_id,
-            user_passwd: user.user_passwd,
-        };
+        const payload = user;
+
         const result = {
             token: jwt.sign(payload, secretKey, options),
             refreshToken: randToken.uid(256)
         };
+
         return result;
     },
     verify: async (token) => {
