@@ -33,17 +33,19 @@
                         <%=price+' 원'%>
                     </p>
                     <hr>
-                    <p class="text-muted" style="font-size: 17px;">
-                        <span>
-                        <% if(myboard.result[0].user_profile) { %>
-                            <img width="10%" height="10%"; src="/images/board/<%=myboard.result[0].user_profile%>">
-                            <!-- 프로파일 -->
-                        <% } else { %>
-                            <img style="width:10%; height:10%;" src="/images/profile.png">
-                        <% } %> 
-                        </span>
-                        닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
-                    </p>
+                    <a id="a_mypage" style="text-decoration-line: underline; cursor: zoom-in; color: red;">
+                        <p class="text-muted" style="font-size: 17px;">
+                            <span>
+                            <% if(myboard.result[0].user_profile) { %>
+                                <img width="10%" height="10%"; src="/images/board/<%=myboard.result[0].user_profile%>">
+                                <!-- 프로파일 -->
+                            <% } else { %>
+                                <img style="width:10%; height:10%;" src="/images/profile.png">
+                            <% } %> 
+                            </span>
+                            닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
+                        </p>
+                    </a>
                     <p class="text-muted" style="font-size: 25px;">
                         <% let locals=myboard.result[0].user_address.split(' ');
                         locals = locals[0]+' '+locals[1]+' '+locals[2];
@@ -84,6 +86,10 @@
             </div>
         </div><!-- /.container -->
 
+        <!-- 마이페이지 가기위한 form 태그 -->
+        <form style="display: none;" id="form_mypage" action="" method="post">
+            <input id="input_nickname" type="text" value="<%=myboard.result[0].nickname%>">
+        </form>
     </main>
     <script  src="/javascripts/cookie.js" type="text/javascript"></script>
     <script src="/javascripts/fetch.js" type="text/javascript"></script>

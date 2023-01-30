@@ -168,6 +168,13 @@ function reloadComment_Check() {
     }
 }
 
+/** 닉네임을 입력받고 
+ * 마이페이지 가게 하기 위한 함수 */
+a_mypage.addEventListener('click', async event => {
+    form_mypage.action = `/v3/board-mypage/${input_nickname.value}?_method=GET`
+    form_mypage.submit();
+})
+
 /**게시판 삭제 클릭시 토큰도 같이 body
  * 에 넘어가게 하기
 */
@@ -180,3 +187,5 @@ board_delete_token.value = token;
  * 
 */
 getComment(page_num);
+
+

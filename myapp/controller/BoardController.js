@@ -117,15 +117,15 @@ module.exports = {
      *      없다면 유저정보만 리턴해주는 함수
      */
     FindByAllBoard: async function (req, res) {
-        const decode = await jwt.verify(req.body.token); //토큰 해독
-        let user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+
+        let nickname = req.params.nickname; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
     
-        Book.FindByAllBoard(user_id).then((result) => {
+        Book.FindByAllBoard(nickname).then((result) => {
 
             if(result == ""){
 
-                Users.getUser(user_id).then((result) => {
+                Users.getUser(nickname).then((result) => {
                     return res.status(200).render('mylist', { board: {result} });
                 });
             } else {

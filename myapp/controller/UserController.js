@@ -157,7 +157,9 @@ module.exports = {
             res.send(err);
         }
     },
-    /** 토큰의 유효성을 판단해주는 함수 */
+    /** 토큰을 입력받고
+     *  닉네임을 보내주는 함수
+     */
     verifyToken: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
         console.log(decode);

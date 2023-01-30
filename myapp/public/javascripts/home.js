@@ -6,13 +6,19 @@ let token_form = document.getElementById('token_form'); //토큰 보내는 form
 let input_token = document.getElementById('input_token'); // 토큰 보내는 input 
 
 write.addEventListener('click', event =>{
-    token_form.action = "/v2/write?_method=GET"
+    token_form.action = `/v2/write?_method=GET`
     input_token.value = token;
     token_form.submit();
 });
 
-mypage.addEventListener('click', event => {
-    token_form.action = "/v3/board-mypage?_method=GET"
+mypage.addEventListener('click', async event => {
+    if(token == ""){
+        alert("로그인 하세요");
+        location.href="/v2/login";
+        return;
+    }
+    let name = await Post_body("/v1/getnickname?_method=GET",{data:token});
+    token_form.action = `/v3/board-mypage/${name.nickname}?_method=GET`
     input_token.value = token;
     token_form.submit();
 })

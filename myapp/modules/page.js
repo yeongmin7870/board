@@ -49,16 +49,20 @@ module.exports = {
 
         if (start_page <= 0) {      // 시작페이지가 0이거나 작을때
             start_page = 0;
-            if (start_page <= - Math.floor(page_size / 2))   //  현재페이지 - 절반페이지까지 이전 페이지 버튼이 보이게 하기
-                prevPage = false;
         }
 
         if (end_page >= total_page) {   // 끝페이지가 전체페이지랑 같거나 클때
             end_page = total_page;
-            if (end_page >= total_page + Math.floor(page_size / 2))  //  전체페이지 + 절반페이지까지 다음 페이지 버튼이 보이게 하기
-                nexPage = false;
         }
 
+        if(current_page == 0){ // 현재페이지가 0일때 이전버튼 없애기
+            prevPage = false;
+        }
+        if(current_page == total_page-1){ // 현재페이지가 마지막일때 다음버튼 없애기
+            nexPage = false;
+        }
+
+        
         /** 마지막 페이지와 시작페이지 격차를 구하기 위해서는 먼저 두 변수
          *  0 ~ total_page 범위에 벗어나는지 확인이 필요  
          */
@@ -70,9 +74,10 @@ module.exports = {
              *  보여줄 페이지 사이즈와 같지 않다면 
              *  격차만큼 시작페이지를 뺴주기 
              */
+         
             if (end_start_minus != page_size) {
                 start_page = start_page - (page_size - (end_start_minus));
-            }
+            }   
         }
         /** 마지막페이지가 전체페이지 수 보다 작다면 */
         if (end_page < total_page) {
@@ -84,6 +89,19 @@ module.exports = {
                 end_page = end_page + (page_size - (end_start_minus));
             }
         }
+        /** pagesize와 (total_page + 1) 이 같을때 
+         *  시작페이지가 -1이 되거나 
+         *  끝페이지가 전체페이지 +1 되는 버그 체크 
+         */
+        if(total_page+1 == page_size) {
+            if(start_page == -1){
+                start_page = 0;
+            }
+            if(end_page == page_size){
+                end_page = total_page;
+            }
+        }
+
         return { "start_page": start_page, "end_page": end_page, "prevPage": prevPage, "nexPage": nexPage, "page_size": page_size }
     },
 }

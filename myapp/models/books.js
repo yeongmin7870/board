@@ -86,7 +86,7 @@ module.exports = {
         })
     },
     // 해당 아이디 게시글 찾기
-    FindByAllBoard: function (user_id) {
+    FindByAllBoard: function (nickname) {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
@@ -94,8 +94,8 @@ module.exports = {
                 }
                 con.query(
                     'select * from board b, book_classification bc,user u where ' +
-                    'b.user_id=? and b.book_classification_id = bc.book_classification_id and '+
-                    'b.user_id = u.user_id', [user_id], (err, result, fields) => {
+                    'u.nickname=? and b.book_classification_id = bc.book_classification_id and '+
+                    'b.user_id = u.user_id', [nickname], (err, result, fields) => {
                         if (err){
                             reject(err);
                         }
