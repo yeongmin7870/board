@@ -1,12 +1,12 @@
 const con = require('../config/mysqlconn.js');
-
+const mysql = require('mysql2');
 
 module.exports = {
     getUser: function (user_id) {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 con.query(
-                    'SELECT * FROM user WHERE user_id = ?', [user_id] ,(err, result) => {
+                    'SELECT * FROM user WHERE user_id = ?', [user_id], (err, result) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -110,7 +110,8 @@ module.exports = {
     },
 
     /** 유저 프로파일 등록 */
-    uploadProfile: function (user) {``
+    uploadProfile: function (user) {
+        ``
         console.log(user);
         let sql = "UPDATE user SET user_profile = ? WHERE user_id = ?";
 
@@ -145,6 +146,25 @@ module.exports = {
                 if (err) new Error(err);
                 con.query(
                     sql, values, function (err, result) {
+                        if (err) reject(err);
+                        else resolve(result);
+                    }
+                )
+                con.release();
+            });
+        });
+    },
+    /** 아이디를 입력받고 
+     * 프로필 경로 리턴
+     */
+    findProfilePath: function (user) {
+        let sql = "SELECT * FROM user u WHERE u.user_id = ?;";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) new Error(err);
+                con.query(
+                    sql, [user.user_id], function (err, result) {
                         if (err) reject(err);
                         else resolve(result);
                     }

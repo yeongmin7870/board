@@ -1,5 +1,5 @@
 const con = require('../config/mysqlconn.js');
-
+const mysql = require('mysql2');
 module.exports = {
     // 책 종류 가져오기
     getBookClassifications: function () {
@@ -151,13 +151,19 @@ module.exports = {
         });
     },
     doRmByBoard: function (board_id) {
+        let sql1 = "DELETE FROM board b WHERE b.board_id = ?;";
+        let sql2 = "DELETE FROM comment c WHERE c.board_id = ?; ";
+
+        let sql_board = mysql.format(sql1, board_id);
+        let sql_comment = mysql.format(sql2, board_id);
+        
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
                     console.log(err);
                 }
                 con.query(
-                    'DELETE FROM board WHERE board_id = ?', [board_id], (err, result) => {
+                      sql_comment+sql_board , (err, result) => {
                         if (err)
                             reject(err);
                         else

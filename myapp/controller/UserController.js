@@ -8,6 +8,7 @@ const crypto = require('../modules/crypto');
 const { logger } = require('../modules/logger');
 const utcnow = new Date();
 const timedelta = require('time-delta');
+const fs = require('fs');
 
 module.exports = {
     doGetUser: function (req, res, next) {
@@ -176,6 +177,25 @@ module.exports = {
                 user_id: user_id,
                 user_profile: filename
             }
+            /** 프로필 수정하기 전에 삭제 수행 하는 알고리즘 */
+            const findProfile = await Users.findProfilePath(user);
+            const image_name = findProfile[0].user_profile;
+            let file_path = './public/images/board/' + image_name;
+            console.log(file_path);
+            if (fs.existsSync(file_path)) {
+                try {
+                    fs.unlinkSync(file_path);
+                    logger.info(`'${user_id}' 님이 ' 프로필 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
+                } catch (e) {
+                    logger.error(e);
+                    res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
+                }
+            } else {
+                let m = `${file_path} 삭제하려는 서버 이미지 경로가 올바르지 않습니다.`;
+                logger.error(m);
+            }
+
+            /** 프로필 수정하는 알고리즘 */
             let result = await Users.uploadProfile(user);
             if (result.msg == "ok") {
                 logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
@@ -198,6 +218,7 @@ module.exports = {
                     `
                 );
             }
+
         } catch (err) {
             res.status(404).send(`<script>
             alert('이미지 파일이 아닙니다 🐱');

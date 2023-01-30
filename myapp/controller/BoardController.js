@@ -6,6 +6,7 @@ const Comment = require('../models/comments');
 const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
 const Users = require('../models/Users');
+const mysql = require('mysql2');
 
 module.exports = {
 
@@ -168,8 +169,8 @@ module.exports = {
                 res.send(`<script>
                             alert('자신의 게시물이 아니기 때문에 삭제 할 수 없습니다.');
                             window.history.back();
-                        </script>
-                `);
+                          </script>
+            `);
                 return;
             } else {
 
@@ -185,9 +186,8 @@ module.exports = {
                         res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
                     }
                 } else {
-                    let m = "삭제하려는 서버 이미지 경로가 올바르지 않습니다.";
+                    let m = `${file_path} 삭제하려는 서버 이미지 경로가 올바르지 않습니다.`;
                     logger.error(m);
-                    res.send({ msg: m });
                 }
 
                 // 디비 게시글 데이터 삭제 
@@ -199,7 +199,7 @@ module.exports = {
                             location.href="/v2/home/0";
                         </script>
                     `);
-                });
+                }).catch((err) => console.log(err));
 
             }
         });
