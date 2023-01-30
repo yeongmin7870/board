@@ -269,5 +269,23 @@ module.exports = {
             `);
         }
     },
-
+    /** 게시판 상태를 입력 받고
+     * 
+     *  현재 게시판 상태를 수정하는 함수
+     */
+    changeBoardState: async (req,res) => {
+        let board= {
+            board_state: req.body.board_state,
+            board_id: req.params.board_id
+        }
+        let result = await Book.changeBoardState(board);
+        // logger.info(`'${user_id}' 님이 '${comment_result[0].board_id}' 게시물의 "${comment_result[0].comment_content}" 댓글을 성공적으로 삭제했습니다.`);
+        res.send(`
+        <script>
+            alert("게시물 상태를 성공적으로 수정했어요!");
+            opener.parent.location.reload();
+            window.close();
+        </script>
+        `);
+    },
 }

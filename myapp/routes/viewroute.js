@@ -21,4 +21,8 @@ router.get('/write', authUtil, boardcontroller.findBybookClassification);
 router.get('/profile-popup', (req,res) =>{
     res.render('profile_popup');
 })
+// 게시판상태 수정 화면
+router.get('/boardstate-popup', (req,res) =>{
+    res.render('board_state_popup');
+})
 module.exports = router;

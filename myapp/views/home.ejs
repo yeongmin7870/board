@@ -180,8 +180,14 @@
             <!-- 게시판글 목록 시작 -->
         <div style="width: 100%; height: 10%; text-align: center;">
             <hr>
-            <% for (var i=0; i < board.result.length; i++){ %>
-                <div class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
+            <% for (var i=0; i < board.result.length; i++){ 
+                if (board.result[i].board_state == "예약" || board.result[i].board_state == "판매완료") {    
+            %>
+                <div style="opacity: 0.5;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
+                <h2 style="color: gray;"><%=board.result[i].board_state%></h2>
+            <%} else {%>
+                <div  id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
+            <%}%>
                     <div class="col-md-7">
                         <h3 class="featurette-heading fw-normal lh-1" style="font-size: 30px;">
                             <span style="font-size: small;">조회수:<%=board.result[i].view_count%></span><br><br>

@@ -174,4 +174,27 @@ module.exports = {
             });
         })
     },
+
+    changeBoardState: function (board) {
+        let sql = "UPDATE board b SET b.board_state=? WHERE b.board_id=?;";
+
+        let sql_board = mysql.format(sql, [board.board_state, board.board_id]);
+        
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) {
+                    console.log(err);
+                }
+                con.query(
+                      sql_board , (err, result) => {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    }
+                );
+                con.release();
+            });
+        })
+    },
 }

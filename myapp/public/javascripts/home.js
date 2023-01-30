@@ -30,3 +30,4 @@ if (token) { // 쿠키에 토큰이 있다면 // <로그인 상태>
     btn_signin.style.display = 'block'; // 로그인 버튼 활성화
     btn_signout.style.display = 'none'; // 로그아웃 버튼 비활성화
 }
+console.log(input_board_state.value);

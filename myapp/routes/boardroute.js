@@ -18,6 +18,8 @@ router.get('/board-mypage/:nickname', boardcontroller.FindByAllBoard)
 router.get('/book-class', boardcontroller.findBybookClassification)
 // 한 개의 게시판 보기
 router.get('/board/page/:board_id', boardcontroller.FindByBoard);
+// 게시물 상태 변경
+router.put('/boardstate/:board_id', boardcontroller.changeBoardState)
 
 router.post('/board/comment', authUtil, boardcontroller.setToBoardComment)         // 댓글 작성
     .get('/board/comment/:board_id/:page', boardcontroller.getAllComment)          // 해당 게시물 댓글 출력

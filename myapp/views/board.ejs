@@ -16,6 +16,7 @@
 
 <body>
     <main>
+    <div id = "all_state" >
         <div class="container marketing">
             <hr class="featurette-divider">
             <div style="float: left; width: 50%;">
@@ -23,8 +24,15 @@
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
-                        <%=myboard.result[0].board_title%>
+                        <%=myboard.result[0].board_title%> 
                     </h2>
+                    <select id="select_board_state">
+                        <optgroup>
+                            <option><%=myboard.result[0].board_state%></option>
+                        </optgroup>
+                    </select>
+                    <input id="board_satate_value" type="hidden" value="<%=myboard.result[0].board_state%>">
+                    <!--예약이거나 판매완료면 비활성화 시키기 위한 값 저장 input-->
                     <p class="text-muted" style="font-size: 25px;">
                         <%=myboard.result[0].book_classification_name%>
                     </p>
@@ -44,6 +52,7 @@
                             <% } %> 
                             </span>
                             닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
+                            <input id="input_state_check_nickname" type="hidden" value="<%=myboard.result[0].nickname%>"> <!-- 현재 게시판 상태를 변경할때 필요한 닉네임을 담은 input태그-->
                         </p>
                     </a>
                     <p class="text-muted" style="font-size: 25px;">
@@ -84,12 +93,16 @@
                     </div>
                 </form>
             </div>
-        </div><!-- /.container -->
+        </div>
+
+        <input type="hidden" id="input_board_id" value="<%=myboard.result[0].board_id%>">
+        <!--게시판 상태를 변경하기위해 게시판 아이디를 input에 보관했다가 popup 주소로 보냄-->
 
         <!-- 마이페이지 가기위한 form 태그 -->
         <form style="display: none;" id="form_mypage" action="" method="post">
             <input id="input_nickname" type="text" value="<%=myboard.result[0].nickname%>">
         </form>
+    </div>
     </main>
     <script  src="/javascripts/cookie.js" type="text/javascript"></script>
     <script src="/javascripts/fetch.js" type="text/javascript"></script>

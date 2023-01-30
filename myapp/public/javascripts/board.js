@@ -173,7 +173,36 @@ function reloadComment_Check() {
 a_mypage.addEventListener('click', async event => {
     form_mypage.action = `/v3/board-mypage/${input_nickname.value}?_method=GET`
     form_mypage.submit();
-})
+});
+
+/** 게시판 상태 수정하기 위해 클릭했을때 */
+select_board_state.addEventListener('click', async () => {
+    if (token == undefined) {
+        alert("로그인해주세요");
+        location.href = "/v2/login";
+        return;
+    }
+    const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
+    const tokenNickname = t.nickname;
+    if (tokenNickname == input_state_check_nickname.value) {
+        window.open(`/v2/boardstate-popup?board_id=${input_board_id.value}`, "게시판상태 수정", "width=400, height=300, top=10, left=10");
+    } else {
+        alert("자신의 게시물이 아니기 때문에 게시물을 수정할 수 없습니다.");
+    }
+});
+
+/** 게시판 상태확인 해서 비활성화 만들기 */
+if (board_satate_value.value == "예약" || board_satate_value.value == "판매완료") {
+    
+    /** 이벤트 막는 함수  */
+    let stopFunc = function (e) { e.preventDefault(); e.stopPropagation(); return false; };
+    
+    btn_comment.addEventListener('click', stopFunc, true); //댓글작성버튼
+    comment_div.addEventListener('click', stopFunc, true); // 댓글 삭제 버튼
+    comment_page.addEventListener('click', stopFunc, true); // 댓글 페이징처리 버튼
+
+    all_state.style.opacity="0.5";
+}
 
 /**게시판 삭제 클릭시 토큰도 같이 body
  * 에 넘어가게 하기
