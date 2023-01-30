@@ -32,63 +32,133 @@
                 <li>주소: <%=address%></li>  <!-- 주소 -->
             </ul>
             <hr>
-    <%  
-        if(board.result[0].board_id){ 
-    %>
+
+            <div id ="btn_group">
+                <button type="button" class="btn btn-outline-success" id="btn_all" onclick="buttonDisabled(this)" value="전체">전체</button>
+                <button type="button" class="btn btn-outline-success" id="btn_sell" onclick="buttonDisabled(this)" value="판매">판매중</button>
+                <button type="button" class="btn btn-outline-success" id="btn_reservation" onclick="buttonDisabled(this)" value="예약">예약중</button>
+                <button type="button" class="btn btn-outline-success" id="btn_soldout" onclick="buttonDisabled(this)" value="판매완료">판매완료</button>
+            </div>
             <p>🐈 판매상품보기</p>
-            <button type="button" class="btn btn-outline-success" disabled>전체</button>
-            <button type="button" class="btn btn-outline-success">판매중</button>
-            <button type="button" class="btn btn-outline-success">예약중</button>
-            <button type="button" class="btn btn-outline-success">판매완료</button>
             <hr>
-            <div style="text-align: center;">
-                <table>
-                    <thead>
-                        <%for(let i=0; i < board.result.length; i++) { %>
-                            <tr>
-                                <th scope="col"></th>
-                            </tr>
-                        <% } %>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <%for(let i=0; i < board.result.length; i++) { %>
-                                <td>
-                                    <img src="/images/board/<%=board.result[i].board_image%>" style="width:30%; height:30%;">
-                                    <p><%=board.result[i].board_title%></p>
-                                </td>
-                            <% } %>
-                        </tr>
-                    </tbody>            
+            <table>
+                <thead>
+                    <div id="mypage_board_content_th"></div>
                 </table>
-            </div>    
-    <%} else {%>
-        <h4> 데이터가 없습니다 </h4>
-    <% } %>
+                <tbody>
+                    <tr>
+                            <div style="text-align: center;" id="mypage_board_content">
+                                <!--이 안은 해당 닉네임 게시판 -->
+                            </div>
+                    </tr>
+                </tbody>
+            </table>
         <hr>
-        <button type="button" class="btn btn-outline-primary" onClick="location.href='/v2/home/0'">홈으로</button>
+        <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">홈으로</button>
         </div>
         <script src="/javascripts/cookie.js" type="text/javascript"></script>
         <script src="/javascripts/fetch.js" type="text/javascript"></script>
         <script>
             let token = getCookie('x_auth'); //토큰 꺼내기
             let btn_profile = document.getElementById("btn_profile"); // 수정버튼
+            let newContentDiv = ""; // 마이페이지 게시물 내용 자식 div
             const nowNickname = document.getElementById("nowNickname"); //현재 닉네임 input
             const mypageNickname = nowNickname.value; //마이페이지 닉네임
-            
+
+
             /** 토큰을 받으면 닉네임으로 프로필 수정권한을 체크 해주고
              *  맞다면 수정 팝업창을 보여주는 함수
              */
             btn_profile.addEventListener("click", async () => {
-                const t = await Post_body("/v1/getnickname?_method=GET",{data:token}); // 토큰으로 가져온 닉네임
+                const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
                 const tokenNickname = t.nickname;
-                if(tokenNickname == mypageNickname){
+                if (tokenNickname == mypageNickname) {
                     window.open("/v2/profile-popup", "프로파일 수정", "width=400, height=300, top=10, left=10");
                 } else {
                     alert("자신의 마이페이지가 아니기 때문에 프로파일을 수정할 수 없습니다.");
                 }
             })
-            
+            /** 클릭한 버튼 아이디를 입력받으면
+             *  한번 전부 비활성화 풀어주고
+             *  클릭한 버튼을 비활성화 시킴
+             */
+            function buttonDisabled(b) {
+                const target = document.getElementById(b.id);
+                let childBtn = document.getElementById("btn_group").getElementsByTagName('*');
+                for (let btn of childBtn) {
+                    btn.disabled = false;
+                }
+                target.disabled = true;
+
+                btn_getContent(target);
+            }
+            /**버튼 누르면 해당 내용을 가져옴*/
+            async function btn_getContent(btn) {
+                let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=${btn.value}`
+                const content = await Get_pathVar(url);
+            }
+
+            /** 최초의 한번만 실행 
+             *  전체 게시판 내용 가져오기
+            */
+            async function all_getContent() {
+                let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=전체`
+                const content = await Get_pathVar(url);
+                makeboardContent(content.board.result)
+            }
+            /** 마이페이지 고객이 작성한 게시물 출력 해주는 함수*/
+            function makeboardContent(content) {
+                let mypage_board_content = document.getElementById("mypage_board_content"); // 마이페이지 게시물 내용 부모 div
+
+                if (content[0].board_id) {
+                    let comment_html1 = "";
+                    for (let i = 0; i < content.length; i++) {
+                        comment_html1 += `
+                            <tr>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        `;
+                    }
+                    for (let i = 0; i < content.length; i++) {
+                        let comment_html2 = `
+                            <td>
+                                <div id="div_boardImage_${content[i].board_id}" style="float:left; width:50%;">
+                                    <a href="/v3/board/page/${content[i].board_id}">
+                                    <img src="/images/board/${content[i].board_image}" style="width:30%; height:30%;">
+                                    <p>${content[i].board_title}</p></a> 
+                                    <input type="hidden" value="${content[i].board_state}" id="input_boardImage_${content[i].board_id}">
+                                </div>
+                            </td>
+                        `;
+                        newContentDiv = document.createElement("div");
+                        newContentDiv.innerHTML = comment_html1 + comment_html2;
+                        newContentDiv.setAttribute("id", "board_div_child");
+                        mypage_board_content.appendChild(newContentDiv);
+
+                        let input_boardImage = document.getElementById(`input_boardImage_${content[i].board_id}`);
+                        let div_boardImage = document.getElementById(`div_boardImage_${content[i].board_id}`);
+                        stateOpacity(input_boardImage, div_boardImage); // 상태에 따라서 투명화 시키기 
+                    }
+                } else {
+                    let comment_html = `<h4>데이터가 없습니다.</h4>`;
+                    newContentDiv = document.createElement("div");
+                    newContentDiv.innerHTML = comment_html;
+                    newContentDiv.setAttribute("id", "board_div_child");
+                    mypage_board_content.appendChild(newContentDiv);
+                }
+            }
+
+            /**상태에 따라서 투명화 시켜주는 함수 */
+            function stateOpacity(input_boardImage, div_boardImage) {
+
+                if (input_boardImage.value == "예약" || input_boardImage.value == "판매완료") {
+                    div_boardImage.style.opacity = "0.5";
+                }
+            }
+
+            all_getContent();
+
         </script>
 </body>
 

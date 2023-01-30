@@ -33,7 +33,7 @@ const authUtil = {
                 console.log('토큰이 유효하지 않습니다.');
                 return res.send(`
             <script>
-                alert('정상적인 로그인을 해주세요!');
+                alert('로그인을 해주세요!');
                 location.href = '/v2/login';
             </script>
             `);

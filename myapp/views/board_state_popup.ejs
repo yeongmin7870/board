@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h4>판매 상태를 변경 할 수 있습니다.</h4>
     <form id="form_board_state" method="post">
         <select name="board_state" required="true" class="form-control">
-                <option selected value="판매">판매</option>
-                <option value="예약">예약</option>
-                <option value="판매완료">판매완료</option>
+            <option selected value="판매">판매</option>
+            <option value="예약">예약</option>
+            <option value="판매완료">판매완료</option>
         </select>
         <button id="btn_finish" type="button" onclick="btn_put_boardstate();">수정완료</button>
     </form>
+    <script src="/javascripts/cookie.js" type="text/javascript"></script>
     <script>
+        /**token값*/
+        let token = getCookie('x_auth');
         /**게시판 상태 수정완료 버튼*/
         function btn_put_boardstate() {
             const urlparams = new URL(location.href).searchParams;
             const board_id = urlparams.get("board_id");
-            form_board_state.action = `/v3/boardstate/${board_id}?_method=PUT`;
+            form_board_state.action = `/v3/boardstate/${board_id}?_method=PUT&&token=${token}`;
             form_board_state.submit();
         }
     </script>
 </body>
+
 </html>

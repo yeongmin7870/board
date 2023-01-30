@@ -36,7 +36,7 @@ module.exports = {
             if (result[0].user_passwd == client_pass.password) {
                 const user_token = {
                     "iss": "ym_bookstore.kro.kr",  //토큰 발급자
-                    "exp": Math.floor(utcnow / 1000)+ 60 * 30, // 현재시간으로부터 + 30분 만료 시간 
+                    "exp": Math.floor(utcnow / 1000)+ 60 * 30 *60, // 현재시간으로부터 + 30분 만료 시간 
                     "http://ym_bookstore.kro.kr/jwt_claims/is_admin": true, //공개 클레임 , 충돌을 방지하기 위해 uri 형식
                     "user_id": req.body.user_id,    // 비공개 클레임
                     "user_nickname": result[0].nickname, //비공개 클레임
@@ -234,6 +234,9 @@ module.exports = {
     getNickname: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
         let user_id = decode.user_id;
+        if(user_id == undefined) {
+            return res.send({nickname: "need login"})
+        }
         const nickname = await Users.getNickname(user_id);
         res.send({ nickname: nickname[0].nickname });
     },

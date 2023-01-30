@@ -24,7 +24,7 @@ module.exports = {
     setBoard: function (board) {
         let { board_id, user_id, board_title, book_classification_id, board_contents, board_image, price } = board;
         values = [
-            [board_id, user_id, board_title, book_classification_id, board_contents, board_image, price, 0]
+            [board_id, user_id, board_title, book_classification_id, board_contents, board_image, price, 0, "판매"]
         ];
         // 토큰 해독
 
@@ -86,23 +86,37 @@ module.exports = {
         })
     },
     // 해당 아이디 게시글 찾기
-    FindByAllBoard: function (nickname) {
+    FindByAllBoard: function (mypage) {
+        let nickname = mypage.nickname;
+        let board_state = mypage.board_state;
+        let sql = "";
+        let sql1 = "";
+
+        if (board_state == "전체") { // 전체 보기 
+            sql1 = 'select * from board b, book_classification bc,user u where ' +
+                'u.nickname=? and b.book_classification_id = bc.book_classification_id and ' +
+                'b.user_id = u.user_id ORDER BY b.board_id DESC; ';
+            sql = mysql.format(sql1, [nickname, board_state]);
+        } else { // 그외 판매중 or 예약중 or 판매완료 보기
+            sql1 = sql1 = 'select * from board b, book_classification bc,user u where ' +
+                'u.nickname=? and b.board_state=? and b.book_classification_id = bc.book_classification_id and ' +
+                'b.user_id = u.user_id ORDER BY b.board_id DESC; ';
+            sql = mysql.format(sql1, [nickname, board_state]);
+        }
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
                     console.log(err);
                 }
                 con.query(
-                    'select * from board b, book_classification bc,user u where ' +
-                    'u.nickname=? and b.book_classification_id = bc.book_classification_id and '+
-                    'b.user_id = u.user_id', [nickname], (err, result, fields) => {
-                        if (err){
-                            reject(err);
-                        }
-                        else {
-                            resolve(result);
-                        }
+                       sql , (err, result) => {
+                    if (err) {
+                        reject(err);
                     }
+                    else {
+                        resolve(result);
+                    }
+                }
                 );
                 con.release();
             });
@@ -117,7 +131,7 @@ module.exports = {
                 }
                 con.query(
                     'SELECT * FROM board b, book_classification bc, user u' +
-                    ' WHERE b.board_id =? AND b.book_classification_id = bc.book_classification_id AND'+
+                    ' WHERE b.board_id =? AND b.book_classification_id = bc.book_classification_id AND' +
                     ' b.user_id = u.user_id'
                     , [board_id], (err, result) => {
                         if (err)
@@ -156,14 +170,14 @@ module.exports = {
 
         let sql_board = mysql.format(sql1, board_id);
         let sql_comment = mysql.format(sql2, board_id);
-        
+
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
                     console.log(err);
                 }
                 con.query(
-                      sql_comment+sql_board , (err, result) => {
+                    sql_comment + sql_board, (err, result) => {
                         if (err)
                             reject(err);
                         else
@@ -179,14 +193,14 @@ module.exports = {
         let sql = "UPDATE board b SET b.board_state=? WHERE b.board_id=?;";
 
         let sql_board = mysql.format(sql, [board.board_state, board.board_id]);
-        
+
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
                     console.log(err);
                 }
                 con.query(
-                      sql_board , (err, result) => {
+                    sql_board, (err, result) => {
                         if (err)
                             reject(err);
                         else
