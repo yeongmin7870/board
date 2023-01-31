@@ -46,7 +46,7 @@ module.exports = {
         })
     },
     //전체 게시물 카운트 수
-    getCntFindAll: function (startPage, endPage) {
+    getCntFindAll: function () {
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {
@@ -62,6 +62,34 @@ module.exports = {
                 );
                 con.release();
             });
+        })
+    },
+    /** 닉네임과 상태를 입력받고 
+     *  디비에서 게시물 카운트 수를 리턴해주는
+     *  함수
+     */
+    getCntFindStateBoard: function (board) {
+        let sql = 'SELECT COUNT(*) as cnt FROM board b, user u WHERE '+
+        'u.nickname=? AND b.board_state=? AND b.user_id = u.user_id';
+
+        if(board.board_state == "전체"){
+           sql = 'SELECT COUNT(*) as cnt FROM board b, user u WHERE '+
+           'u.nickname=? AND b.user_id = u.user_id';
+        }
+
+        return new Promise((resovle, reject) => {
+            con.getConnection((err, con) => {
+                if (err) new Error(err);
+                con.query(
+                    sql , [board.nickname, board.board_state], (err, result) => {
+                        if (err)
+                            reject(err);
+                        else
+                            resovle(result);
+                    }
+                );
+                con.release();
+            })
         })
     },
     //게시글 내용 전체 가져오기
@@ -85,23 +113,33 @@ module.exports = {
             });
         })
     },
-    // 해당 아이디 게시글 찾기
-    FindByAllBoard: function (mypage) {
+    /** 
+     *  (object) mypage    
+     *  (int) startColumn
+     *  (int) columnsize
+     *   @return
+     *      게시물 상태와 컬럼 사이즈에 따라 
+     *      게시물 + 유저정보 + 종류를 리턴함
+     *      
+     */
+    FindByAllBoard: function (mypage, startColumn, columnSize) {
         let nickname = mypage.nickname;
         let board_state = mypage.board_state;
         let sql = "";
         let sql1 = "";
-
+        /** 필요한 정보 */
+        const needinfo = 'b.board_id, b.board_title, b.board_image, b.board_state, '+
+        'u.nickname';
         if (board_state == "전체") { // 전체 보기 
-            sql1 = 'select * from board b, book_classification bc,user u where ' +
+            sql1 = `select ${needinfo} from board b, book_classification bc,user u where ` +
                 'u.nickname=? and b.book_classification_id = bc.book_classification_id and ' +
-                'b.user_id = u.user_id ORDER BY b.board_id DESC; ';
-            sql = mysql.format(sql1, [nickname, board_state]);
+                'b.user_id = u.user_id ORDER BY b.board_id DESC LIMIT ?  OFFSET ?;';
+            sql = mysql.format(sql1, [nickname, columnSize, startColumn]);
         } else { // 그외 판매중 or 예약중 or 판매완료 보기
-            sql1 = sql1 = 'select * from board b, book_classification bc,user u where ' +
+            sql1 = sql1 = `select ${needinfo} from board b, book_classification bc,user u where ` +
                 'u.nickname=? and b.board_state=? and b.book_classification_id = bc.book_classification_id and ' +
-                'b.user_id = u.user_id ORDER BY b.board_id DESC; ';
-            sql = mysql.format(sql1, [nickname, board_state]);
+                'b.user_id = u.user_id ORDER BY b.board_id DESC LIMIT ?  OFFSET ?;';
+            sql = mysql.format(sql1, [nickname, board_state, columnSize, startColumn]);
         }
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
@@ -109,14 +147,14 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                       sql , (err, result) => {
-                    if (err) {
-                        reject(err);
+                    sql, (err, result) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            resolve(result);
+                        }
                     }
-                    else {
-                        resolve(result);
-                    }
-                }
                 );
                 con.release();
             });

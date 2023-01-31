@@ -24,7 +24,7 @@ mypage.addEventListener('click', async event => {
         location.href="/v2/login";
         return;
     }
-    token_form.action = `/v3/board-mypage/${name.nickname}?board_state=전체&&_method=GET`
+    token_form.action = `/v3/board-mypage/${name.nickname}?_method=GET`
     input_token.value = token;
     token_form.submit();
 })

@@ -7,6 +7,7 @@ const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
 const Users = require('../models/Users');
 const mysql = require('mysql2');
+const { count } = require('console');
 
 module.exports = {
 
@@ -130,122 +131,143 @@ module.exports = {
      *      해당 상태의 게시판을 리턴
      */
     FindByBoardContent: async function (req, res) {
-
         const nickname = req.params.nickname; // 토큰 오브젝트에서 고객 아이디만 꺼내기
         const board_state = req.query.board_state; // 게시판 상태
+        /** 현재페이지 */
+        let current_page = Number(req.query.current_page);
+
         const mypage = {
             nickname: nickname,
-            board_state: board_state
+            board_state: board_state,
+            current_page: current_page,
         }
-        Book.FindByAllBoard(mypage).then((result) => {
-            return res.send({ board: { result } });
-        })
+
+        /**전체 컬럼 개수  */
+        let count_column = await Book.getCntFindStateBoard(mypage);
+            count_column = count_column[0].cnt;
+        /** 페이지 처리함수 */
+        let showPage = await Page.showPage(current_page, 6, count_column);
+            /**전체 페이지 개수 */
+            let total_page = showPage.total_page;
+            /**시작하는 컬럼 순서 */
+            let startColumn = showPage.startColumn;
+            /**컬럼 사이즈 */
+            let columnSize = showPage.columnSize;
+            current_page = showPage.current_page;
+       
+         /** 현재 페이지 컬럼 내용들 */
+        const result = await Book.FindByAllBoard(mypage, startColumn, columnSize)
+        /** 숫자및 화살표 정보  */
+        const Pagination = await Page.Pagination(current_page, 4, total_page);
+
+        return res.send({ board: { result }, numberbar_arrow: Pagination });
     },
 
-// 책 카테고리 
-findBybookClassification: async function (req, res) {
-    Book.getBookClassifications().then((result) => {
-        res.status(200).render('writeboard', { book: { result } });
-    });
-},
-// 해당 게시글 한 개 찾기
-FindByBoard: async function (req, res) {
-    try {
-        await Book.view_count(req.params.board_id); // 조회수 +1
-        const result = await Book.FindByBoard(req.params.board_id);
-        res.status(200).render('board', { myboard: { result } });
-    } catch (err) {
-        console.log(err);
-    }
-},
-/**
- * 게시글 삭제
- * 
- *   게시글 아이디를 입력받고
- *  
- */
-doRmByBoard: async function (req, res) {
 
-    const user = await jwt.verify(req.body.token); // 토큰 해독
+    // 책 카테고리 
+    findBybookClassification: async function (req, res) {
+        Book.getBookClassifications().then((result) => {
+            res.status(200).render('writeboard', { book: { result } });
+        });
+    },
+    // 해당 게시글 한 개 찾기
+    FindByBoard: async function (req, res) {
+        try {
+            await Book.view_count(req.params.board_id); // 조회수 +1
+            const result = await Book.FindByBoard(req.params.board_id);
+            res.status(200).render('board', { myboard: { result } });
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    /**
+     * 게시글 삭제
+     * 
+     *   게시글 아이디를 입력받고
+     *  
+     */
+    doRmByBoard: async function (req, res) {
 
-    const user_id = user.user_id;
+        const user = await jwt.verify(req.body.token); // 토큰 해독
 
-    // 해당 이미지 파일 이름 찾고 삭제하기
-    Book.FindByBoard(req.params.board_id).then((result) => {
+        const user_id = user.user_id;
 
-        if (user_id != result[0].user_id) { //현재 아이디와 토큰 아이디가 일치하지 않으면
-            res.send(`<script>
+        // 해당 이미지 파일 이름 찾고 삭제하기
+        Book.FindByBoard(req.params.board_id).then((result) => {
+
+            if (user_id != result[0].user_id) { //현재 아이디와 토큰 아이디가 일치하지 않으면
+                res.send(`<script>
                             alert('자신의 게시물이 아니기 때문에 삭제 할 수 없습니다.');
                             window.history.back();
                           </script>
             `);
-            return;
-        } else {
-
-            const image_name = result[0].board_image;
-            let file_path = './public/images/board/' + image_name;
-
-            if (fs.existsSync(file_path)) {
-                try {
-                    fs.unlinkSync(file_path);
-                    logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
-                } catch (e) {
-                    logger.error(e);
-                    res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
-                }
+                return;
             } else {
-                let m = `${file_path} 삭제하려는 서버 이미지 경로가 올바르지 않습니다.`;
-                logger.error(m);
-            }
 
-            // 디비 게시글 데이터 삭제 
-            Book.doRmByBoard(req.params.board_id).then((result) => {
-                logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물을 성공적으로 삭제했습니다.`);
-                res.status(201).send(`
+                const image_name = result[0].board_image;
+                let file_path = './public/images/board/' + image_name;
+
+                if (fs.existsSync(file_path)) {
+                    try {
+                        fs.unlinkSync(file_path);
+                        logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
+                    } catch (e) {
+                        logger.error(e);
+                        res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
+                    }
+                } else {
+                    let m = `${file_path} 삭제하려는 서버 이미지 경로가 올바르지 않습니다.`;
+                    logger.error(m);
+                }
+
+                // 디비 게시글 데이터 삭제 
+                Book.doRmByBoard(req.params.board_id).then((result) => {
+                    logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물을 성공적으로 삭제했습니다.`);
+                    res.status(201).send(`
                         <script>
                             alert("게시글이 삭제되었습니다.");
                             location.href="/v2/home/0";
                         </script>
                     `);
-            }).catch((err) => console.log(err));
+                }).catch((err) => console.log(err));
 
-        }
-    });
+            }
+        });
 
-},
-/**댓글 작성
- * 
- * @body Comment object 입력받음
- *  입력받은 것을 디비에 넣고
- * @response 
- *  결과를 응답에 보내주는 함수
-*/
-setToBoardComment: async function (req, res) {
-    const user = await jwt.verify(req.body.token); // 토큰 해독
-    /** request user_id가 현재 null 이므로  */
-    req.body.user_id = user.user_id;
+    },
+    /**댓글 작성
+     * 
+     * @body Comment object 입력받음
+     *  입력받은 것을 디비에 넣고
+     * @response 
+     *  결과를 응답에 보내주는 함수
+    */
+    setToBoardComment: async function (req, res) {
+        const user = await jwt.verify(req.body.token); // 토큰 해독
+        /** request user_id가 현재 null 이므로  */
+        req.body.user_id = user.user_id;
 
-    Comment.setToBoardComment(req.body).then((result) => {
+        Comment.setToBoardComment(req.body).then((result) => {
 
-        /** 누가 어디에 댓글 달았는지 로그 */
-        logger.info(`'${req.body.user_id}' 님이 '${req.body.board_id}' 게시판에서 "${req.body.comment_content}" 댓글 작성을 했습니다.`);
+            /** 누가 어디에 댓글 달았는지 로그 */
+            logger.info(`'${req.body.user_id}' 님이 '${req.body.board_id}' 게시판에서 "${req.body.comment_content}" 댓글 작성을 했습니다.`);
 
-        res.send(result);
-    })
-        .catch((err) => {
-            logger.error(`'${req.body.user_id}' 님이 '${req.body.board_id}' 게시판에서 "${req.body.comment_content}" 댓글 작성을 실패했습니다.`);
-            res.send(err);
+            res.send(result);
         })
-},
-//해당 게시글 댓글 보여주기
-getByboardComment: async (req, res) => {
-    try {
-        let result = await Comment.getByboardComment(req.params.board_id);
-        res.send({ msg: result });
-    } catch (err) {
-        res.send({ msg: err });
-    }
-},
+            .catch((err) => {
+                logger.error(`'${req.body.user_id}' 님이 '${req.body.board_id}' 게시판에서 "${req.body.comment_content}" 댓글 작성을 실패했습니다.`);
+                res.send(err);
+            })
+    },
+    //해당 게시글 댓글 보여주기
+    getByboardComment: async (req, res) => {
+        try {
+            let result = await Comment.getByboardComment(req.params.board_id);
+            res.send({ msg: result });
+        } catch (err) {
+            res.send({ msg: err });
+        }
+    },
     /**
      * 게시물 댓글 삭제
      * 
@@ -277,25 +299,25 @@ getByboardComment: async (req, res) => {
             `);
         }
     },
-        /** 게시판 상태를 입력 받고
-         * 
-         *  현재 게시판 상태를 수정하는 함수
-         */
-        changeBoardState: async (req, res) => {
-            let board = {
-                board_state: req.body.board_state,
-                board_id: req.params.board_id
-            }
-            const decode = await jwt.verify(req.query.token);
-            const user_id = decode.user_id;
-            await Book.changeBoardState(board);
-            logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물의 상태를 "${req.body.board_state}" 로(으로) 변경했습니다.`);
-            res.send(`
+    /** 게시판 상태를 입력 받고
+     * 
+     *  현재 게시판 상태를 수정하는 함수
+     */
+    changeBoardState: async (req, res) => {
+        let board = {
+            board_state: req.body.board_state,
+            board_id: req.params.board_id
+        }
+        const decode = await jwt.verify(req.query.token);
+        const user_id = decode.user_id;
+        await Book.changeBoardState(board);
+        logger.info(`'${user_id}' 님이 '${req.params.board_id}' 게시물의 상태를 "${req.body.board_state}" 로(으로) 변경했습니다.`);
+        res.send(`
         <script>
             alert("게시물 상태를 성공적으로 수정했어요!");
             opener.parent.location.reload();
             window.close();
         </script>
         `);
-        },
+    },
 }

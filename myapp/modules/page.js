@@ -1,3 +1,5 @@
+const Book = require('../models/books');
+
 module.exports = {
     /** 
      * @param current_page
@@ -104,4 +106,5 @@ module.exports = {
 
         return { "start_page": start_page, "end_page": end_page, "prevPage": prevPage, "nexPage": nexPage, "page_size": page_size }
     },
+
 }
