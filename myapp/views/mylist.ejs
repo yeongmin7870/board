@@ -64,6 +64,7 @@
             let newContentDiv = ""; // 마이페이지 게시물 내용 자식 div
             const nowNickname = document.getElementById("nowNickname"); //현재 닉네임 input
             const mypageNickname = nowNickname.value; //마이페이지 닉네임
+            let mypage_board_content = document.getElementById("mypage_board_content"); // 마이페이지 게시물 내용 부모 div
 
 
             /** 토큰을 받으면 닉네임으로 프로필 수정권한을 체크 해주고
@@ -96,6 +97,8 @@
             async function btn_getContent(btn) {
                 let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=${btn.value}`
                 const content = await Get_pathVar(url);
+                deleteDiv(); // 기존에 요소가 있다면 삭제
+                makeboardContent(content.board.result);
             }
 
             /** 최초의 한번만 실행 
@@ -104,13 +107,12 @@
             async function all_getContent() {
                 let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=전체`
                 const content = await Get_pathVar(url);
-                makeboardContent(content.board.result)
+                
+                makeboardContent(content.board.result);
             }
             /** 마이페이지 고객이 작성한 게시물 출력 해주는 함수*/
             function makeboardContent(content) {
-                let mypage_board_content = document.getElementById("mypage_board_content"); // 마이페이지 게시물 내용 부모 div
-
-                if (content[0].board_id) {
+                if (content.length != 0) { //테이블 헤드
                     let comment_html1 = "";
                     for (let i = 0; i < content.length; i++) {
                         comment_html1 += `
@@ -120,10 +122,10 @@
                             </tr>
                         `;
                     }
-                    for (let i = 0; i < content.length; i++) {
+                    for (let i = 0; i < content.length; i++) { // 테이블 본체 
                         let comment_html2 = `
                             <td>
-                                <div id="div_boardImage_${content[i].board_id}" style="float:left; width:50%;">
+                                <div id="div_boardImage_${content[i].board_id}" width:50%;">
                                     <a href="/v3/board/page/${content[i].board_id}">
                                     <img src="/images/board/${content[i].board_image}" style="width:30%; height:30%;">
                                     <p>${content[i].board_title}</p></a> 
@@ -131,6 +133,7 @@
                                 </div>
                             </td>
                         `;
+
                         newContentDiv = document.createElement("div");
                         newContentDiv.innerHTML = comment_html1 + comment_html2;
                         newContentDiv.setAttribute("id", "board_div_child");
@@ -141,6 +144,7 @@
                         stateOpacity(input_boardImage, div_boardImage); // 상태에 따라서 투명화 시키기 
                     }
                 } else {
+                    console.log("hi");
                     let comment_html = `<h4>데이터가 없습니다.</h4>`;
                     newContentDiv = document.createElement("div");
                     newContentDiv.innerHTML = comment_html;
@@ -154,6 +158,18 @@
 
                 if (input_boardImage.value == "예약" || input_boardImage.value == "판매완료") {
                     div_boardImage.style.opacity = "0.5";
+                }
+            }
+
+            /** 기존 div에 요소가 있다면 지워주는 함수
+             */
+            function deleteDiv() {
+                //기존에 댓글이 있다면 한번 지워주는 if문
+                if (newContentDiv != "") {
+                    let parent = newContentDiv.parentElement; // 해당 자식태그 부모요소 가져오기
+                    while (parent.firstChild) {
+                        parent.removeChild(parent.lastChild); // 부모요소 안 자식태그 삭제
+                    }
                 }
             }
 

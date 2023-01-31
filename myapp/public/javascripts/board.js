@@ -131,7 +131,7 @@ btn_comment.addEventListener('click', async () => {
         return;
     }
 
-    let url = 'http://localhost:3000/v3/board/comment';
+    let url = '/v3/board/comment';
     let data = {
         "comment_id": 0,
         "user_id": "",
