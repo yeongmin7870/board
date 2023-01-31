@@ -19,48 +19,48 @@
             <h4>마이페이지</h4>
             <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">홈으로</button>
 
-            <hr>
-                <span>
-                <% if(board.result[0].user_profile) { %>
-                    <img style="width: 30%; height: 30%;" src="/images/board/<%=board.result[0].user_profile%>">
-                    <!-- 프로파일 -->
+        <hr>
+        <span>
+            <% if(board.result[0].user_profile) { %>
+                <img style="width: 30%; height: 30%;" src="/images/board/<%=board.result[0].user_profile%>">
+                <!-- 프로파일 -->
                 <% } else { %>
                     <img style="width:  30%; height: 30%;" src="/images/profile.png">
-                <% } %> 
-                <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>"> <!-- 현재 누구의 마이페이지를 보고 있는지 -->
-                <button id="btn_profile"  class="btn btn-outline-secondary">수정</button>
-                </span>
-            <ul>
-                <li>닉네임: <%=board.result[0].nickname%></li> <!-- 닉네임 -->
-                <li>주소: <%=address%></li>  <!-- 주소 -->
-            </ul>
-            <hr>
+                    <% } %>
+                        <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>">
+                        <!-- 현재 누구의 마이페이지를 보고 있는지 -->
+                        <button id="btn_profile" class="btn btn-outline-secondary">수정</button>
+        </span>
+        <ul>
+            <li>닉네임: <%=board.result[0].nickname%>
+            </li> <!-- 닉네임 -->
+            <li>주소: <%=address%>
+            </li> <!-- 주소 -->
+        </ul>
+        <hr>
 
-            <div id ="btn_group">
-                <button type="button" class="btn btn-outline-success" id="btn_all" onclick="buttonDisabled(this)" value="전체" disabled>전체</button>
-                <button type="button" class="btn btn-outline-success" id="btn_sell" onclick="buttonDisabled(this)" value="판매">판매중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_reservation" onclick="buttonDisabled(this)" value="예약">예약중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_soldout" onclick="buttonDisabled(this)" value="판매완료">판매완료</button>
-            </div>
-            <p>🐈 판매상품보기</p>
+        <div id="btn_group">
+            <button type="button" class="btn btn-outline-success" id="btn_all"
+                onclick="buttonDisabled(this,'btn_group')" value="전체" disabled>전체</button>
+            <button type="button" class="btn btn-outline-success" id="btn_sell"
+                onclick="buttonDisabled(this,'btn_group')" value="판매">판매중</button>
+            <button type="button" class="btn btn-outline-success" id="btn_reservation"
+                onclick="buttonDisabled(this,'btn_group')" value="예약">예약중</button>
+            <button type="button" class="btn btn-outline-success" id="btn_soldout"
+                onclick="buttonDisabled(this,'btn_group')" value="판매완료">판매완료</button>
+        </div>
+        <p>🐈 판매상품보기</p>
+        <hr>
+
+        <div style="text-align: center; clear: both;" id="mypage_board_content">
+            <!--이 안은 해당 닉네임 게시판 -->
+        </div>
+        <!-- css float 여기서부터  clear 해버림 -->
+        <div id="nav_bar_btn_group" style="clear:both;">
             <hr>
-                <table>
-                        <thead>
-                            <div id="mypage_board_content_th"></div>
-                        </table>
-                    <tbody>
-                        <tr>
-                            <div style="text-align: center;" id="mypage_board_content">
-                                <!--이 안은 해당 닉네임 게시판 -->
-                            </div>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="margin-top: 33%; text-align: center; margin-right: 1%;">
-                    <hr>
-                        <div id="div_numberbar_arrow"></div>
-                    <hr>
-                </div>
+            <div id="div_numberbar_arrow"> <!-- 네비게이션 바 --></div>
+            <hr>
+        </div>
         </div>
 
         <script src="/javascripts/cookie.js" type="text/javascript"></script>
@@ -70,12 +70,13 @@
             let btn_profile = document.getElementById("btn_profile"); // 수정버튼
             let newContentDiv = ""; // 마이페이지 게시물 내용 자식 div
             let current_page = 0; // 게시판 내용 보고 있는 현재 페이지
-            let div_numberbar_arrow = document.getElementById("numberbar_arrow"); // 페이지 숫자 막대기랑, 이전페이지, 다음페이지 버튼 div
-            let div_new_numberbar_arrow =""; // div_numberbar_arrow 자식 div
+            let div_numberbar_arrow = document.getElementById("div_numberbar_arrow"); // 페이지 숫자 막대기랑, 이전페이지, 다음페이지 버튼 div
+            let div_new_numberbar_arrow = ""; // div_numberbar_arrow 자식 div
             const nowNickname = document.getElementById("nowNickname"); //현재 닉네임 input
             const mypageNickname = nowNickname.value; //마이페이지 닉네임
             let mypage_board_content = document.getElementById("mypage_board_content"); // 마이페이지 게시물 내용 부모 div
-
+            let btn_board_state = "전체"; // 현재 내가 어떤 게시판 상태 버튼을 눌렀는지 확인하는 변수;
+            let url = ""; // 마이페이지 게시판 내용물 및 네비게이션 바 주소를 담는 값
 
             /** 토큰을 받으면 닉네임으로 프로필 수정권한을 체크 해주고
              *  맞다면 수정 팝업창을 보여주는 함수
@@ -93,68 +94,73 @@
              *  한번 전부 비활성화 풀어주고
              *  클릭한 버튼을 비활성화 시킴
              */
-            function buttonDisabled(b) {
+            function buttonDisabled(b, c) {
                 const target = document.getElementById(b.id);
-                let childBtn = document.getElementById("btn_group").getElementsByTagName('*');
+                let childBtn = document.getElementById(`${c}`).getElementsByTagName('*');
                 for (let btn of childBtn) {
                     btn.disabled = false;
                 }
                 target.disabled = true;
-
                 btn_getContent(target);
             }
             /**버튼 누르면 해당 내용을 가져옴*/
             async function btn_getContent(btn) {
-                let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=${btn.value}&&current_page=${current_page}`
+                if (btn.value) {
+                    btn_board_state = btn.value; // 현재 선택한 게시판 상태 분류 버튼 저장
+                    current_page = 0; // 게시판 상태 분류 버튼을 선택했으므로 현재페이지를 다시 0으로 만들어줌
+                }
+
+                url = `/v3/board-mypage-content/${nowNickname.value}?board_state=${btn_board_state}&&current_page=${current_page}`
                 const content = await Get_pathVar(url);
+
+                deleteBtnDiv();
+                makeNavigationBar(content.numberbar_arrow);
+
                 deleteDiv(); // 기존에 요소가 있다면 삭제
                 makeboardContent(content.board.result);
+
             }
 
             /** 최초의 한번만 실행 
              *  전체 게시판 내용 가져오기
             */
             async function all_getContent() {
-                let url = `/v3/board-mypage-content/${nowNickname.value}?board_state=전체&&current_page=${current_page}`
+                url = `/v3/board-mypage-content/${nowNickname.value}?board_state=전체&&current_page=${current_page}`
                 const content = await Get_pathVar(url);
 
-                console.log("페이징처리"+content.numberbar_arrow.nexPage); //테스트
-
                 makeboardContent(content.board.result);
+
+                makeNavigationBar(content.numberbar_arrow);
+
             }
             /** 마이페이지 고객이 작성한 게시물 출력 해주는 함수*/
             function makeboardContent(content) {
                 if (content.length != 0) { //테이블 헤드
-                    let comment_html1 = "";
-                    for (let i = 0; i < content.length; i++) {
-                        comment_html1 += `
-                                <th scope="col">
-                                </th>
-                        `;
-                    }
+
                     for (let i = 0; i < content.length; i++) { // 테이블 본체 
-                        let comment_html2 = `
-                            <td>
-                                <div id="div_boardImage_${content[i].board_id}" style="width:20%; height:20%; float:left; margin-left: 10%;"">
-                                    <a href="/v3/board/page/${content[i].board_id}">
-                                    <img src="/images/board/${content[i].board_image}" style="width:100%; height:100%;">
-                                    <p>${content[i].board_title}</p></a> 
+                        let content_html = `
+                                <div id="div_boardImage_${content[i].board_id}" style="float: left; width: 33%;">
+                                    <a style="text-decoration: none;" href="/v3/board/page/${content[i].board_id}">
+                                    <div style="position:relative">
+                                        <p style="color:gray; position: absolute; top: 50%; left: 47%;">${content[i].board_state}<p>
+                                        <img src="/images/board/${content[i].board_image}" style="width:50%; height:50%;">
+                                    </div>
+                                    <p style="color: black;">${content[i].board_title}</p></a> 
                                     <input type="hidden" value="${content[i].board_state}" id="input_boardImage_${content[i].board_id}">
                                 </div>
-                            </td>
                         `;
 
                         newContentDiv = document.createElement("div");
-                        newContentDiv.innerHTML = comment_html1 + comment_html2;
+                        newContentDiv.innerHTML = content_html;
                         newContentDiv.setAttribute("id", "board_div_child");
                         mypage_board_content.appendChild(newContentDiv);
 
                         let input_boardImage = document.getElementById(`input_boardImage_${content[i].board_id}`);
                         let div_boardImage = document.getElementById(`div_boardImage_${content[i].board_id}`);
                         stateOpacity(input_boardImage, div_boardImage); // 상태에 따라서 투명화 시키기 
+
                     }
                 } else {
-                    console.log("hi");
                     let comment_html = `<h4>데이터가 없습니다.</h4>`;
                     newContentDiv = document.createElement("div");
                     newContentDiv.innerHTML = comment_html;
@@ -171,24 +177,69 @@
                 }
             }
 
-            /** 기존 div에 요소가 있다면 지워주는 함수
+            /** 기존 게시판 image에 요소가 있다면 지워주는 함수
              */
             function deleteDiv() {
-                //기존에 댓글이 있다면 한번 지워주는 if문
+                //기존에 게시판 이미지가 있다면  지워주는 if문
                 if (newContentDiv != "") {
                     let parent = newContentDiv.parentElement; // 해당 자식태그 부모요소 가져오기
+
                     while (parent.firstChild) {
                         parent.removeChild(parent.lastChild); // 부모요소 안 자식태그 삭제
                     }
+                }
+            }
+            /** 기존에 네비게이션바가 있다면
+             *  한번 지워주는 함수
+             */
+            function deleteBtnDiv() {
+                if (div_new_numberbar_arrow != "") {
+                    let parent = div_new_numberbar_arrow.parentElement;
+
+                    while (parent.firstChild) {
+                        parent.removeChild(parent.lastChild);
+                    };
                 }
             }
 
             /** 페이지 숫자 막대 및 이전,
              * 다음페이지 화살표 생성
              *  하는 함수 */
-            // function makeNavigationBar(){
+            function makeNavigationBar(content) {
+                if (content.end_page != 0) {
+                    let html = "";
+                    for (let i = content.start_page; i < content.end_page; i++) {
+                        html += `
+                        <div style="float: left; width: 3%;">
+                            <button class="btn btn-outline-success" type="button" id="btn_nav${i}" onclick="btn_nav_arrow_click(this)" value="${i}">${i + 1}</button>
+                        </div>
+                    `;
+                    }
+                    div_new_numberbar_arrow = document.createElement("div");
+                    div_new_numberbar_arrow.innerHTML = html + `<p style="color:red">페이지: [${Number(current_page) + 1}]</p>`;
+                    div_new_numberbar_arrow.setAttribute("id", "btn_mypage");
+                    div_numberbar_arrow.appendChild(div_new_numberbar_arrow);
+                } else {
+                    let html = `
+                    <div style="float: left;">
+                    </div>
+                    `;
+                    div_new_numberbar_arrow = document.createElement("div");
+                    div_new_numberbar_arrow.innerHTML = html;
+                    div_new_numberbar_arrow.setAttribute("id", "btn_mypage");
+                    div_numberbar_arrow.appendChild(div_new_numberbar_arrow);
+                }
+            }
+            /** 네비게이션 바 클릭시 네비게이션 바
+             *  disabled 만들고
+             * 이미지 내용물 달라지게 하기*/
+            function btn_nav_arrow_click(b) {
 
-            // }
+                current_page = b.value; // 현재페이지를 클릭한 버튼 값으로 변경
+                /** 이미지 내용물 달라지게 하기*/
+                btn_getContent(btn_board_state);
+
+            }
 
             all_getContent();
 

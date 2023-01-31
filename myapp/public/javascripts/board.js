@@ -65,9 +65,7 @@ async function getComment(page_num) {
     for (let i = comment.page.start_page; i < comment.page.end_page; i++) {
 
         comment_html +=
-            `
-                        <button id="comment_page_btn" class="btn btn-outline-primary" value="${i}" onclick="btn_comment_paging(this.value);">${i + 1}</button>
-                    `
+            `<button id="comment_page_btn" class="btn btn-outline-primary" value="${i}" onclick="btn_comment_paging(this.value);">${i + 1}</button>`
     }
     let comment_state = `
                     <p style="color:red;">[ ${Number(page) + 1} ]<span>page</span></p>
@@ -78,15 +76,15 @@ async function getComment(page_num) {
     if (comment.page.prevPage == true) {
 
         prev_btn = `
-                        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) - 1}); "> < 다음</button>
-                    `
+        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) - 1}); "> < 다음</button>
+        `
     }
 
     if (comment.page.nexPage == true) {
 
         next_btn = `
-                        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) + 1});">이전 > </button>
-                    `
+            <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) + 1});">이전 > </button>
+        `
     }
     page_newDiv = document.createElement("div");
 

@@ -107,48 +107,30 @@
     </header>
 
     <main>
-
-        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner" style="text-align: center; background-color: rgb(74, 73, 73);">
-                <div class="carousel-item active">
-                    <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                        <rect width="100%" height="100%" fill="#777" />
-                    </svg> -->
-                    <img src="/images/bookstore.jpg" width="40%" height="100%" />
-                </div>
-                <div class="carousel-item">
-                    <img src="/images/forest.jpg" width="40%" height="100%" />
-                </div>
-                <div class="carousel-item">
-                    <img src="/images/sky_blue.jpg" width="40%" height="100%" />
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-        <!-- Marketing messaging and featurettes
-    ================================================== -->
-        <!-- Wrap the rest of the page in another container to center all the content. -->
-        <div class="container marketing">
+        <hr>
+        <div class="container marketing" style="margin-top:2%;">
             <div>
                 <!-- 검색기능 -->
-                <form class="d-flex" role="search" style="margin-left: 30%;margin-right: 20%; width: 40%;">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                <form action="/v2/home/0?_method=get" method="post" class="d-flex" role="search" style="margin-left: 30%;margin-right: 20%; width: 40%;">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" value="#">종류</a></li>
+                        </ul>
+                        <input name="search" type="text" class="form-control" aria-label="Text input with dropdown button">
+                    </div>  
+                    <button style="width: auto; height: 1%;" class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+            </div>
+            <div id="btn_group" style="margin-left: 39%;">
+                <button type="button" class="btn btn-outline-success" id="btn_all"
+                    value="전체" disabled>전체</button>
+                <button type="button" class="btn btn-outline-success" id="btn_sell"
+                        value="판매">판매중</button>
+                <button type="button" class="btn btn-outline-success" id="btn_reservation"
+                        value="예약">예약중</button>
+                <button type="button" class="btn btn-outline-success" id="btn_soldout"
+                        value="판매완료">판매완료</button>
             </div>
             <br>
             <div style="text-align: center;">
@@ -183,8 +165,8 @@
             <% for (var i=0; i < board.result.length; i++){ 
                 if (board.result[i].board_state == "예약" || board.result[i].board_state == "판매완료") {    
             %>
-                <div style="opacity: 0.5;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
-                <h2 style="color: gray;"><%=board.result[i].board_state%></h2>
+                <div style="position:relative; opacity: 0.5;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
+                <h2 style="position:absolute; top: 45%; left: 30%; color: violet;"><%=board.result[i].board_state%></h2>
             <%} else {%>
                 <div  id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
             <%}%>

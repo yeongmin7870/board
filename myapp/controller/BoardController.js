@@ -42,6 +42,7 @@ module.exports = {
      *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
+        console.log(req.body);
         /** 현재페이지 */
         let current_page = req.params.page
         /**전체 컬럼 개수  */
@@ -159,8 +160,8 @@ module.exports = {
         const result = await Book.FindByAllBoard(mypage, startColumn, columnSize)
         /** 숫자및 화살표 정보  */
         const Pagination = await Page.Pagination(current_page, 4, total_page);
-
         return res.send({ board: { result }, numberbar_arrow: Pagination });
+        
     },
 
 
