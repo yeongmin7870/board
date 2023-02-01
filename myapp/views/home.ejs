@@ -82,25 +82,22 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/v2/home/0">Home</a>
+                            <a class="nav-link active" aria-current="page" href="/v2/home/0">홈으로</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="mypage"
-                                style="cursor: pointer;">MyPage</a>
+                                style="cursor: pointer;">마이페이지</a>
                         </li>
                         <li id="write" class="nav-item">
-                            <a class="nav-link" style="cursor: pointer;">Write</a>
-                        </li>
-                        <li class="nav-item" onclick="location.href='/chat'">
-                            <a class="nav-link" style="cursor: pointer;">나의대화</a>
+                            <a class="nav-link" style="cursor: pointer;">게시판 작성</a>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <button id="btn_signout" class="btn btn-outline-danger" type="submit"
-                        onclick="location.href='/cookies/cookie-remove';">Sign out</button>
+                        onclick="location.href='/cookies/cookie-remove';">로그아웃</button>
                     <button id="btn_signin" class="btn btn-outline-success" type="submit"
-                        onclick="location.href='/v2/login';">Sign In</button>
+                        onclick="location.href='/v2/login';">로그인</button>
                 </div>
             </div>
         </nav>
@@ -109,30 +106,36 @@
     <main>
         <hr>
         <div class="container marketing" style="margin-top:2%;">
-            <div>
+            <div style="text-align: center;">
                 <!-- 검색기능 -->
                 <form action="/v2/home/0?_method=get" method="post" class="d-flex" role="search" style="margin-left: 30%;margin-right: 20%; width: 40%;">
+                    <!-- 현재 게시판 상태를 저장해주는 input -->
+                    <input name="board_state" id="board_state" type="hidden" value="<%=board_state%>">
+
                     <div class="input-group mb-3">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" value="#">종류</a></li>
-                        </ul>
-                        <input name="search" type="text" class="form-control" aria-label="Text input with dropdown button">
+                        <select name="select_option" class="form-select" aria-label="Default select example" style="width: 1%;">
+                            <option value="제목" selected>제목</option>
+                            <option value="종류">종류</option>
+                            <option value="닉네임">닉네임</option>
+                        </select>
+                        <input name="search" type="text" class="form-control" aria-label="Text input with dropdown button" style="width: 50%;" required>
                     </div>  
                     <button style="width: auto; height: 1%;" class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+                <p>"<%=search%>" 로 검색하셨습니다.</p>
             </div>
             <div id="btn_group" style="margin-left: 39%;">
-                <button type="button" class="btn btn-outline-success" id="btn_all"
-                    value="전체" disabled>전체</button>
-                <button type="button" class="btn btn-outline-success" id="btn_sell"
-                        value="판매">판매중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_reservation"
+                <button type="button" class="btn btn-primary" id="btn_all"
+                    value="전체" onclick="btn_board_state(this)">전체</button>
+                <button type="button" class="btn btn-primary" id="btn_sell"
+                    onclick="btn_board_state(this)" value="판매">판매중</button>
+                <button type="button" class="btn btn-primary" id="btn_reservation" onclick="btn_board_state(this)"
                         value="예약">예약중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_soldout"
-                        value="판매완료">판매완료</button>
+                <button type="button" class="btn btn-primary" id="btn_soldout" onclick="btn_board_state(this)" value="판매완료">판매완료</button>
             </div>
             <br>
+            <!-- 네비게이션 -->
+            <% if(board.result.length != 0){ %>
             <div style="text-align: center;">
                 <!-- << -->
                 <%if(page.prevPage==true){%>
@@ -159,13 +162,16 @@
                 <%}%>
                                     <!-- /페이징 처리 -->
             </div>
+            <% } %>
             <!-- 게시판글 목록 시작 -->
+        <div style="text-align: center;">
+        <% if(board.result.length != 0){ %>
         <div style="width: 100%; height: 10%; text-align: center;">
             <hr>
             <% for (var i=0; i < board.result.length; i++){ 
                 if (board.result[i].board_state == "예약" || board.result[i].board_state == "판매완료") {    
             %>
-                <div style="position:relative; opacity: 0.5;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
+                <div style="position:relative; opacity: 0.6;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
                 <h2 style="position:absolute; top: 45%; left: 30%; color: violet;"><%=board.result[i].board_state%></h2>
             <%} else {%>
                 <div  id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
@@ -209,7 +215,11 @@
             <% } %>
         </div>
         </div><!-- /.container -->
-
+        <% } else { %>
+            <hr>
+            <h4>검색 결과가 없습니다.</h4>
+        <% } %>
+        </div>
         <form id="token_form" action="" style="display: none;"  method="post">
             <input type="hidden" id="input_token" name="token" value="">
         </form>

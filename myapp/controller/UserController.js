@@ -7,7 +7,6 @@ const { promise } = require('../config/mysqlconn');
 const crypto = require('../modules/crypto');
 const { logger } = require('../modules/logger');
 const utcnow = new Date();
-const timedelta = require('time-delta');
 const fs = require('fs');
 
 module.exports = {

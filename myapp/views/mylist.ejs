@@ -22,11 +22,11 @@
         <hr>
         <span>
             <% if(board.result[0].user_profile) { %>
-                <img style="width: 30%; height: 30%;" src="/images/board/<%=board.result[0].user_profile%>">
+                <img style="width: 10%; height: 10%;" src="/images/board/<%=board.result[0].user_profile%>">
                 <!-- 프로파일 -->
-                <% } else { %>
-                    <img style="width:  30%; height: 30%;" src="/images/profile.png">
-                    <% } %>
+            <% } else { %>
+                <img style="width:  10%; height: 10%;" src="/images/profile.png">
+            <% } %>
                         <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>">
                         <!-- 현재 누구의 마이페이지를 보고 있는지 -->
                         <button id="btn_profile" class="btn btn-outline-secondary">수정</button>
@@ -173,7 +173,7 @@
             function stateOpacity(input_boardImage, div_boardImage) {
 
                 if (input_boardImage.value == "예약" || input_boardImage.value == "판매완료") {
-                    div_boardImage.style.opacity = "0.5";
+                    div_boardImage.style.opacity = "0.6";
                 }
             }
 

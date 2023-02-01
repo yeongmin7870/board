@@ -42,11 +42,37 @@ module.exports = {
      *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
-        console.log(req.body);
+        /** 게시판 상태 변수 */
+        let board_state = "";
+
+        /** 게시판 상태 변수가 쿼리로 넘어오지 않았다면 */
+        if (req.query.board_state == undefined) {
+            /** 게시판 상태 변수가 쿼리, body 둘다 넘어오지 않았다면 */
+            if (req.body.board_state == "" || req.body.board_state == undefined) {
+                board_state = "전체";
+            } else {
+                board_state = req.body.board_state;
+            }
+        } else {
+            board_state = req.query.board_state;
+        }
+
+        let search = (req.body.search == undefined) ? "" : req.body.search;
+        const select_option = (req.body.select_option == undefined) ? "board_title" : req.body.select_option;
+        /** 검색 결과를 가공한 변수 */
+        let manufacture_search = "";
+        for (m of search.split(" ")) manufacture_search += m;
+
+        const board = {
+            board_state: board_state,
+            search: manufacture_search,
+            select_option: select_option,
+        }
+
         /** 현재페이지 */
         let current_page = req.params.page
         /**전체 컬럼 개수  */
-        let count_column = await Book.getCntFindAll();
+        let count_column = await Book.getCntFindAll(board);
 
         /** 페이지 처리함수 */
         let showPage = await Page.showPage(current_page, 4, count_column);
@@ -58,7 +84,7 @@ module.exports = {
         let columnSize = showPage.columnSize;
         current_page = showPage.current_page;
         /** 현재 페이지 컬럼 내용들 */
-        let result = await Book.getAllBoard(startColumn, columnSize);
+        let result = await Book.getAllBoard(startColumn, columnSize, board);
 
         /** pagination 처리 함수 */
         let Pagination = await Page.Pagination(current_page, 5, total_page);
@@ -73,7 +99,10 @@ module.exports = {
         /** 페이지 사이즈 */
         let page_size = Pagination.page_size;
 
-        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
+        if(search != ""){
+            logger.info(`'${board_state}' 게시판 상태, '${select_option}' 분류로 "${search}" 을(를) 검색했습니다.`);
+        }
+        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search });
     },
     /**
      * 게시판 댓글 페이지처리
@@ -145,23 +174,23 @@ module.exports = {
 
         /**전체 컬럼 개수  */
         let count_column = await Book.getCntFindStateBoard(mypage);
-            count_column = count_column[0].cnt;
+        count_column = count_column[0].cnt;
         /** 페이지 처리함수 */
         let showPage = await Page.showPage(current_page, 6, count_column);
-            /**전체 페이지 개수 */
-            let total_page = showPage.total_page;
-            /**시작하는 컬럼 순서 */
-            let startColumn = showPage.startColumn;
-            /**컬럼 사이즈 */
-            let columnSize = showPage.columnSize;
-            current_page = showPage.current_page;
-       
-         /** 현재 페이지 컬럼 내용들 */
+        /**전체 페이지 개수 */
+        let total_page = showPage.total_page;
+        /**시작하는 컬럼 순서 */
+        let startColumn = showPage.startColumn;
+        /**컬럼 사이즈 */
+        let columnSize = showPage.columnSize;
+        current_page = showPage.current_page;
+
+        /** 현재 페이지 컬럼 내용들 */
         const result = await Book.FindByAllBoard(mypage, startColumn, columnSize)
         /** 숫자및 화살표 정보  */
         const Pagination = await Page.Pagination(current_page, 4, total_page);
         return res.send({ board: { result }, numberbar_arrow: Pagination });
-        
+
     },
 
 
