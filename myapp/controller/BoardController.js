@@ -38,12 +38,14 @@ module.exports = {
     },
     /**
      * 메인홈 게시판 목록 출력
-     * @params 현재 페이지 입력받으면
+     *   current_page , board_state, select_option
      *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
         /** 게시판 상태 변수 */
         let board_state = "";
+        let select_option = "";
+        let search = "";
 
         /** 게시판 상태 변수가 쿼리로 넘어오지 않았다면 */
         if (req.query.board_state == undefined) {
@@ -57,8 +59,29 @@ module.exports = {
             board_state = req.query.board_state;
         }
 
-        let search = (req.body.search == undefined) ? "" : req.body.search;
-        const select_option = (req.body.select_option == undefined) ? "board_title" : req.body.select_option;
+        /** 옵션 선택 변수가 쿼리로 넘어오지 않았다면 */
+        if (req.query.select_option == undefined) {
+            /** 옵션 선택 변수가 쿼리, body 둘다 넘어오지 않았다면 */
+            if (req.body.select_option == "" || req.body.select_option == undefined) {
+                select_option = "제목";
+            } else {
+                select_option = req.body.select_option;
+            }
+        } else {
+            select_option = req.query.select_option;
+        }
+
+        /** 검색 변수가 쿼리로 넘어오지 않았다면 */
+        if (req.query.search == undefined) {
+            /** 검색 변수가 쿼리, body 둘다 넘어오지 않았다면 */
+            if (req.body.search == "" || req.body.search == undefined) {
+                search = "";
+            } else {
+                search = req.body.search;
+            }
+        } else {
+            search = req.query.search;
+        }
         /** 검색 결과를 가공한 변수 */
         let manufacture_search = "";
         for (m of search.split(" ")) manufacture_search += m;
@@ -98,11 +121,11 @@ module.exports = {
         let nexPage = Pagination.nexPage;
         /** 페이지 사이즈 */
         let page_size = Pagination.page_size;
-
-        if(search != ""){
-            logger.info(`'${board_state}' 게시판 상태, '${select_option}' 분류로 "${search}" 을(를) 검색했습니다.`);
+        console.log(board);
+        if (search != "") {
+            logger.info(`'${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
         }
-        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search });
+        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search, select_option: select_option });
     },
     /**
      * 게시판 댓글 페이지처리

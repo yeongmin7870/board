@@ -113,12 +113,13 @@
                     <input name="board_state" id="board_state" type="hidden" value="<%=board_state%>">
 
                     <div class="input-group mb-3">
-                        <select name="select_option" class="form-select" aria-label="Default select example" style="width: 1%;">
-                            <option value="제목" selected>제목</option>
+                        <select id="select_option" name="select_option" class="form-select" aria-label="Default select example" style="width: 1%;">
+                            <option value="제목">제목</option>
                             <option value="종류">종류</option>
                             <option value="닉네임">닉네임</option>
                         </select>
-                        <input name="search" type="text" class="form-control" aria-label="Text input with dropdown button" style="width: 50%;" required>
+                        <input id="input_select_option" type="hidden" value="<%=select_option%>">
+                        <input name="search" value="<%=search%>" type="text" class="form-control" aria-label="Text input with dropdown button" style="width: 50%;" required>
                     </div>  
                     <button style="width: auto; height: 1%;" class="btn btn-outline-success" type="submit">Search</button>
                 </form>
@@ -140,27 +141,31 @@
                 <!-- << -->
                 <%if(page.prevPage==true){%>
                     <button class="btn btn-outline-secondary"
-                        onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-1,0)%>';">
+                        onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-1,0)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
+                        '&&search=<%=search%>'">
                         < 이전 </button>
                 <%}%>
                 <!-- [1 2 3 4 5] -->
-                <%for(var i=page.start_page; i < page.end_page; i++) { if(page.current_page==i){%>
+                <%for(var i=page.start_page; i < page.end_page; i++) { 
+                    if(page.current_page==i){%>
                     <button class="btn btn-outline-primary" style="color:red"
-                        onclick="location.href='/v2/home/<%=i%>'">
+                        onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
+                        '&&search=<%=search%>'">
                         <%=i+1%>
                     </button>
                     <%} else {%>
-                        <button class="btn btn-outline-primary"
-                            onclick="location.href='/v2/home/<%=i%>'">
-                            <%=i+1%>
-                        </button>
+                    <button class="btn btn-outline-primary" onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&'+
+                    'select_option=<%=select_option%>&&search=<%=search%>'">
+                        <%=i+1%>
+                    </button>
                     <%} }%>
                             <!-- >> -->
                     <%if(page.nexPage==true){%>
                         <button class="btn btn-outline-secondary"
-                            onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+1,page.total_page-1)%>';">다음 ></button>
-                <%}%>
-                                    <!-- /페이징 처리 -->
+                        onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+1,page.total_page-1)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
+                        '&&search=<%=search%>'">다음 ></button>
+                    <%}%>
+                       <!-- /페이징 처리 -->
             </div>
             <% } %>
             <!-- 게시판글 목록 시작 -->

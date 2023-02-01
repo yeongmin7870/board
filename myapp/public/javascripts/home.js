@@ -77,7 +77,7 @@ function saveBoardState(state) {
  */
 function buttonDisabled() {
     let btn_id = "";
-    switch(board_state.value){
+    switch (board_state.value) {
         case "전체":
             btn_id = "btn_all";
             break;
@@ -95,13 +95,37 @@ function buttonDisabled() {
     target.disabled = true;
 }
 
+/** 
+ * selection option 값 입력받으면
+ * selete 옵션 선택 */
+function selectOption() {
+    let select_option = document.getElementById("select_option");
+    let searchAfterOption = document.getElementById("input_select_option");
+    let i = 0;
+    setTimeout(() => {
+        switch (searchAfterOption.value) {
+            case "제목":
+                i = 0;
+                break;
+            case "종류":
+                i = 1;
+                break;
+            case "닉네임":
+                i = 2;
+                break;
+        }
+        select_option.options[i].selected = true;
+    }, 1);
+}
 
 /** 메인 함수 */
 function main() {
     buttonDisabled();
-
     saveBoardState("board_state"); // 현재 게시판 상태를 확인하고 변수에 저장함
-
+    /** 사용자가 검색할때 체크했던 옵션
+     *  다시 체크해주는 함수
+     */
+    selectOption();
     /** 로그인 버튼 컨트롤 */
     btn_login();
 }
