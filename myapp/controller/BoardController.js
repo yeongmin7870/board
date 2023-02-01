@@ -121,8 +121,7 @@ module.exports = {
         let nexPage = Pagination.nexPage;
         /** 페이지 사이즈 */
         let page_size = Pagination.page_size;
-        console.log(board);
-        if (search != "") {
+         if (search != "") {
             logger.info(`'${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
         }
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search, select_option: select_option });
