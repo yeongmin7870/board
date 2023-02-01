@@ -28,13 +28,13 @@
                 <input type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
             </div>
             <div>
-                <div style="float: left; width: 50%;">
+                <div style="float: left; width: 100%;">
                     <label for="nickname"><b>닉네임</b></label>
                     <input type="text" placeholder="최대6 글자 별명을 입력하세요" name="nickname" id="nickname" maxlength="6"
                         onkeyup="checkNickname()" required>
                 </div>
-                <div style="float: left; width: 50%">
-                    <input style="background-color: white;" type="text" id="nicknameInfo" value="" readonly>
+                <div style="float: left; width: 100%">
+                    <input style="background-color: white;" type="text" id="nicknameInfo" value="" placeholder="닉네임 중복 여부" readonly>
                 </div>
                 <input value="" id="checkedNickname" type="text" style="display: none;" required>
             </div>
@@ -42,31 +42,28 @@
                 <label for="address"><b>주소</b></label>
                 <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" readonly required>
             </div>
-            <div>
-                <label for="Email"><b>이메일</b></label>
-                <input type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
-                @
-                <select id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
-                    <option selected>이메일 선택</option>
-                    <option value="@naver.com">naver</option>
-                    <option value="@gmail.com">gmail</option>
-                    <option value="@daum.com">daum</option>
-                    <option value="@kakao.com.com">kakao</option>
-                    <option value="@cyworld.com">cyworld</option>
-                    <option value="@hanmail.com">hanmail</option>
-                    <option value="@outlook.com">outlook</option>
-                    <option value="@tistory.com">tistory</option>
-                    <option value="@yahoo.com">yahoo</option>
-                    <option value="null">직접입력</option>
-                </select>
-                <input type="text" value="" id="directEmail" name="directEmail" onkeyup="directEmailOption()"
-                    style="display: none;" placeholder="example.com" required disabled> <!-- 직접입력 칸 -->
+            <label for="Email"><b>이메일</b></label>
+            <input type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
+            @
+            <select id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
+                <option selected>이메일 선택</option>
+                <option value="@naver.com">naver</option>
+                <option value="@gmail.com">gmail</option>
+                <option value="@daum.com">daum</option>
+                <option value="@kakao.com.com">kakao</option>
+                <option value="@cyworld.com">cyworld</option>
+                <option value="@hanmail.com">hanmail</option>
+                <option value="@outlook.com">outlook</option>
+                <option value="@tistory.com">tistory</option>
+                <option value="@yahoo.com">yahoo</option>
+                <option value="null">직접입력</option>
+            </select>
+            <input type="text" value="" id="directEmail" name="directEmail" onkeyup="directEmailOption()"
+                style="display: none;" placeholder="example.com" required disabled> <!-- 직접입력 칸 -->
 
-                <input type="text" id="user_email" value="" name="user_email" style="display: none;" required>
-                <!-- 서버로 보내줄 이메일 조합 칸 -->
-                <br>
-            </div>
-
+            <input type="text" id="user_email" value="" name="user_email" style="display: none;" required>
+            <!-- 서버로 보내줄 이메일 조합 칸 -->
+            <br>
             <button type="button" id="checkEmailBtn" onclick="btnCheckEmail();"
                 style="display: block; width: fit-content;">이메일
                 확인받기</button>
@@ -80,9 +77,9 @@
             <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p> <!-- 승인 타이머 -->
             <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
             <!-- 승인 코드 입력 칸  -->
-            <input type="text" placeholder="" name="codeInfo" id="codeInfo"
-                style="display: block; background-color: white;" readonly>
-            <!-- 승인 여부 확인 박스 -->
+            <input type="text" placeholder="인증여부" name="codeInfo" id="codeInfo"
+                style="display: block; background-color: white;"  readonly>
+             <!-- 승인 여부 확인 박스 -->
             <hr>
 
             <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
