@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
 
 const port = process.env.PORT || 3000;
 const { logger } = require('./modules/logger');
@@ -33,8 +31,7 @@ app.use('/cookies', cookieRouter);
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.set('io', io) // 전역변수로 등록 
 
-http.listen(port, () => {
+app.listen(port, () => {
     logger.info(`http://localhost:${port}/v2/home/0 주소로 서버가 시작되었습니다.`);
 });
