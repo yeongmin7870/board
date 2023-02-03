@@ -1,12 +1,14 @@
-.idea
-// 모듈 폴더
+# .idea
+# // 모듈 폴더
 myapp/node_modules/
-//디비, 키 같은 중요한 폴더
-myapp/config/
+# //디비, 키 같은 중요한 폴더
+# myapp/config/
 
-myapp/._config
-// 서버 이미지 폴더
-myapp/public/images/
+# myapp/._config
+# // 서버 이미지 폴더
+# myapp/public/images/
 
-// 로그폴더
+# // 로그폴더
 myapp/logs/
+
+myapp/config/bookboard.sql
