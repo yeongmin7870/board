@@ -135,7 +135,7 @@ function btnCheckCode() { // 승인완료 코드
 }
 function sendCode() { //승인코드 고객께 보내기
     const data = { receiverEmail: user_email.value };
-    fetch('http://localhost:3000/v1/mail', {
+    fetch('/v1/mail', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ async function checkNickname() {
     let nickname_v = nickname.value;
 
     if (nickname_v != "") {
-        let check = await fetch(`http://localhost:3000/v1/checknickname/${nickname_v}`)
+        let check = await fetch(`/v1/checknickname/${nickname_v}`)
         let checkNickname = await check.json();
         let nicknameInfo = document.querySelector("#nicknameInfo");
 

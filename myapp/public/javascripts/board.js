@@ -35,7 +35,7 @@ let end_page = 0;
  */
 async function getComment(page_num) {
     page = page_num;
-    let comment = await Get_pathVar(`http://localhost:3000/v3/board/comment/${board_id}/${page}`);
+    let comment = await Get_pathVar(`/v3/board/comment/${board_id}/${page}`);
     end_page = comment.page.end_page;
 
     for (let i = 0; i < comment.comment.result.length; i++) {
