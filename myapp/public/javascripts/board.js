@@ -175,6 +175,9 @@ a_mypage.addEventListener('click', async event => {
 
 /** 게시판 상태 수정하기 위해 클릭했을때 */
 btn_board_update.addEventListener('click', async () => {
+    /** 판매상태 체크 */
+    if(board_satate_value.value != "판매") return alert("판매상태가 아니라서 수정 할 수 없습니다.");
+
     const update_board_form = document.getElementById("update_board_form");
     
     const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
