@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form id="form_profile" action="/v1/upload-profile" method="post" enctype="multipart/form-data">
+    <form id="form_profile" action="/v1/upload-profile?_method=PUT" method="post" enctype="multipart/form-data">
         <input id="token" type="hidden" name=token value="">
         <input id="profile" type="file" name="profile" required>
         <button id="btn_profile_submit" type="submit" class="btn btn-outline-secondary">수정</button>

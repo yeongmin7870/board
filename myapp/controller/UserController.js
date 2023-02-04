@@ -182,7 +182,7 @@ module.exports = {
             const findProfile = await Users.findProfilePath(user);
             const image_name = findProfile[0].user_profile;
             let file_path = './public/images/board/' + image_name;
-            console.log(file_path);
+
             if (fs.existsSync(file_path)) {
                 try {
                     fs.unlinkSync(file_path);
@@ -191,9 +191,6 @@ module.exports = {
                     logger.error(e);
                     res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
                 }
-            } else {
-                let m = `${file_path} 삭제하려는 서버 이미지 경로가 올바르지 않습니다.`;
-                logger.error(m);
             }
 
             /** 프로필 수정하는 알고리즘 */
@@ -232,11 +229,39 @@ module.exports = {
      */
     getNickname: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
-        let user_id = decode.user_id;
+        const user_id = decode.user_id;
         if(user_id == undefined) {
             return res.send({nickname: "need login"})
         }
         const nickname = await Users.getNickname(user_id);
         res.send({ nickname: nickname[0].nickname });
+    },
+    /** 토큰, 자기 소개글 입력 받고
+     *  결과 리턴해주는 함수
+     */
+    uploadIntroduce: async function(req,res){
+        const decode = await jwt.verify(req.body.token); // 토큰 해독
+        const user_id = decode.user_id;
+        
+        const result = await Users.uploadIntroduce(user_id, req.body.introduce);
+        if(result.response == "Good"){
+            logger.info(`'${user_id}' 가 "${req.body.introduce}" 으로 소개글을 등록 했습니다.`)
+            res.send(`
+            <script>
+                alert("소개글이 정상적으로 등록되었습니다.");
+                opener.parent.location.reload();
+                window.close();
+            </script>
+            `)
+        } else {
+            logger.error(`'${user_id}' 가 소개글을 등록하다가 "${result}" 에러를 발생시켰습니다.`);
+            res.send(`
+            <script>
+                alert("소개글 등록이 실패했습니다.");
+                opener.parent.location.reload();
+                window.close();
+            </script>
+            `);
+        }
     },
 }

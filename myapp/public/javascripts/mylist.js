@@ -171,5 +171,27 @@ function btn_nav_arrow_click(b) {
     btn_getContent(btn_board_state);
 
 }
+/** 자기소개글 수정
+ *  팝업창
+ */
+async function btn_introduce() {
+    const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
+    const tokenNickname = t.nickname;
 
-all_getContent();
+    if (tokenNickname == mypageNickname) {
+        window.open("/v2/introduce-popup", "소개글 수정", "width=400, height=300, top=10, left=10");
+    } else {
+        alert("자신의 마이페이지가 아니므로 자기소개 글을 수정할 수 없어요!");
+        return;
+    }
+}
+
+/** 메인 함수 */
+function main() {
+    all_getContent();
+}
+
+
+
+main();
+

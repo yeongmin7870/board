@@ -23,5 +23,8 @@ router.post('/verify', UserController.verifyToken);
 // 닉네임만 가져오기
 router.get('/getnickname', UserController.getNickname);
 // 유저 프로파일 등록
-router.post('/upload-profile', upload.single("profile"), UserController.uploadProfile)
+router.put('/upload-profile', upload.single("profile"), UserController.uploadProfile)
+// 유저 자기소개 등록
+router.put('/upload-indroduce', UserController.uploadIntroduce)
+
 module.exports = router;

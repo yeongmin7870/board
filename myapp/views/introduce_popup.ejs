@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>소개글 수정</title>
+</head>
+<body style="margin-left: 10%; margin-top:10%">
+    <h4>소개글</h4>
+    <form action="/v1/upload-indroduce?_method=PUT" method="post">
+        <textarea type="text" style="width: 50%; height: 100px;" name="introduce"  id="text_introduce" 
+        onkeydown="text_Byte_length(this, 100)" required></textarea>
+        <input type="hidden" name="token" id="token" >
+        <button type="submit" class="btn btn-outline-secondary" id="btn_introduce"> 소개글 수정완료 </button>
+    </form>
+    <input type="text" id="readByte" readonly>
+
+    <script src="/javascripts/cookie.js" type="text/javascript"></script>
+    <script>
+        let token = getCookie('x_auth'); //토큰 꺼내기
+        document.getElementById("token").value = token
+    </script>
+    <script>
+        /** 수정버튼 */
+        const btn_introduce = document.getElementById("btn_introduce");
+
+        /** 글자를 바이트 수로 제한  */
+        function text_Byte_length(t, maxByte){
+            input_text = document.getElementById(t.id);
+            let str = input_text.value
+            let one_char = "";
+
+            let sumByte = 0;
+            /** 
+             *  escape - 각 문자를 %16진수코드값 으로 인코딩
+             *  1 byte : '%xx' 형태
+             *  영문 알파벳, 숫자, 일부 특수문자 제외
+             * 
+             *  입력한 문자열을 짤라서 2바이트인 1바이트인지 계산
+            */
+            for(let i =0; i < str.length; i++){
+                one_char = str.charAt(i);
+                
+                if( escape(one_char).length > 3 ) sumByte+=2;
+                else sumByte +=1;
+            }
+
+            /** 현재 전체 바이트 수를 125 이하로 제한하고
+             *  넘을시 경고를 주고 버튼을 비활성화 시킴
+             */
+            if(sumByte > 125) {
+                input_text.value = str.substr(0,124);
+                btn_introduce.disabled = true;
+                alert("글자 수가 넘습니다.");
+            } else {
+                btn_introduce.disabled = false;
+            }
+
+            readByte.value = sumByte + " Byte";
+        }
+    </script>
+</body>
+</html>

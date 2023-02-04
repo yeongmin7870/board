@@ -15,30 +15,43 @@
             address = address[0]+' '+address[1]+' '+address[2];    
         %> <!-- 주소 자르기 -->
         <div style="text-align: left; margin-left: 10%; margin-right: 10%; margin-top: 5%;">
-            <hr>
-            <h4>마이페이지</h4>
-            <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">홈으로</button>
+            <div>
+                <hr>
+                <h4>마이페이지</h4>
+                <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'">홈으로</button>
 
-        <hr>
-        <span>
-            <% if(board.result[0].user_profile) { %>
-                <img style="width: 10%; height: 10%;" src="/images/board/<%=board.result[0].user_profile%>">
-                <!-- 프로파일 -->
-            <% } else { %>
-                <img style="width:  10%; height: 10%;" src="/images/profile.png">
-            <% } %>
+                <hr>
+                <span>
+                    <% if(board.result[0].user_profile) { %>
+                        <img style="width: 10%; height: 10%;" src="/images/board/<%=board.result[0].user_profile%>">
+                        <!-- 프로파일 -->
+                    <% } else { %>
+                        <img style="width:  10%; height: 10%;" src="/images/profile.png">
+                    <% } %>
                         <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>">
                         <!-- 현재 누구의 마이페이지를 보고 있는지 -->
-                        <button id="btn_profile" class="btn btn-outline-secondary">수정</button>
-        </span>
-        <ul>
-            <li>닉네임: <%=board.result[0].nickname%>
-            </li> <!-- 닉네임 -->
-            <li>주소: <%=address%>
-            </li> <!-- 주소 -->
-        </ul>
+                    <div>
+                        <button id="btn_profile" class="btn btn-outline-secondary" style="margin-top: 1%;">프로필 수정</button>
+                        <button class="btn btn-outline-secondary" style="margin-top: 1%;" name="introduce" onclick="btn_introduce()">소개글 수정</button>
+                    </div>
+                    <div style="width: 50%; height:50; margin-right: 10%; margin-top: -10%; text-align: left; float: right;">
+                        <% if(board.result[0].user_introduce){ %>
+                            <h5>소개글</h5>
+                            <p style="width: 35%;"><%=board.result[0].user_introduce%></p>
+                        <% } else { %> 
+                            <h5>소개글</h5>
+                            <p>아직 소개글이 없어요!</p>
+                        <% } %>
+                    </div>
+                </span>
+                <ul>
+                    <li>닉네임: <%=board.result[0].nickname%>
+                    </li> <!-- 닉네임 -->
+                    <li>주소: <%=address%>
+                    </li> <!-- 주소 -->
+                </ul>
+            </div>
         <hr>
-
         <div id="btn_group">
             <button type="button" class="btn btn-outline-success" id="btn_all"
                 onclick="buttonDisabled(this,'btn_group')" value="전체" disabled>전체</button>

@@ -67,11 +67,12 @@
                     </p>
                 </div>
                 <hr>
-                <form style="float: left; margin-right: 2%;" id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
+                <form style="float: left; margin-right: 1%;" id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
                     <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
                     <input id="board_delete_token" name=token type="hidden" value="">
                     <button class="btn btn-outline-danger" id="btn_delete_board"  type="submit">게시물 삭제</button>
                 </form>
+                <button type="button" class="btn btn-outline-success" onclick="location.href='/v2/home/0'">게시물 수정</button>
                 <button type="button" class="btn btn-outline-success" onclick="location.href='/v2/home/0'">홈으로</button>
                 <hr>
             </div>

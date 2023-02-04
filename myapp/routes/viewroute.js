@@ -25,4 +25,8 @@ router.get('/profile-popup', (req,res) =>{
 router.get('/boardstate-popup', (req,res) =>{
     res.render('board_state_popup');
 })
+// 소개글 수정 화면
+router.get('/introduce-popup', (req,res) => {
+    res.render('introduce_popup');
+})
 module.exports = router;

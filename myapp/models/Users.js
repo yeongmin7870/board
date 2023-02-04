@@ -3,10 +3,11 @@ const mysql = require('mysql2');
 
 module.exports = {
     getUser: function (user_id) {
+        const needInfo = "user_profile, user_address, nickname, user_introduce";
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 con.query(
-                    'SELECT * FROM user WHERE nickname = ?', [user_id], (err, result) => {
+                    `SELECT ${needInfo} FROM user WHERE nickname = ?`, [user_id], (err, result) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -111,8 +112,6 @@ module.exports = {
 
     /** 유저 프로파일 등록 */
     uploadProfile: function (user) {
-        ``
-        console.log(user);
         let sql = "UPDATE user SET user_profile = ? WHERE user_id = ?";
 
         return new Promise((resolve, reject) => {
@@ -167,6 +166,26 @@ module.exports = {
                     sql, [user.user_id], function (err, result) {
                         if (err) reject(err);
                         else resolve(result);
+                    }
+                )
+                con.release();
+            });
+        });
+    },
+    /** 토큰이랑 소개글을 입력받고
+     *  디비 업데이트 해주고 
+     *  결과를 리턴하는 함수
+     */
+    uploadIntroduce: function (user_id, introduce) {
+        let sql = "UPDATE user SET user_introduce = ? WHERE user_id = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) new Error(err);
+                con.query(
+                    sql, [introduce, user_id], function (err, result) {
+                        if (err) reject(err);
+                        else resolve({response:"Good"});
                     }
                 )
                 con.release();

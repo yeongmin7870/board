@@ -43,7 +43,7 @@ async function getComment(page_num) {
         time = new Date(time); // 시간을 보기 좋게 변경
 
         let comment_html = "<hr>"
-            + "<h5> 아이디: " + comment.comment.result[i].user_id + "</h5>"
+            + "<h5> 닉네임: " + comment.comment.result[i].nickname + "</h5>"
             + "<h2>" + comment.comment.result[i].comment_content + "</h2>"
             + "<p>" + time.toLocaleString() + "</p>"
             + `<form type="hidden" method="post" action="/v3/board/comment/${comment.comment.result[i].comment_id}?_method=DELETE">`

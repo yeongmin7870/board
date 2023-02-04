@@ -6,7 +6,7 @@ myapp/config/
 
 myapp/._config
 // 서버 이미지 폴더
-myapp/public/images/
+myapp/public/images/board/*
 
 // 로그폴더
 myapp/logs/

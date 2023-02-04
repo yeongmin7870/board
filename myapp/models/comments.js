@@ -28,11 +28,12 @@ module.exports = {
         });
     },
     getByboardComment: (board_id, columnSize, startColumn) => {
+        let needsinfo = "c.comment_id, c.comment_content, c.comment_time, c.board_id, u.nickname";
         return new Promise((resovle, reject) => {
             con.getConnection((err, con) => {
                 if (err) console.log(new Error(err));
                 else {
-                    let sql = "SELECT * FROM comment WHERE board_id=? ORDER BY comment_id DESC"
+                    let sql = `SELECT ${needsinfo} FROM comment c, user u WHERE c.board_id=? AND u.user_id = c.user_id ORDER BY c.comment_id DESC`
                         + " LIMIT ?  OFFSET ?";
                     con.query(
                         sql, [board_id, columnSize, startColumn], (err, result) => {
