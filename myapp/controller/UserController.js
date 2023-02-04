@@ -24,7 +24,9 @@ module.exports = {
     */
     doSignIn: async function (req, res, next) {
 
-        Users.doSignIn(req.body.user_id).then(async (result) => {
+        const result = await Users.doSignIn(req.body.user_id);
+
+        if (result != "") {
 
             /**클라이언트에서 입력받은 비번, 디비에서 가져온 소금값, 입력 후 JSON으로 저장한 변수 */
             const user = { "password": req.body.user_passwd, "salt": result[0].user_salt };
@@ -32,10 +34,11 @@ module.exports = {
             /** 비번, 소금값 입력후 해시비번값 리턴할 때 까지 기다리는 함수   */
             const client_pass = await crypto.createHashedPassword(user); // 받은 비번을 솔트랑 같이 해시 함수 돌려보기 
 
+            // exp 유효시간 계산 https://stackoverflow.com/questions/33322407/unable-to-set-exp-and-iat-for-jwt-correctly 참고
             if (result[0].user_passwd == client_pass.password) {
                 const user_token = {
                     "iss": "ym_bookstore.kro.kr",  //토큰 발급자
-                    "exp": Math.floor(utcnow / 1000)+ 60 * 30 *60, // 현재시간으로부터 + 30분 만료 시간 
+                    "exp": (new Date().getTime() + 60 * 60 * 1000) / 1000, // 현재시간으로부터 + 30분 만료 시간 
                     "http://ym_bookstore.kro.kr/jwt_claims/is_admin": true, //공개 클레임 , 충돌을 방지하기 위해 uri 형식
                     "user_id": req.body.user_id,    // 비공개 클레임
                     "user_nickname": result[0].nickname, //비공개 클레임
@@ -57,15 +60,15 @@ module.exports = {
                         </script>
                     `);
             }
-        }).catch((err) => {
-            console.log(err);
+
+        } else {
             res.send(`
             <script>
                 alert('없는 사용자 입니다.');
                 location.href='/v2/login'
             </script>
         `);
-        });
+        }
     },
     /**
      * 회원가입\
@@ -230,8 +233,8 @@ module.exports = {
     getNickname: async function (req, res) {
         const decode = await jwt.verify(req.body.data); //토큰 해독
         const user_id = decode.user_id;
-        if(user_id == undefined) {
-            return res.send({nickname: "need login"})
+        if (user_id == undefined) {
+            return res.send({ nickname: "need login" })
         }
         const nickname = await Users.getNickname(user_id);
         res.send({ nickname: nickname[0].nickname });
@@ -239,12 +242,12 @@ module.exports = {
     /** 토큰, 자기 소개글 입력 받고
      *  결과 리턴해주는 함수
      */
-    uploadIntroduce: async function(req,res){
+    uploadIntroduce: async function (req, res) {
         const decode = await jwt.verify(req.body.token); // 토큰 해독
         const user_id = decode.user_id;
-        
+
         const result = await Users.uploadIntroduce(user_id, req.body.introduce);
-        if(result.response == "Good"){
+        if (result.response == "Good") {
             logger.info(`'${user_id}' 가 "${req.body.introduce}" 으로 소개글을 등록 했습니다.`)
             res.send(`
             <script>

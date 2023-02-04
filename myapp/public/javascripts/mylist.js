@@ -74,7 +74,7 @@ function makeboardContent(content) {
                         <a style="text-decoration: none;" href="/v3/board/page/${content[i].board_id}">
                         <div style="position:relative">
                             <p style="color:gray; position: absolute; top: 50%; left: 47%;">${content[i].board_state}<p>
-                            <img src="/images/board/${content[i].board_image}" style="width:50%; height:50%;">
+                            <img src="/images/board/${content[i].board_image}" style="width: 30%; height:100px;">
                         </div>
                         <p style="color: black;">${content[i].board_title}</p></a> 
                         <input type="hidden" value="${content[i].board_state}" id="input_boardImage_${content[i].board_id}">

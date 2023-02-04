@@ -154,7 +154,7 @@ module.exports = {
         });
     },
     /** 아이디를 입력받고 
-     * 프로필 경로 리턴
+     *  해당 유저 정보 전부 리턴
      */
     findProfilePath: function (user) {
         let sql = "SELECT * FROM user u WHERE u.user_id = ?;";
@@ -192,4 +192,20 @@ module.exports = {
             });
         });
     },
+    getBoardImage: async function(board_id){
+        let sql = "SELECT board_image FROM board WHERE board_id = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) new Error(err);
+                con.query(
+                    sql, [board_id], function (err, result) {
+                        if (err) reject(err);
+                        else resolve(result);
+                    }
+                )
+                con.release();
+            });
+        });      
+    }
 };

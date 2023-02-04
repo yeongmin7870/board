@@ -1,19 +1,21 @@
 /**댓글 제출 버튼*/
-let btn_comment = document.getElementById("btn_comment");
+const btn_comment = document.getElementById("btn_comment");
 /**댓글 입력 input*/
 let input_comment_content = document.getElementById("input_comment_content");
 /**부모 댓글 div*/
 let comment_div = document.getElementById("comment_div");
 /**게시판 지울때 사용하는 토큰*/
-let board_delete_token = document.getElementById("board_delete_token");
+const board_delete_token = document.getElementById("board_delete_token");
 /**게시판 삭제 form*/
-let delete_board_form = document.getElementById("delete_board_form");
+const delete_board_form = document.getElementById("delete_board_form");
 /**게시판 삭제 버튼*/
-let btn_delete_board = document.getElementById("btn_delete_board");
+const btn_delete_board = document.getElementById("btn_delete_board");
 /**자식 댓글 div*/
 let c_newDiv = "";
 /**댓글 페이징 처리 div */
 let comment_page_div = document.getElementById("comment_page");
+/** 게시물 수정 버튼 */
+const btn_board_update = document.getElementById("btn_board_update");
 
 let url = window.location.pathname;
 url = url.split('/');
@@ -172,32 +174,42 @@ a_mypage.addEventListener('click', async event => {
 });
 
 /** 게시판 상태 수정하기 위해 클릭했을때 */
-select_board_state.addEventListener('click', async () => {
-    if (token == undefined) {
-        alert("로그인해주세요");
-        location.href = "/v2/login";
-        return;
-    }
+btn_board_update.addEventListener('click', async () => {
+    const update_board_form = document.getElementById("update_board_form");
+    
     const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
     const tokenNickname = t.nickname;
-    if (tokenNickname == input_state_check_nickname.value) {
-        window.open(`/v2/boardstate-popup?board_id=${input_board_id.value}`, "게시판상태 수정", "width=400, height=300, top=10, left=10");
+
+    if (tokenNickname != input_state_check_nickname.value) {
+        return alert("자신의 게시물이 아니기 때문에 게시물 수정을 수 없습니다.");
     } else {
-        alert("자신의 게시물이 아니기 때문에 게시물을 수정할 수 없습니다.");
+        update_board_form.action="/v2/chageboard?_method=GET";
+        update_board_form.method = "post";
+        update_board_form.submit();
     }
 });
+/** 게시물 판매상태 수정 권한 확인 */
+async function checkUpdateBoardUser(){
+    const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
+    const tokenNickname = t.nickname;
+
+    if (tokenNickname != input_state_check_nickname.value) {
+        return alert("자신의 게시물이 아니기 때문에 게시물을 수정할 수 없습니다.");
+    } else {
+        return window.open(`/v2/boardstate-popup?board_id=${input_board_id.value}`, "게시판상태 수정", "width=400, height=300, top=10, left=10");
+    }}
 
 /** 게시판 상태확인 해서 비활성화 만들기 */
 if (board_satate_value.value == "예약" || board_satate_value.value == "판매완료") {
-    
+
     /** 이벤트 막는 함수  */
     let stopFunc = function (e) { e.preventDefault(); e.stopPropagation(); return false; };
-    
+
     btn_comment.addEventListener('click', stopFunc, true); //댓글작성버튼
     comment_div.addEventListener('click', stopFunc, true); // 댓글 삭제 버튼
     comment_page.addEventListener('click', stopFunc, true); // 댓글 페이징처리 버튼
 
-    all_state.style.opacity="0.5";
+    all_state.style.opacity = "0.5";
 }
 
 /**게시판 삭제 클릭시 토큰도 같이 body

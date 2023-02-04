@@ -10,59 +10,7 @@
     <title>홈화면</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/carousel/">
     <link href="/csses/home/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        .b-example-divider {
-            height: 3rem;
-            background-color: rgba(0, 0, 0, .1);
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-        }
-
-        .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 100vh;
-        }
-
-        .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-        }
-
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
-
-        .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-    </style>
-    <!-- Custom styles for this template -->
+     <!-- Custom styles for this template -->
     <link href="/csses/carousel.css" rel="stylesheet">
     <script type="text/javascript">
         window.history.forward();
@@ -181,7 +129,7 @@
             <%} else {%>
                 <div  id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
             <%}%>
-                    <div class="col-md-7">
+                    <div class="col-md-7" style="width: 500px; height: 300px; text-align: center; margin-top: -5%;">
                         <h3 class="featurette-heading fw-normal lh-1" style="font-size: 30px;">
                             <span style="font-size: small;">조회수:<%=board.result[i].view_count%></span><br><br>
                             <%=board.result[i].board_title%> <!-- 조회수 -->
@@ -196,10 +144,10 @@
                                 <hr>
                                 <span class="lead" style="font-size: 18px;">
                                     <% if(board.result[i].user_profile) { %>
-                                        <img width="10%" height="10%"; src="/images/board/<%=board.result[i].user_profile%>">
+                                        <img width="80px" height="60px"; src="/images/board/<%=board.result[i].user_profile%>">
                                         <!-- 프로파일 -->
                                     <% } else { %>
-                                        <img style="width:10%; height:10%;" src="/images/profile.png">
+                                        <img style="width: 80px; height:60px;" src="/images/profile.png">
                                     <% } %> 
                                     닉네임 : <%=board.result[i].nickname%><!-- 닉네임 -->
                                 </span><br>
@@ -211,8 +159,8 @@
                                 </span>
                         </h3>
                     </div>
-                    <div class="col-md-5">
-                        <img src="/images/board/<%=board.result[i].board_image%>" style="width: 100%; height: 100%;"/>
+                    <div class="col-md-5" style="text-align: right;">
+                        <img src="/images/board/<%=board.result[i].board_image%>" style="width: 500px; height: 300px; margin-right: -40%; margin-top: 10%;"/>
                     </div>
                     <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>

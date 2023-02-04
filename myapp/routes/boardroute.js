@@ -8,6 +8,7 @@ const { upload } = require('../middlewares/multer');
 
 // 게시판 작성하기
 router.post('/board', upload.single("board_image"), boardcontroller.doWriteBoard)
+.put('/board', upload.single("board_image"), boardcontroller.updateBoard); // 게시판 수정
 // 게시판 삭제하기
 router.delete('/board/dormboard/:board_id', authUtil, boardcontroller.doRmByBoard)
 // 메인홈페이지 게시판 보여줄 정보만 가져오기

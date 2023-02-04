@@ -20,13 +20,13 @@
         <div class="container marketing">
             <hr class="featurette-divider">
             <div style="float: left; width: 50%;">
-                <img src="/images/board/<%=myboard.result[0].board_image%>" width="90%" height="90%" />
+                <img src="/images/board/<%=myboard.result[0].board_image%>" width="500px" height="300px" />
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
                         <%=myboard.result[0].board_title%> 
                     </h2>
-                    <select id="select_board_state">
+                    <select id="select_board_state" onclick="checkUpdateBoardUser()">
                         <optgroup>
                             <option><%=myboard.result[0].board_state%></option>
                         </optgroup>
@@ -73,8 +73,8 @@
                     <button class="btn btn-outline-danger" id="btn_delete_board"  type="submit">게시물 삭제</button>
                 </form>
                 <!-- 게시판 수정을 위한 Form 태그 -->
-                <form action="/v2/chageboard?_method=GET" method="post" style="float:left; margin-right: 1%;">
-                    <button type="submit" class="btn btn-outline-success">게시물 수정</button>
+                <form action="" id="update_board_form" method="post" style="float:left; margin-right: 1%;">
+                    <button id="btn_board_update" type="button" class="btn btn-outline-success">게시물 수정</button>
                     <input type="hidden" name="board_title" value="<%=myboard.result[0].board_title%>">
                     <input type="hidden" name="book_classification_name" value="<%=myboard.result[0].book_classification_name%>">
                     <input type="hidden" name="board_price" value="<%=myboard.result[0].price%>">

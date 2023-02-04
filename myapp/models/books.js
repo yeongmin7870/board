@@ -105,7 +105,7 @@ module.exports = {
     //게시글 내용 전체 가져오기
     getAllBoard: function (startColumn, columnSize, board) {
 
-        const sql = search.board_content_search(startColumn, columnSize, board); 
+        const sql = search.board_content_search(startColumn, columnSize, board);
 
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
@@ -113,7 +113,7 @@ module.exports = {
                     console.log(err);
                 }
                 con.query(
-                    sql , (err, result) => {
+                    sql, (err, result) => {
                         if (err)
                             reject(err);
                         else
@@ -250,6 +250,27 @@ module.exports = {
                 }
                 con.query(
                     sql_board, (err, result) => {
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    }
+                );
+                con.release();
+            });
+        })
+    },
+    changeBoard: function (board, board_image) {
+        let sql = "UPDATE board SET board_title=?, book_classification_id=?, board_contents=?, board_image=?, price=?  WHERE board_id=?;";
+        let values = [board.board_title, board.book_classification_id, board.board_contents, board_image, board.price,board.board_id];
+        
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) {
+                    console.log(err);
+                }
+                con.query(
+                    sql, values, (err, result) => {
                         if (err)
                             reject(err);
                         else

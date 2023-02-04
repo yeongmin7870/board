@@ -378,7 +378,6 @@ module.exports = {
      */
     dochangeboard: async function (req, res) {
         const bookClassification = await Book.getBookClassifications();
-        console.log(req.body);
         const board = {
             board_id: req.body.board_id,
             board_title: req.body.board_title,
@@ -388,5 +387,55 @@ module.exports = {
             board_image: req.body.board_image
         }
         res.render("dochangeboard", { book: { bookClassification }, board: board });
+    },
+    /** 게시물 정보 입력받으면
+     *  수정해주는 함수
+     */
+    updateBoard: async function (req, res) {
+        let board = req.body;
+        try {
+            const next_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
+            const decode = await jwt.verify(req.body.token); //토큰 해독
+            const user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+
+            /** 게시판 수정하기 전에 게시판 이미지 삭제 수행 하는 모델 */
+            const findProfile = await Users.getBoardImage(board.board_id);
+            let preImage = findProfile[0].board_image;
+            let file_path = './public/images/board/' + preImage;
+
+            if (fs.existsSync(file_path)) {
+                try {
+                    fs.unlinkSync(file_path);
+                    logger.info(`'${user_id}' 님이 ' 게시물 이미지 삭제 수행중에 '${preImage}' 이미지를 삭제했습니다.`);
+                } catch (e) {
+                    logger.error(e);
+                    res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
+                }
+            }
+
+            const result = await Book.changeBoard(board, next_image);
+
+            if (result != "") {
+
+                logger.info(`'${user_id}' 님이 '${board.board_id}' 번 게시글을 수정했습니다.`)
+                res.status(200).send(
+                    `
+                    <script>
+                        alert("게시글이 수정되었습니다!");
+                        location.href="/v2/home/0";
+                    </script>
+                    `
+                );
+            }
+        } catch (err) {
+            {
+                console.log(err);
+                res.status(404).send(`<script>
+                    location.href='/v2/home/0';
+                    alert('이미지 파일이 아닙니다 🐱');
+                    </script>`);
+            }
+        }
+
     },
 }
