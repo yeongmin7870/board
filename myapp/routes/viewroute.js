@@ -29,4 +29,6 @@ router.get('/boardstate-popup', (req,res) =>{
 router.get('/introduce-popup', (req,res) => {
     res.render('introduce_popup');
 })
+// 게시판 수정 페이지
+router.get('/chageboard', boardcontroller.dochangeboard)
 module.exports = router;

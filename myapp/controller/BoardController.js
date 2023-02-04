@@ -121,7 +121,7 @@ module.exports = {
         let nexPage = Pagination.nexPage;
         /** 페이지 사이즈 */
         let page_size = Pagination.page_size;
-         if (search != "") {
+        if (search != "") {
             logger.info(`'${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
         }
         res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search, select_option: select_option });
@@ -217,7 +217,7 @@ module.exports = {
 
 
     // 책 카테고리 
-    findBybookClassification: async function (req, res) {
+    findBybookClassification: function (req, res) {
         Book.getBookClassifications().then((result) => {
             res.status(200).render('writeboard', { book: { result } });
         });
@@ -371,5 +371,22 @@ module.exports = {
             window.close();
         </script>
         `);
+    },
+    /** 게시물 수정
+     *  수정할 게시물 내용들 입력받고
+     *  화면을 보여줌
+     */
+    dochangeboard: async function (req, res) {
+        const bookClassification = await Book.getBookClassifications();
+        console.log(req.body);
+        const board = {
+            board_id: req.body.board_id,
+            board_title: req.body.board_title,
+            book_classification_name: req.body.book_classification_name,
+            board_price: req.body.board_price,
+            board_contents: req.body.board_contents,
+            board_image: req.body.board_image
+        }
+        res.render("dochangeboard", { book: { bookClassification }, board: board });
     },
 }
