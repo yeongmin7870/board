@@ -17,7 +17,7 @@ const userRouter = require('./routes/userroute');
 const viewRouter = require('./routes/viewroute')
 const cookieRouter = require('./routes/cookieroute');
 const boardRouter = require('./routes/boardroute');
-const chatcontroller = require('./controller/ChatController');
+const chat = require('./chatting/chat');
 
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -33,12 +33,12 @@ app.use('/v3', boardRouter);
 
 app.use('/cookies', cookieRouter);
 
-io.on('connection', (socket) => {
-fdsfs
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
-    });
+/** 채팅 소켓 통신 */
+app.use('/chatting', (req,res) => { 
+    chat.chat(io, req.query.room);
+    res.render('chatting');
 });
+
 
 app.set('view engine', 'ejs');
 app.set('views', './views');

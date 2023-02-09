@@ -46,8 +46,8 @@
     <div class="sendbox">
         <form class="form_send" id="form_send">
             <div class="input-group mb-3">
-                <button style="background-color: plum;" class="btn btn-dark" type="button"
-                    onclick="location.href='/v2/home/0'">나가기</button>
+                <button style="background-color: plum;" class="btn btn-dark" type="button" id="btn_exit"
+                    onclick="exitRoom()">나가기</button>
                 <input type="text" class="form-control" id="input_content" aria-describedby="button-addon2"
                     maxlength="30">
                 <button style="color:white;" class="btn btn-outline-secondary" type="submit" id="btn_send">보내기</button>
@@ -67,11 +67,20 @@
 
         const token = getCookie('x_auth'); // 토큰
         let nickname = "";
+        /** 가져오고 싶은 이름을 주면 
+         * url 파라미터에서 
+         * 해당 이름을 가진 데이터를 가져오는 함수*/
+        function getParma(data) {
+            let params = (new URL(document.location)).searchParams;
+            let result = params.get(`${data}`);
+            return result;
+        }
 
         /**채팅 기능 함수*/
         function chat() {
             form_send.addEventListener('submit', (e) => {
                 e.preventDefault();
+
                 if (input_content.value) {
                     let today = new Date();
                     /** 24시 표시를 12시간으로 바꾸기 */
@@ -80,7 +89,8 @@
                     let min = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
 
                     let time = `${hours}:${min}`
-                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time });
+
+                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time});
                     input_content.value = '';
                 }
             });
@@ -112,9 +122,6 @@
                 window.scrollTo(0, document.body.scrollHeight);
 
 
-                checkedread();
-
-
             });
         }
         /**닉네임 가져오기*/
@@ -126,6 +133,13 @@
             } else {
                 nickname = result.nickname;
             }
+        }
+
+        /** 나가기 버튼 눌렀을때
+         *  서버에서 room 도 나가기
+         */
+        function exitRoom() {
+            location.href='/v2/home/0';
         }
 
         // /** 읽음 체크 */

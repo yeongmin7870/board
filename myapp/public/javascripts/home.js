@@ -120,7 +120,7 @@ function selectOption() {
 }
 
 chatting.addEventListener('click', event => {
-    token_form.action = `/v2/chatting?_method=GET`
+    token_form.action = `/v2/chatting_list?_method=GET`
     input_token.value = token;
     token_form.submit();
 });
