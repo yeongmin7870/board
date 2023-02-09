@@ -2,6 +2,7 @@ btn_signin = document.getElementById('btn_signin');
 btn_signout = document.getElementById('btn_signout');
 let write = document.getElementById('write');
 let mypage = document.getElementById('mypage');
+let chatting = document.getElementById('chatting');
 let token_form = document.getElementById('token_form'); //토큰 보내는 form
 let input_token = document.getElementById('input_token'); // 토큰 보내는 input 
 let board_state = document.getElementById('board_state'); // 게시판 상태를 저장하는 input
@@ -117,6 +118,12 @@ function selectOption() {
         select_option.options[i].selected = true;
     }, 1);
 }
+
+chatting.addEventListener('click', event => {
+    token_form.action = `/v2/chatting?_method=GET`
+    input_token.value = token;
+    token_form.submit();
+});
 
 /** 메인 함수 */
 function main() {

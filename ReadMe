@@ -6,3 +6,6 @@
     npm install
     cd public/images && mkdir board
     npm stasrt
+
+
+  

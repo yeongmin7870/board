@@ -57,7 +57,7 @@ module.exports = {
             "SELECT ? FROM DUAL WHERE " +
             "NOT EXISTS (SELECT user_id FROM user WHERE user_id= ?)";
         let values = [
-            [user['user_id'], user['user_passwd'], user['user_salt'], user['user_email'], user['user_profile'], user['user_address'], user['nickname']],
+            [user['user_id'], user['user_passwd'], user['user_salt'], user['user_email'], user['user_profile'], user['user_address'], user['nickname'], user['user_introduce']],
             [user['user_id']]
         ];
         return new Promise((resolve, reject) => {

@@ -76,14 +76,14 @@ async function getComment(page_num) {
     if (comment.page.prevPage == true) {
 
         prev_btn = `
-        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) - 1}); "> < 다음</button>
+        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) - 1}); "> < 이전</button>
         `
     }
 
     if (comment.page.nexPage == true) {
 
         next_btn = `
-        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) + 1});">이전 > </button>
+        <button class="btn btn-outline-primary" onclick="btn_comment_paging(${Number(page) + 1});">다음 > </button>
         `
     }
     page_newDiv = document.createElement("div");
@@ -176,31 +176,32 @@ a_mypage.addEventListener('click', async event => {
 /** 게시판 상태 수정하기 위해 클릭했을때 */
 btn_board_update.addEventListener('click', async () => {
     /** 판매상태 체크 */
-    if(board_satate_value.value != "판매") return alert("판매상태가 아니라서 수정 할 수 없습니다.");
+    if (board_satate_value.value != "판매") return alert("판매상태가 아니라서 수정 할 수 없습니다.");
 
     const update_board_form = document.getElementById("update_board_form");
-    
+
     const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
     const tokenNickname = t.nickname;
 
     if (tokenNickname != input_state_check_nickname.value) {
-        return alert("자신의 게시물이 아니기 때문에 게시물 수정을 수 없습니다.");
+        return alert("자신의 게시물이 아니기 때문에 게시물 수정 할 수 없습니다.");
     } else {
-        update_board_form.action="/v2/chageboard?_method=GET";
+        update_board_form.action = "/v2/chageboard?_method=GET";
         update_board_form.method = "post";
         update_board_form.submit();
     }
 });
 /** 게시물 판매상태 수정 권한 확인 */
-async function checkUpdateBoardUser(){
+async function checkUpdateBoardUser() {
     const t = await Post_body("/v1/getnickname?_method=GET", { data: token }); // 토큰으로 가져온 닉네임
     const tokenNickname = t.nickname;
 
     if (tokenNickname != input_state_check_nickname.value) {
-        return alert("자신의 게시물이 아니기 때문에 게시물을 수정할 수 없습니다.");
+        return alert("자신의 게시물이 아니기 때문에 게시물 상태를 수정 할 수 없습니다.");
     } else {
         return window.open(`/v2/boardstate-popup?board_id=${input_board_id.value}`, "게시판상태 수정", "width=400, height=300, top=10, left=10");
-    }}
+    }
+}
 
 /** 게시판 상태확인 해서 비활성화 만들기 */
 if (board_satate_value.value == "예약" || board_satate_value.value == "판매완료") {

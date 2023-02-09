@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>채팅</title>
+</head>
+<style>
+    /**채팅 보내는 form 태그*/
+    .form_send {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgb(235, 182, 235);
+
+    }
+
+    /** 나가기 버튼이 있는 맨위 div */
+    .div_exit {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        background-color: rgb(242, 184, 242);
+    }
+
+    .message {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+<body>
+    <div class="div_exit">
+    </div>
+
+    <div class="div_message">
+        <div class="message" id="message">
+        </div>
+    </div>
+    <div class="sendbox">
+        <form class="form_send" id="form_send">
+            <div class="input-group mb-3">
+                <button style="background-color: plum;" class="btn btn-dark" type="button"
+                    onclick="location.href='/v2/home/0'">나가기</button>
+                <input type="text" class="form-control" id="input_content" aria-describedby="button-addon2"
+                    maxlength="30">
+                <button style="color:white;" class="btn btn-outline-secondary" type="submit" id="btn_send">보내기</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/javascripts/cookie.js"></script>
+    <script src="/javascripts/fetch.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const form_send = document.getElementById("form_send");
+        const input_content = document.getElementById("input_content");
+        /** 메시지 문구 들어갈 div */
+        const message = document.getElementById("message");
+
+        const token = getCookie('x_auth'); // 토큰
+        let nickname = "";
+
+        /**채팅 기능 함수*/
+        function chat() {
+            form_send.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (input_content.value) {
+                    let today = new Date();
+                    /** 24시 표시를 12시간으로 바꾸기 */
+                    let hours = (today.getHours() - 12) < 0 ? `오전 ${(today.getHours() - 12) * -1}` : `오후 ${today.getHours() - 12}`;
+                    /**분이 10분미만이면 0을 붙여서 표현  */
+                    let min = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
+
+                    let time = `${hours}:${min}`
+                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time });
+                    input_content.value = '';
+                }
+            });
+
+            socket.on('chat message', (msg) => {
+                let left_html =
+                    `
+                    <div style="position:relative; text-align: center; margin-right:60%;">
+                        <img src="/images/talk_box.png" style="width:auto; height:500px;">
+                        <h4 id='nickname_r' style="font-size: 20px; width:30%; position: absolute; left: 30%; bottom:37%; transform:translate(-50%, -50%); color: black;">닉네임: ${msg.nickname}</h4>
+                        <p id='message_l' style="font-size: 20px; width:30%; position: absolute; left: 50%; top:65%; bottom:25%; transform:translate(-50%, -50%); color: black; ">${msg.message}</p>
+                        <p id='message_time_l' style="font-size: 20px; width:30%; position: absolute; left:100%; right: 0; top:70%;  bottom:25%; transform:translate(-50%, -50%); color: black;">${msg.time}</p>
+                        <p id='message_read_l' style="font-size: 20px; width:30%; position: absolute; left:90%; right: 10; top:70%;  bottom:25%; transform:translate(-50%, -50%); color: black;">안읽음</p>
+                    </div>
+                `
+                let right_html =
+                    `
+                    <div style="position:relative; text-align: center; margin-left:60%;">
+                        <img src="/images/talk_box.png" style="width:auto; height:500px;">
+                        <h4 id='nickname_r' style="font-size: 20px; width:30%; position: absolute; left: 30%; bottom:37%; transform:translate(-50%, -50%); color: black;">닉네임: ${msg.nickname}</h4>
+                        <p id='message_r' style="font-size: 20px; width:30%; position: absolute; left: 50%; top:65%;  bottom:25%; transform:translate(-50%, -50%); color: black;">${msg.message}</p>
+                        <p id='message_time_r' style="font-size: 20px; width:30%; position: absolute; right:100%; left:0%; top:70%;  bottom:25%; transform:translate(-50%, -50%); color: black; float:right">${msg.time}</p>
+                        <p id='message_read_r' style="font-size: 20px; width:30%; position: absolute; left:90%; left:10%; top:70%;  bottom:25%; transform:translate(-50%, -50%); color: black;">안읽음</p>
+                    </div>
+                `
+
+                if (nickname != msg.nickname) message.insertAdjacentHTML("beforeend", left_html);
+                else message.insertAdjacentHTML("beforeend", right_html);
+                window.scrollTo(0, document.body.scrollHeight);
+
+
+                checkedread();
+
+
+            });
+        }
+        /**닉네임 가져오기*/
+        async function getnickname() {
+            const result = await Post_body('/v1/getnickname?_method=GET', { data: token });
+            if (result.nickname == "need login") {
+                alert("로그인이 필요합니다.");
+                location.href = "/v2/login"
+            } else {
+                nickname = result.nickname;
+            }
+        }
+
+        // /** 읽음 체크 */
+        // function checkedread() {
+
+        //     let check = setInterval(() => {
+        //         let message_read_r = document.getElementById("message_read_r");
+
+        //         /** 현재 웹페이지를 보고 있으면 */
+        //         if (document.hasFocus()) {
+
+        //             message_read_r.innerHTML = "읽음";
+
+        //             console.log("보고 있음");
+        //         } else {
+        //             console.log("안보고 있음");
+        //         }
+        //     }, 1000)
+
+        // }
+
+        function main() {
+            getnickname();
+            chat();
+        }
+
+        main();
+
+
+    </script>
+</body>
+
+</html>
