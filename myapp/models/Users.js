@@ -109,7 +109,26 @@ module.exports = {
             });
         });
     },
+    /** 닉네임을 입력받고
+     *  아이디를 리턴해주는 함수
+     */
+    findId: function (nickname) {
 
+        let sql = "SELECT * FROM user WHERE nickname = ?";
+
+        return new Promise((resolve, reject) => {
+            con.getConnection((err, con) => {
+                if (err) throw (err);
+                con.query(
+                    sql, [nickname], function (err, result) {
+                        if (err) reject(err)
+                        else resolve({ user_id: result[0].user_id })  // 해당 닉네임이 없음    
+                    }
+                )
+                con.release();
+            });
+        });
+    },
     /** 유저 프로파일 등록 */
     uploadProfile: function (user) {
         let sql = "UPDATE user SET user_profile = ? WHERE user_id = ?";
@@ -185,14 +204,14 @@ module.exports = {
                 con.query(
                     sql, [introduce, user_id], function (err, result) {
                         if (err) reject(err);
-                        else resolve({response:"Good"});
+                        else resolve({ response: "Good" });
                     }
                 )
                 con.release();
             });
         });
     },
-    getBoardImage: async function(board_id){
+    getBoardImage: async function (board_id) {
         let sql = "SELECT board_image FROM board WHERE board_id = ?";
 
         return new Promise((resolve, reject) => {
@@ -206,6 +225,6 @@ module.exports = {
                 )
                 con.release();
             });
-        });      
+        });
     }
 };

@@ -6,8 +6,6 @@ const Comment = require('../models/comments');
 const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
 const Users = require('../models/Users');
-const mysql = require('mysql2');
-const { count } = require('console');
 
 module.exports = {
 
