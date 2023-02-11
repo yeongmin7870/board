@@ -12,7 +12,7 @@ module.exports = {
                 con.query(
                     'SELECT * FROM book_classification', (err, result) => {
                         if (err)
-                            reject(result);
+                            reject(err);
                         else
                             resolve(result);
                     }

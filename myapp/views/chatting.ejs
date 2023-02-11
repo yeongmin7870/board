@@ -75,8 +75,12 @@
             let result = params.get(`${data}`);
             return result;
         }
+        const room = getParma("room");
 
-        /**채팅 기능 함수*/
+        /**메시지를 서버로 전송하고 
+         * 받아온 메시지를 클라이언트에 찍어주는
+         * 함수 
+        */
         function chat() {
             form_send.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -89,8 +93,10 @@
                     let min = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
 
                     let time = `${hours}:${min}`
+                    /** 메시지를 보내는 기능 */
+                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time, room: room});
+                    /** 초대하는 기능 */
 
-                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time});
                     input_content.value = '';
                 }
             });
@@ -139,7 +145,12 @@
          *  서버에서 room 도 나가기
          */
         function exitRoom() {
-            location.href='/v2/home/0';
+            location.href='/v2/chatting_list';
+        }
+
+        /**채팅 방 생성*/
+        function createRoom(){
+
         }
 
         // /** 읽음 체크 */
@@ -160,6 +171,8 @@
         //     }, 1000)
 
         // }
+
+
 
         function main() {
             getnickname();

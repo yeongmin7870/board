@@ -33,12 +33,7 @@ app.use('/v3', boardRouter);
 
 app.use('/cookies', cookieRouter);
 
-/** 채팅 소켓 통신 */
-app.use('/chatting', (req,res) => { 
-    chat.chat(io, req.query.room);
-    res.render('chatting');
-});
-
+chat.chat(io);
 
 app.set('view engine', 'ejs');
 app.set('views', './views');

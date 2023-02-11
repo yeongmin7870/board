@@ -31,7 +31,10 @@ router.get('/introduce-popup', (req,res) => {
 })
 // 게시판 수정 페이지
 router.get('/chageboard', boardcontroller.dochangeboard)
-
+// 메인 채팅 페이지
+router.get('/chatting' ,(req, res) => {
+    res.render('chatting');
+})
 // 나의 채팅 리스트 페이지
 router.get('/chatting_list', (req, res) => {
     res.render('chatting_list');

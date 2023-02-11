@@ -16,7 +16,8 @@ let c_newDiv = "";
 let comment_page_div = document.getElementById("comment_page");
 /** 게시물 수정 버튼 */
 const btn_board_update = document.getElementById("btn_board_update");
-
+/** 채팅하기 버튼 */
+const btn_chat = document.getElementById("btn_chat");
 let url = window.location.pathname;
 url = url.split('/');
 /**borard_id 가져올려고 url입력 후 짜름*/
@@ -216,11 +217,19 @@ if (board_satate_value.value == "예약" || board_satate_value.value == "판매�
     all_state.style.opacity = "0.5";
 }
 
+
+
 /**게시판 삭제 클릭시 토큰도 같이 body
  * 에 넘어가게 하기
 */
 board_delete_token.value = token;
 
+/** 채팅하기 버튼 눌렀을때 */
+function let_chat(){
+    
+    alert("채팅방이 생성되었습니다!");
+    location.href="/v2/chatting";
+}
 
 /**
  * 페이지 처음 시작 시
