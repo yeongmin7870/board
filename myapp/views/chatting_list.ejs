@@ -34,7 +34,8 @@
 <body>
     <div class="list">
         <h4>채팅방 목록</h4>
-        <p><a href="/v2/chatting?room=room1">첫번째방</a></p>
+        <div id="room_list"></div>
+
     </div>
     <button class="btn btn-success" id="btn_home" onclick="location.href='/v2/home/0'">홈으로 🏠</button>
 
@@ -45,11 +46,29 @@
         let token = getCookie('x_auth');
     </script>
     <script>
+
+        let room_list = document.getElementById("room_list");
+        /**방 리스트 출력 함수*/
         async function getMyList() {
             const response = await Post_body("/v4/chat/room?_method=GET", { token: token });
             if (response.msg == "need login") { alert("로그인이 필요합니다."); return location.href = "/v2/home/0"; }
-            console.log(response.msg);
+            for (let i = 0; i < response.otherNickname.length; i++) {
+                let html = `
+                <form action="/v2/chatting?_method=get&&Nickname=${response.otherNickname[i]}" method="post">
+                    <button type="submit" name="room_name" class="btn btn-light" id="btn_list${i}" value="${response.room_name[i].chat_room_name}">${response.otherNickname[i]}</button>
+                </form>
+                    `;
+                let newDiv = document.createElement("div");
+                newDiv.innerHTML = html;
+                newDiv.setAttribute("id", "list");
+                room_list.appendChild(newDiv);
+                document.getElementById(`btn_list${i}`).style.width = "100%";
+
+            }
         }
+
+
+
         getMyList();
     </script>
 </body>

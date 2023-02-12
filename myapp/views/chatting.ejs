@@ -36,7 +36,8 @@
 </style>
 
 <body>
-    <div class="div_exit">
+    <div class="div_exit" style="text-align:center">
+        <h4>"<%=Nickname%>" 채팅</h4>
     </div>
 
     <div class="div_message">
@@ -54,6 +55,8 @@
             </div>
         </form>
     </div>
+    <!-- 방 이름 -->
+    <input type="hidden" id="room_name" value="<%=room_name%>">
 
     <script src="/javascripts/cookie.js"></script>
     <script src="/javascripts/fetch.js"></script>
@@ -62,6 +65,7 @@
         const socket = io();
         const form_send = document.getElementById("form_send");
         const input_content = document.getElementById("input_content");
+        const room_name = document.getElementById("room_name");
         /** 메시지 문구 들어갈 div */
         const message = document.getElementById("message");
 
@@ -75,7 +79,6 @@
             let result = params.get(`${data}`);
             return result;
         }
-        const room = getParma("room");
 
         /**메시지를 서버로 전송하고 
          * 받아온 메시지를 클라이언트에 찍어주는
@@ -84,7 +87,6 @@
         function chat() {
             form_send.addEventListener('submit', (e) => {
                 e.preventDefault();
-
                 if (input_content.value) {
                     let today = new Date();
                     /** 24시 표시를 12시간으로 바꾸기 */
@@ -94,7 +96,7 @@
 
                     let time = `${hours}:${min}`
                     /** 메시지를 보내는 기능 */
-                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time, room: room});
+                    socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time, room_name: room_name.value });
                     /** 초대하는 기능 */
 
                     input_content.value = '';
@@ -145,11 +147,11 @@
          *  서버에서 room 도 나가기
          */
         function exitRoom() {
-            location.href='/v2/chatting_list';
+            location.href = '/v2/chatting_list';
         }
 
         /**채팅 방 생성*/
-        function createRoom(){
+        function createRoom() {
 
         }
 
@@ -176,7 +178,14 @@
 
         function main() {
             getnickname();
-            chat();
+
+            setTimeout(() => {
+                /**해당 방으로 입장*/
+                socket.emit('enterRoom', { room_name: room_name.value });
+                /**채팅 출력*/
+                chat();
+            }, 1000);
+            
         }
 
         main();

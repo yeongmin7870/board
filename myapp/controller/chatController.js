@@ -39,17 +39,25 @@ module.exports = {
     },
     /** 토큰을 받으면
      *  현재 내방 리스트를 리턴
+     *  상대방 닉네임으로 누구 채팅인지 표시
      */
     myRoomList: async (req, res) => {
         const token = await jwt.verify(req.body.token);
         if (token.user_id == undefined) return res.send({ msg: "need login" });
         /** 리스트 가져오기 */
         const response = await chat.myRoomList(token.user_id);
-        for(i of response){
-            const otherName = i.chat_room_name.split('+');
-            console.log(otherName[0]);
-        }
-        if (response[0] != undefined) res.send({ msg: response });
+
+        /** 현재 채팅방 목록 object , 담는 변수 */
+        let otherName = [];
+        for (i of response) otherName.push(i.chat_room_name.split('+'));
+
+        /** 상대방 닉네임만 저장하는 변수 */
+        let otherNickname = [];
+        /** 채팅방목록 object 에서 상대방 닉네임만 뽑아서 저장 */
+        for (let i = 0; i < otherName.length; i++)
+            for (let j = 0; j < 2; j++)
+                if (token.user_nickname != otherName[i][j]) otherNickname.push(otherName[i][j]);
+        if (otherNickname[0] != undefined) res.send({ otherNickname: otherNickname, room_name: response });
         else res.send({ msg: "Bad" });
     },
 }

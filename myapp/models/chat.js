@@ -59,8 +59,8 @@ module.exports = {
         });
     },
     myRoomList: (user_id) => {
-        const sql = "SELECT chat_room_name FROM chat_room WHERE chat_room_state = 0 AND " + 
-        "sender_id=(?) OR receiver_id=(?)";
+        const sql = "SELECT chat_room_name FROM chat_room WHERE chat_room_state = 0 AND " +
+            "sender_id=(?) OR receiver_id=(?)";
         const values = [
             [user_id],
             [user_id]
@@ -80,9 +80,9 @@ module.exports = {
      *  둘이 같은 채팅방에 있는지 확인해주는 함수
      */
     checkedOneByRoom: (sender_id, receiver_id) => {
-        const sql = "SELECT chat_room_name FROM chat_room WHERE chat_room_state = 0 AND " + 
-        "sender_id=(?) AND receiver_id=(?) OR " +
-        "sender_id=(?) AND receiver_id=(?)";
+        const sql = "SELECT chat_room_name FROM chat_room WHERE chat_room_state = 0 AND " +
+            "sender_id=(?) AND receiver_id=(?) OR " +
+            "sender_id=(?) AND receiver_id=(?)";
         const values = [
             [sender_id],
             [receiver_id],
