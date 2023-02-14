@@ -60,4 +60,15 @@ module.exports = {
         if (otherNickname[0] != undefined) res.send({ otherNickname: otherNickname, room_name: response });
         else res.send({ msg: "Bad" });
     },
+
+    writeChat: async (req, res) => {
+        const response = await chat.writeChat();
+        res.send(response);
+    },
+    
+    getChat: async (req, res) => {
+        const response = await chat.getChat();
+        if(response == null) res.send("not exist key");
+        else res.send(response);
+    },
 }

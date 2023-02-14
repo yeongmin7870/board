@@ -1,6 +1,7 @@
 const con = require('../config/mysqlconn.js');
 const mysql = require('mysql2');
-
+const redis_con = require('../config/redisconn');
+const { response } = require('express');
 module.exports = {
     /** 아이디를 입력받으면
      *  채팅방에대한 정보
@@ -100,4 +101,20 @@ module.exports = {
             });
         });
     },
+    /** Redis String 형으로 
+     *  Key, Value 형식으로 저장
+     */
+    writeChat: async () => {
+        const response = await redis_con.set('hihi', "22")
+            .catch((err) => console.log(err));
+        if (JSON.stringify(response) != undefined) return "did save chat";
+        else return "can't save chat";
+    },
+    /** Key값으로 값을 
+     *  꺼내는 함수 
+     */
+    getChat: async () => {
+        const response = await redis_con.get('hihi');
+        return response;
+    }
 }

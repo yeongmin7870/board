@@ -52,6 +52,7 @@
         async function getMyList() {
             const response = await Post_body("/v4/chat/room?_method=GET", { token: token });
             if (response.msg == "need login") { alert("로그인이 필요합니다."); return location.href = "/v2/home/0"; }
+            
             for (let i = 0; i < response.otherNickname.length; i++) {
                 let html = `
                 <form action="/v2/chatting?_method=get&&Nickname=${response.otherNickname[i]}" method="post">

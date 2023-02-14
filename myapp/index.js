@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
+const redis_con = require('./config/redisconn');
 
 const port = process.env.PORT || 80;
 const { logger } = require('./modules/logger');
@@ -36,6 +37,8 @@ app.use('/v4', chatRouter);
 app.use('/cookies', cookieRouter);
 
 chat.chat(io);
+/** Redis 연결 */
+redis_con.connect();
 
 app.set('view engine', 'ejs');
 app.set('views', './views');

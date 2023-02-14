@@ -33,11 +33,23 @@
         width: 100%;
         height: auto;
     }
+
+    #btn_chat_delete {
+        position: fixed;
+        top: 0.5%;
+        left: 0.5%;
+        border-color: white;
+    }
+
+    #chat_title {
+        padding-top: 0.5%;
+    }
 </style>
 
 <body>
     <div class="div_exit" style="text-align:center">
-        <h4>"<%=Nickname%>" 채팅</h4>
+        <h4 id="chat_title">"<%=Nickname%>" 채팅</h4>
+        <button class="btn btn-outline-danger" id="btn_chat_delete" onclick="chat_delete()">채팅방 나가기</button>
     </div>
 
     <div class="div_message">
@@ -48,10 +60,12 @@
         <form class="form_send" id="form_send">
             <div class="input-group mb-3">
                 <button style="background-color: plum;" class="btn btn-dark" type="button" id="btn_exit"
-                    onclick="exitRoom()">나가기</button>
-                <input type="text" class="form-control" id="input_content" aria-describedby="button-addon2"
-                    maxlength="30">
-                <button style="color:white;" class="btn btn-outline-secondary" type="submit" id="btn_send">보내기</button>
+                    onclick="exitRoom()">
+                    < 뒤로가기</button>
+                        <input type="text" class="form-control" id="input_content" aria-describedby="button-addon2"
+                            maxlength="30">
+                        <button style="color:white;" class="btn btn-outline-secondary" type="submit"
+                            id="btn_send">보내기</button>
             </div>
         </form>
     </div>
@@ -97,7 +111,6 @@
                     let time = `${hours}:${min}`
                     /** 메시지를 보내는 기능 */
                     socket.emit('chat message', { nickname: nickname, message: input_content.value, time: time, room_name: room_name.value });
-                    /** 초대하는 기능 */
 
                     input_content.value = '';
                 }
@@ -143,16 +156,19 @@
             }
         }
 
-        /** 나가기 버튼 눌렀을때
-         *  서버에서 room 도 나가기
+        /** 뒤로가기 버튼 눌렀을때
+         *  
          */
         function exitRoom() {
             location.href = '/v2/chatting_list';
         }
 
-        /**채팅 방 생성*/
-        function createRoom() {
-
+        /**채팅방 나가기*/
+        async function chat_delete() {
+            const response = await PUT_BODY('/v4/chat/room', {chat_room_name:room_name.value});
+            alert("채팅방이 정상적으로 삭제되었습니다.");
+            location.href="/v2/chatting_list"
+            console.log(response);
         }
 
         // /** 읽음 체크 */
@@ -178,14 +194,13 @@
 
         function main() {
             getnickname();
-
             setTimeout(() => {
                 /**해당 방으로 입장*/
                 socket.emit('enterRoom', { room_name: room_name.value });
                 /**채팅 출력*/
                 chat();
             }, 1000);
-            
+
         }
 
         main();
