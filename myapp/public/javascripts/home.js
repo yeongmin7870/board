@@ -119,11 +119,11 @@ function selectOption() {
     }, 1);
 }
 
-chatting.addEventListener('click', event => {
-    token_form.action = `/v2/chatting_list?_method=GET`
-    input_token.value = token;
-    token_form.submit();
-});
+// chatting.addEventListener('click', event => {
+//     token_form.action = `/v2/chatting_list?_method=GET`
+//     input_token.value = token;
+//     token_form.submit();
+// });
 
 /** 메인 함수 */
 function main() {

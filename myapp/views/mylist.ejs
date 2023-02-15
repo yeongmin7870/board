@@ -24,18 +24,17 @@
                 <span>
                     <div>
                         <% if(board.result[0].user_profile) { %>
-                            <img style="width: 400px; height: 300px;" src="/images/board/<%=board.result[0].user_profile%>">
+                            <img style="width: 10%; height: 10%;" src="/images/board/<%=board.result[0].user_profile%>">
                             <!-- 프로파일 -->
                         <% } else { %>
-                            <img style="width: 30%; height: 20%;" src="/images/profile.png">
+                            <img style="width: 10%; height: 10%;" src="/images/profile.png">
                         <% } %>
                     </div>
-                    <div style="width: 50%; height:50; margin-right: 20%; text-align: left; float: right; margin-top: -20%;">
+                    <div style="width: 50%; height:50; position: absolute; left: 30%; top: 30%; text-align: center;">
+                        <h5>소개글</h5>
                         <% if(board.result[0].user_introduce){ %>
-                            <h5>소개글</h5>
-                            <p style="width: 35%;"><%=board.result[0].user_introduce%></p>
+                            <p><%=board.result[0].user_introduce%></p>
                         <% } else { %> 
-                            <h5>소개글</h5>
                             <p>아직 소개글이 없어요!</p>
                         <% } %>
                     </div>
