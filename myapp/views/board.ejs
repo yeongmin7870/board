@@ -8,10 +8,8 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.104.2">
     <title>홈화면</title>
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/carousel/">
     <link href="/csses/home/bootstrap.min.css" type="text/css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
 </head>
 
 <style>
@@ -22,6 +20,37 @@
         width: 10%;
         height: 18%;
         border-radius: 50%;
+
+    }
+    /**모든 태그들*/
+    #all_state{
+        margin-top: 2%;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+    /**댓글 작성 버튼*/
+    #btn_comment{
+        width: 100%;
+    }
+    /**댓글 삭제 버튼*/
+    #btn_comment_delete{
+        width:  fit-content;
+        height: min-content;
+    }
+    /**게시판 이미지*/
+    #board_iamge{
+        margin-left: 20%;
+        margin-right: 20%;
+
+        max-width: 50%;
+        width: auto !important;
+        height: auto;
+    }
+    /**프로파일*/
+    #profile{
+        max-width: 10%;
+        width: auto !important;
+        height: auto;
     }
 </style>
 
@@ -30,8 +59,8 @@
     <div id = "all_state" >
         <div class="container marketing">
             <hr class="featurette-divider">
-            <div style="float: left; width: 50%;">
-                <img src="/images/<%=myboard.result[0].board_image%>" width="500px" height="300px" />
+            <div>
+                <img src="/images/<%=myboard.result[0].board_image%>" id="board_iamge"/>
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
@@ -56,10 +85,10 @@
                         <p class="text-muted" style="font-size: 17px;">
                             <span>
                             <% if(myboard.result[0].user_profile) { %>
-                                <img width="10%" height="10%"; src="/images/<%=myboard.result[0].user_profile%>">
+                                <img width="10%" height="10%"; id="profile" src="/images/<%=myboard.result[0].user_profile%>">
                                 <!-- 프로파일 -->
                             <% } else { %>
-                                <img style="width:10%; height:10%;" src="/images/profile.png">
+                                <img style="width:10%; height:10%;" id="profile" src="/images/profile.png">
                             <% } %> 
                             </span>
                             닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
@@ -97,13 +126,13 @@
                 <hr>
             </div>
 
-            <div style="float: left; width: 50%;">
+            <div>
                 <h4>Comment</h4>
                 <form action="#" method="get">
                     <div style="text-align:center;">
                         <form id="comment_form">
                             <input type="text" id="input_comment_content" placeholder="댓글을 작성해주세요"
-                                style="height:100px; width: 600px; text-align: center;" maxlength="50" required><br>
+                                style="height:100px; width: 100%;" maxlength="50" required><br>
                             <button type="submit" id="btn_comment" class="btn btn-outline-primary" >댓글작성완료</button>
                         </form>
                     </div>

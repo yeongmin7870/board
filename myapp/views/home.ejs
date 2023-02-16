@@ -17,6 +17,18 @@
         function noBack(){window.history.forward();}
     </script>
 </head>
+<style>
+    #board_image{
+        max-width: 60%;
+        width: auto !important;
+        height: auto;
+    }
+    #profile {
+        max-width: 10%;
+        width: auto !important;
+        height: auto;
+    }
+</style>
 
 <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
     <header>
@@ -147,10 +159,10 @@
                                 <hr>
                                 <span class="lead" style="font-size: 18px;">
                                     <% if(board.result[i].user_profile) { %>
-                                        <img width="80px" height="60px"; src="/images/<%=board.result[i].user_profile%>">
+                                        <img src="/images/<%=board.result[i].user_profile%>" id="profile">
                                         <!-- 프로파일 -->
                                     <% } else { %>
-                                        <img style="width: 80px; height:60px;" src="/images/profile.png">
+                                        <img src="/images/profile.png" id="profile">
                                     <% } %> 
                                     닉네임 : <%=board.result[i].nickname%><!-- 닉네임 -->
                                 </span><br>
@@ -163,7 +175,7 @@
                         </h3>
                     </div>
                     <div class="col-md-5" style="text-align: right;">
-                        <img src="/images/<%=board.result[i].board_image%>" style="width: 500px; height: 300px; margin-right: -40%; margin-top: 10%;"/>
+                        <img src="/images/<%=board.result[i].board_image%>" id="board_image" />
                     </div>
                     <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>

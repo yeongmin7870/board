@@ -51,7 +51,7 @@ async function getComment(page_num) {
             + "<p>" + time.toLocaleString() + "</p>"
             + `<form type="hidden" method="post" action="/v3/board/comment/${comment.comment.result[i].comment_id}?_method=DELETE">`
             + `<input type="hidden" name="token" value="${token}">`
-            + `<button class="btn btn-outline-danger" type=submit>` + "삭제" + "</button>";
+            + `<button class="btn btn-outline-danger" id="btn_comment_delete" type=submit>` + "삭제" + "</button>";
         + "</form>"
         c_newDiv = document.createElement("div");
 
