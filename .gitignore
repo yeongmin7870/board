@@ -7,10 +7,11 @@ myapp/node_modules/
 myapp/config/*
 
 // 서버 이미지 파일
-myapp/public/images/board/*
+myapp/public/images/*
 
 // 로그파일
 myapp/logs/error/*
 myapp/logs/*.log*
 myapp/logs/*.json*
+
 
