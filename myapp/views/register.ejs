@@ -11,10 +11,12 @@
 </head>
 <style>
     #createUser{
-        text-align:center;
-        margin-left: 40%;
-        margin-right: 40%;
-        background-color: whitesmoke;
+        text-align:left;
+        padding-left: 10%;
+        padding-right: 10%;
+        margin-left: 20%;
+        margin-right: 20%;
+        background-color: rgb(245, 237, 235);
         margin-top: 1%;
     }
 
@@ -31,6 +33,18 @@
         float: right; 
         display: none;
         width: fit-content;
+    }
+    /**승인타이머*/
+    #codeTimer{
+        text-align: center;
+    }
+    #accent_register_login_btn{
+        text-align: center;
+    }
+    #btn_register{
+        width: 50%;
+        background-color: cadetblue;
+        color: white;
     }
 
 </style>
@@ -64,7 +78,7 @@
             </div>
             <label for="Email"><b>이메일</b></label>
             <input class="form-control" type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
-            @
+            <h2 style="text-align: center;">@</h2>
             <select class="form-select" id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
                 <option selected>이메일 선택</option>
                 <option value="@naver.com">naver</option>
@@ -100,12 +114,13 @@
             <input class="form-control" type="text" placeholder="인증여부" name="codeInfo" id="codeInfo" disabled readonly>
              <!-- 승인 여부 확인 박스 -->
             <hr>
-
-            <p>개인정보 제공에 동의 하십니까? <input type="checkbox" id="accept_box" required></p>
-            <button type="button" class="btn btn-success" id="btn_register" onclick="btn_register_event()">회원가입</button>
-            <input class="form-control" type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
-            <div class="container signin">
-                <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
+            <div id="accent_register_login_btn">
+                <p>개인정보 제공에 동의 하십니까? <input type="checkbox" id="accept_box" required></p>
+                <button type="button" class="btn btn-light" id="btn_register" onclick="btn_register_event()">회원가입</button>
+                <input class="form-control" type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
+                <div class="container signin">
+                    <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
+                </div>
             </div>
     </form>
     <script src="/javascripts/register.js"></script>
