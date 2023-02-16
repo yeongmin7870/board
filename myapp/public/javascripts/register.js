@@ -26,7 +26,8 @@ function btnCheckEmail() {
 
     if (checkEmailBtn.style.display == 'block' && user_email.value.search(/@/) != -1) {   // 이메일 확인 버튼이 있고 @을 포함해서 뒷자리까지 입력했다면
         checkEmailBtn.style.display = 'none';       //  이메일 버튼 -> 숨기기 && 승인코드 버튼 -> 생성 && 타이머 -> 생성
-        checkCodeBtn.style.display = 'block'
+        checkCodeBtn.style.display = 'block';
+        resendcodeBtn.style.display = 'block';
 
         codeBox.style.display = 'block'
         codeTimer.style.display = 'block'
@@ -57,7 +58,6 @@ function authTimer() {
             codeTimer.innerText = "승인코드를 다시 받으세요.";
 
             checkCodeBtn.style.display = 'none'
-            resendcodeBtn.style.display = 'block'
             emailcode.value = ""; // 서버로부터 받은 승인코드 초기화
         }
     }, 1000);
@@ -65,7 +65,7 @@ function authTimer() {
 
 function resendBtn() { // 승인코드 다시 보내주기 버튼을 누른다면
     checkCodeBtn.style.display = 'block';
-    resendcodeBtn.style.display = 'none';
+    resendcodeBtn.style.display = 'block';
     authTimer();
     sendCode(); // 승인코드 보내기
 }
@@ -92,14 +92,13 @@ function directEmailBtn() { // 직접 입력 선택 여부
 
 function btn_register_event() { // 회원가입 눌렀을때
 
-    // 승인코드 입력 칸 입력했는지 안했는지
-    if (checkedNickname.value == "") {
-        alert("다시 확인해주세요");
-        return;
-    } else if (codeBox.value == "" || auth_code == false) { // 승인코드가 빈칸이거나 이메일 인증 미완료 
-        alert("이메일 인증해주세요.");
-        return;
-    }
+    if (id.value == "") return alert("아이디를 입력해주세요");
+    if (psw.value == "") return alert("비밀번호를 입력해주세요.");
+    if (checkedNickname.value == "") return alert("닉네임을 확인해주세요.");
+    if (address.value == "") return alert("주소를 입력해주세요");
+    // 승인코드 입력이 빈칸이거나 , 승인여부
+    if (codeBox.value == "" || auth_code == false) return alert("이메일 인증을 완료해주세요.");
+    if (accept_box.checked == false) return alert("개인정보 제공에 동의 해주세요.");
 
     btn_register.addEventListener("click", e => {
         e.preventDefault();
@@ -120,11 +119,17 @@ function btnCheckCode() { // 승인완료 코드
         codeInfo.style.color = "red";
 
         codeBox.style.display = "none"; // 코드 입력칸 숨기기
+        resendcodeBtn.style.display = "none" //승인코드 다시 받기 숨기기
         checkCodeBtn.style.display = "none"; // 입력완료버튼 숨기기
         codeTimer.style.display = "none";  // 시간타이머 숨기기
+
+        emailFront.disabled = true; //이메일 앞부분 비활성화
+        selectEmail.disabled = true; //이메일 뒷부분 비활성화
+        directEmail.disabled = true; // 이메일 직접입력하는 칸 비활성화
         clearInterval(timer); //타이머 끄기
         auth_code = true; // 승인코드 완료 여부
         checkEmailReg.value = "checked";
+
 
         emailcode.value = ""; // 서버로 부터 받은 코드 초기화
     } else {
@@ -134,6 +139,7 @@ function btnCheckCode() { // 승인완료 코드
 
 }
 function sendCode() { //승인코드 고객께 보내기
+    alert(`${user_email.value} 이메일로 승인코드를 보냈습니다.`);
     const data = { receiverEmail: user_email.value };
     fetch('/v1/mail', {
         method: 'post',

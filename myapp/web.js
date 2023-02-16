@@ -7,7 +7,7 @@ const io = new Server(server);
 const redis_con = require('./config/redisconn');
 const path = require('path');
 const port = process.env.PORT || 8001;
-// const { logger } = require('./modules/logger');
+const { logger } = require('./modules/logger');
 
 let bodyparser = require('body-parser');
 let cookieParser = require('cookie-parser');

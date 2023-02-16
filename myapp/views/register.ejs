@@ -7,45 +7,65 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>회원가입</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="/csses/register.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    #createUser{
+        text-align:center;
+        margin-left: 40%;
+        margin-right: 40%;
+        background-color: whitesmoke;
+        margin-top: 1%;
+    }
 
+    #nicknameInfo, #codeInfo{
+        border: 0;
+        background-color: azure;
+    }
+    /**승인코드 입력 완료 버튼*/
+    #checkCodeBtn{
+        float: left; 
+    }
+    /**다시보내는 버튼*/
+    #resendCode{
+        float: right; 
+        display: none;
+        width: fit-content;
+    }
+
+</style>
 <body>
     <form id="createUser" action="/v1/user/sign-up" method="post">
-        <div class="container" style="margin-left: 30%;margin-right: 30%;">
             <h1>회원가입</h1>
             <p>빈칸을 채워주세요</p>
             <hr>
             <div>
                 <label for="id"><b>아이디</b></label>
-                <input type="text" placeholder="아이디를 입력하세요" name="user_id" id="id" required>
+                <input class="form-control" type="text" placeholder="아이디를 입력하세요" name="user_id" id="id" required>
             </div>
             <div>
                 <label for="psw"><b>비밀번호</b></label>
-                <input type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
+                <input class="form-control" type="password" placeholder="비밀번호를 입력하세요" name="user_passwd" id="psw" required>
             </div>
             <div>
-                <div style="float: left; width: 100%;">
+                <div>
                     <label for="nickname"><b>닉네임</b></label>
-                    <input type="text" placeholder="최대6 글자 별명을 입력하세요" name="nickname" id="nickname" maxlength="6"
+                    <input class="form-control" type="text" placeholder="최대6 글자 별명을 입력하세요" name="nickname" id="nickname" maxlength="6"
                         onkeyup="checkNickname()" required>
                 </div>
-                <div style="float: left; width: 100%">
-                    <input style="background-color: white;" type="text" id="nicknameInfo" value="" placeholder="닉네임 중복 여부" readonly>
+                <div>
+                    <input class="form-control"  type="text" id="nicknameInfo" value="" placeholder="닉네임 중복 여부" disabled readonly>
                 </div>
-                <input value="" id="checkedNickname" type="text" style="display: none;" required>
+                <input class="form-control" value="" id="checkedNickname" type="text" style="display: none;" required>
             </div>
             <div>
                 <label for="address"><b>주소</b></label>
-                <input type="text" placeholder="주소를 입력하세요" name="user_address" id="address" readonly required>
+                <input class="form-control" type="text" placeholder="주소를 입력하세요" name="user_address" id="address" readonly required>
             </div>
             <label for="Email"><b>이메일</b></label>
-            <input type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
+            <input class="form-control" type="text" placeholder="이메일 @ 앞자리 입력" name="emailFront" id="emailFront" required>
             @
-            <select id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
+            <select class="form-select" id="selectEmail" onchange="autoEmail()" required> <!-- 이메일 선택-->
                 <option selected>이메일 선택</option>
                 <option value="@naver.com">naver</option>
                 <option value="@gmail.com">gmail</option>
@@ -58,38 +78,35 @@
                 <option value="@yahoo.com">yahoo</option>
                 <option value="null">직접입력</option>
             </select>
-            <input type="text" value="" id="directEmail" name="directEmail" onkeyup="directEmailOption()"
-                style="display: none;" placeholder="example.com" required disabled> <!-- 직접입력 칸 -->
+            <input class="form-control" type="text" value="" id="directEmail" name="directEmail" onkeyup="directEmailOption()"
+                style="display: none;" placeholder="ex: naver.com OR gmail.com" required disabled> <!-- 직접입력 칸 -->
 
-            <input type="text" id="user_email" value="" name="user_email" style="display: none;" required>
+            <input class="form-control" type="text" id="user_email" value="" name="user_email" style="display: none;" required>
             <!-- 서버로 보내줄 이메일 조합 칸 -->
             <br>
-            <button type="button" id="checkEmailBtn" onclick="btnCheckEmail();"
+            <button class="btn btn-secondary" type="button" id="checkEmailBtn" onclick="btnCheckEmail();"
                 style="display: block; width: fit-content;">이메일
                 확인받기</button>
 
-            <button type="button" id="checkCodeBtn" onclick="btnCheckCode();"
+            <button class="btn btn-secondary" type="button" id="checkCodeBtn" onclick="btnCheckCode();"
                 style="display: none; width: fit-content;">승인코드 입력 완료</button>
 
-            <button type="button" id="resendCode" onclick="resendBtn();" style="display: none; width: fit-content;">승인코드
+            <button class="btn btn-secondary" type="button" id="resendCode" onclick="resendBtn();" >승인코드
                 다시 받기</button>
 
             <p type="text" name="codeTimer" id="codeTimer" style="display: none;">5분0초</p> <!-- 승인 타이머 -->
-            <input type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
+            <input class="form-control" type="text" placeholder="승인코드를 입력하세요" name="codeBox" id="codeBox" style="display: none;" required>
             <!-- 승인 코드 입력 칸  -->
-            <input type="text" placeholder="인증여부" name="codeInfo" id="codeInfo"
-                style="display: block; background-color: white;"  readonly>
+            <input class="form-control" type="text" placeholder="인증여부" name="codeInfo" id="codeInfo" disabled readonly>
              <!-- 승인 여부 확인 박스 -->
             <hr>
 
-            <p>개인정보 제공에 동의 하십니까? <input type="checkbox" required></p>
-            <button type="button" class="registerbtn" id="btn_register" onclick="btn_register_event()">회원가입</button>
-            <input type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
+            <p>개인정보 제공에 동의 하십니까? <input type="checkbox" id="accept_box" required></p>
+            <button type="button" class="btn btn-success" id="btn_register" onclick="btn_register_event()">회원가입</button>
+            <input class="form-control" type="text" id="checkEmailReg" style="display: none;" required> <!--이메일 확인 완료 여부-->
             <div class="container signin">
                 <p>이미 계정이 있으신가요? <a href="/v2/login">로그인</a>.</p>
             </div>
-
-        </div>
     </form>
     <script src="/javascripts/register.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>>
