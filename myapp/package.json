@@ -2,10 +2,10 @@
   "name": "myapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "web.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --watch myapp/ myapp/index.js"
+    "start": "nodemon --watch web.js"
   },
   "author": "",
   "license": "ISC",

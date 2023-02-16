@@ -147,7 +147,7 @@
                                 <hr>
                                 <span class="lead" style="font-size: 18px;">
                                     <% if(board.result[i].user_profile) { %>
-                                        <img width="80px" height="60px"; src="/images/board/<%=board.result[i].user_profile%>">
+                                        <img width="80px" height="60px"; src="/images/<%=board.result[i].user_profile%>">
                                         <!-- 프로파일 -->
                                     <% } else { %>
                                         <img style="width: 80px; height:60px;" src="/images/profile.png">
@@ -163,7 +163,7 @@
                         </h3>
                     </div>
                     <div class="col-md-5" style="text-align: right;">
-                        <img src="/images/board/<%=board.result[i].board_image%>" style="width: 500px; height: 300px; margin-right: -40%; margin-top: 10%;"/>
+                        <img src="/images/<%=board.result[i].board_image%>" style="width: 500px; height: 300px; margin-right: -40%; margin-top: 10%;"/>
                     </div>
                     <input type="hidden" id="board_id" value=<%=board.result[i].board_id%>>
                 </div>

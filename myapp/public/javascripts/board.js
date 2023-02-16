@@ -226,16 +226,17 @@ board_delete_token.value = token;
 
 /** 채팅하기 버튼 눌렀을때 */
 async function let_chat() {
-    const data = {
-        token: token,
-        receiver_name: input_state_check_nickname.value
-    }
-    const response = await Post_body("/v4/chat/room", data);
-    if (response.msg == "same user") return alert("자기 자신은 채팅방을 개설할 수 없습니다.");
-    if (response.msg == "Good") { alert("채팅방이 생성되었습니다!"); return location.href = '/v2/chatting_list'; }
-    else if (response.msg == "Bad") return alert("채팅방 개설이 실패했습니다.");
-    else if (response.msg == "need login") return alert("로그인이 필요합니다.");
-    else if (response.msg == "exist room") { alert("이미 채팅방이 있습니다."); return location.href = "/v2/chatting_list" }
+    alert("아직 준비중입니다.");
+    // const data = {
+    //     token: token,
+    //     receiver_name: input_state_check_nickname.value
+    // }
+    // const response = await Post_body("/v4/chat/room", data);
+    // if (response.msg == "same user") return alert("자기 자신은 채팅방을 개설할 수 없습니다.");
+    // if (response.msg == "Good") { alert("채팅방이 생성되었습니다!"); return location.href = '/v2/chatting_list'; }
+    // else if (response.msg == "Bad") return alert("채팅방 개설이 실패했습니다.");
+    // else if (response.msg == "need login") return alert("로그인이 필요합니다.");
+    // else if (response.msg == "exist room") { alert("이미 채팅방이 있습니다."); return location.href = "/v2/chatting_list" }
 
 }
 

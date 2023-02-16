@@ -214,8 +214,8 @@ module.exports = {
         });
     },
     doRmByBoard: function (board_id) {
-        let sql1 = "DELETE FROM board b WHERE b.board_id = ?;";
-        let sql2 = "DELETE FROM comment c WHERE c.board_id = ?; ";
+        let sql1 = "DELETE FROM board  WHERE board_id = ?;";
+        let sql2 = "DELETE FROM comment WHERE board_id = ?; ";
 
         let sql_board = mysql.format(sql1, board_id);
         let sql_comment = mysql.format(sql2, board_id);

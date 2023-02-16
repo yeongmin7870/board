@@ -6,7 +6,7 @@ const Comment = require('../models/comments');
 const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
 const Users = require('../models/Users');
-
+const path = require('path');
 module.exports = {
 
     // 게시판 글 작성
@@ -255,7 +255,7 @@ module.exports = {
             } else {
 
                 const image_name = result[0].board_image;
-                let file_path = './public/images/board/' + image_name;
+                let file_path = path.resolve(__dirname, "../public/images", image_name);
 
                 if (fs.existsSync(file_path)) {
                     try {
@@ -399,7 +399,7 @@ module.exports = {
             /** 게시판 수정하기 전에 게시판 이미지 삭제 수행 하는 모델 */
             const findProfile = await Users.getBoardImage(board.board_id);
             let preImage = findProfile[0].board_image;
-            let file_path = './public/images/board/' + preImage;
+            let file_path = path.resolve(__dirname, "../public/images", preImage);
 
             if (fs.existsSync(file_path)) {
                 try {

@@ -8,6 +8,7 @@ const crypto = require('../modules/crypto');
 const { logger } = require('../modules/logger');
 const utcnow = new Date();
 const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     doGetUser: function (req, res, next) {
@@ -184,7 +185,7 @@ module.exports = {
             /** 프로필 수정하기 전에 삭제 수행 하는 알고리즘 */
             const findProfile = await Users.findProfilePath(user);
             const image_name = findProfile[0].user_profile;
-            let file_path = './public/images/board/' + image_name;
+            let file_path = path.resolve(__dirname, "../public/images", image_name);
 
             if (fs.existsSync(file_path)) {
                 try {

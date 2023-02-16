@@ -31,7 +31,7 @@
         <div class="container marketing">
             <hr class="featurette-divider">
             <div style="float: left; width: 50%;">
-                <img src="/images/board/<%=myboard.result[0].board_image%>" width="500px" height="300px" />
+                <img src="/images/<%=myboard.result[0].board_image%>" width="500px" height="300px" />
                 <div class="col-md-7">
                     <h2 class="featurette-heading fw-normal lh-1">
                         <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
@@ -56,7 +56,7 @@
                         <p class="text-muted" style="font-size: 17px;">
                             <span>
                             <% if(myboard.result[0].user_profile) { %>
-                                <img width="10%" height="10%"; src="/images/board/<%=myboard.result[0].user_profile%>">
+                                <img width="10%" height="10%"; src="/images/<%=myboard.result[0].user_profile%>">
                                 <!-- 프로파일 -->
                             <% } else { %>
                                 <img style="width:10%; height:10%;" src="/images/profile.png">
