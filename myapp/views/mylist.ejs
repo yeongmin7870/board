@@ -10,71 +10,122 @@
     <title>내가 쓴 글들</title>
 </head>
 
-<body>
-            <%  let address=board.result[0].user_address.split(' ');
+<style>
+    #profile {
+        max-width: 10%;
+        width: auto !important;
+        height: auto;
+    }
+
+    #board_images {
+        max-width: 20%;
+        width: auto;
+        height: auto;
+    }
+
+    body {
+        padding-left: 30%;
+        padding-right: 30%;
+    }
+
+    /**상단 내용들 */
+    #top_info {
+        text-align: center;
+    }
+
+    #list_nickname_address {
+        list-style-type: none;
+    }
+
+    #btn_updates{
+        width: fit-content;
+        height: auto;
+    }
+    #home_btn{
+        margin-right: 90%;
+    }
+    #intro_ptag{
+        background-color: rgba(187, 241, 242, 0.447);
+    }
+    #btn_numbers{
+        padding-top: 10%;
+    }
+    #page_info{
+        text-align: center;
+        background-color: rgba(45, 44, 44, 0.668);
+        color: white;
+    }
+    #board_title{
+        font-size: small;
+    }
+</style>
+
+<body id="body">
+    <% let address=board.result[0].user_address.split(' ');
                 address = address[0]+' '+address[1]+' '+address[2];    
             %> <!-- 주소 자르기 -->
-        <div class="mypage" style="text-align: left; margin-left: 10%; margin-right: 10%; margin-top: 5%;">
-            <div>
+        <div class="mypage">
+            <div id="top_info">
                 <hr>
                 <h4>마이페이지</h4>
-                <button type="button" class="btn btn-outline-primary" onClick="location.href='/v2/home/0'">홈으로</button>
-
-                <hr>
-                <span>
-                    <div>
-                        <% if(board.result[0].user_profile) { %>
-                            <img style="width: 10%; height: 10%;" src="/images/<%=board.result[0].user_profile%>">
-                            <!-- 프로파일 -->
-                        <% } else { %>
-                            <img style="width: 10%; height: 10%;" src="/images/profile.png">
+                <button type="button" class="btn btn-outline-primary" onClick="location.href=' /v2/home/0'" id="home_btn">홈으로</button>
+        <hr>
+        <span>
+            <div>
+                <% if(board.result[0].user_profile) { %>
+                    <img id="profile" src="/images/<%=board.result[0].user_profile%>">
+                    <!-- 프로파일 -->
+                    <% } else { %>
+                        <img src="/images/profile.png" id="profile">
                         <% } %>
-                    </div>
-                    <div style="width: 50%; height:50; position: absolute; left: 30%; top: 30%; text-align: center;">
-                        <h5>소개글</h5>
-                        <% if(board.result[0].user_introduce){ %>
-                            <p><%=board.result[0].user_introduce%></p>
-                        <% } else { %> 
-                            <p>아직 소개글이 없어요!</p>
-                        <% } %>
-                    </div>
-                        <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>">
-                        <!-- 현재 누구의 마이페이지를 보고 있는지 -->
-                    <div>
-                        <button id="btn_profile" class="btn btn-outline-secondary" style="margin-top: 1%;">프로필 수정</button>
-                        <button class="btn btn-outline-secondary" style="margin-top: 1%;" name="introduce" onclick="btn_introduce()">소개글 수정</button>
-                    </div>
-                </span>
-                <ul>
-                    <li>닉네임: <%=board.result[0].nickname%>
-                    </li> <!-- 닉네임 -->
-                    <li>주소: <%=address%>
-                    </li> <!-- 주소 -->
-                </ul>
             </div>
             <hr>
-            <div id="btn_group">
-                <button type="button" class="btn btn-outline-success" id="btn_all"
-                    onclick="buttonDisabled(this,'btn_group')" value="전체" disabled>전체</button>
-                <button type="button" class="btn btn-outline-success" id="btn_sell"
-                    onclick="buttonDisabled(this,'btn_group')" value="판매">판매중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_reservation"
-                    onclick="buttonDisabled(this,'btn_group')" value="예약">예약중</button>
-                <button type="button" class="btn btn-outline-success" id="btn_soldout"
-                    onclick="buttonDisabled(this,'btn_group')" value="판매완료">판매완료</button>
+            <ul id="list_nickname_address">
+                <li>닉네임: <%=board.result[0].nickname%>
+                </li> <!-- 닉네임 -->
+                <li>주소: <%=address%>
+                </li> <!-- 주소 -->
+            </ul>
+            <div id="intro_ptag">
+                <% if(board.result[0].user_introduce){ %>
+                    <p>
+                        "<%=board.result[0].user_introduce%>"
+                    </p>
+                <% } else { %>
+                    <p>"아직 소개글이 없어요!"</p>
+                <% } %>
             </div>
-            <p>🐈 판매상품보기</p>
-            <hr>
+            <input id="nowNickname" type="hidden" value="<%=board.result[0].nickname%>">
+            <!-- 현재 누구의 마이페이지를 보고 있는지 -->
+        </span>
+        <div id="btn_updates">
+            <button id="btn_profile" class="btn btn-outline-secondary" style="margin-top: 1%;">프로필 수정</button>
+            <button class="btn btn-outline-secondary" style="margin-top: 1%;" name="introduce" onclick="btn_introduce()">소개글 수정</button>
+        </div>
+        </div>
+        <hr>
+        <div id="btn_group">
+            <button type="button" class="btn btn-outline-success" id="btn_all"
+                onclick="buttonDisabled(this,'btn_group')" value="전체" disabled>전체</button>
+            <button type="button" class="btn btn-outline-success" id="btn_sell"
+                onclick="buttonDisabled(this,'btn_group')" value="판매">판매중</button>
+            <button type="button" class="btn btn-outline-success" id="btn_reservation"
+                onclick="buttonDisabled(this,'btn_group')" value="예약">예약중</button>
+            <button type="button" class="btn btn-outline-success" id="btn_soldout"
+                onclick="buttonDisabled(this,'btn_group')" value="판매완료">판매완료</button>
+        </div>
+        <p>🐈 판매상품보기</p>
+        <hr>
 
-            <div style="text-align: center; clear: both;" id="mypage_board_content">
-                <!--이 안은 게시판 올린것들 내용물-->
-            </div>
-            <!-- css float 여기서부터  clear 해버림 -->
-            <div id="nav_bar_btn_group" style="clear:both;">
-                <hr>
-                <div id="div_numberbar_arrow"> <!-- 네비게이션 바 --></div>
-                <hr>
-            </div>
+        <div style="text-align: center; clear: both;" id="mypage_board_content">
+            <!--이 안은 게시판 올린것들 내용물-->
+        </div>
+        <!-- css float 여기서부터  clear 해버림 -->
+        <div id="nav_bar_btn_group" style="clear:both;">
+            <hr>
+            <div id="div_numberbar_arrow"> <!-- 네비게이션 바 --></div>
+            <hr>
+        </div>
         </div>
 
         <script src="/javascripts/cookie.js" type="text/javascript"></script>

@@ -74,9 +74,9 @@ function makeboardContent(content) {
                         <a style="text-decoration: none;" href="/v3/board/page/${content[i].board_id}">
                         <div style="position:relative">
                             <p style="color:gray; position: absolute; top: 50%; left: 47%;">${content[i].board_state}<p>
-                            <img src="/images/${content[i].board_image}" style="width: 30%; height:100px;">
+                            <img src="/images/${content[i].board_image}" id="board_images">
                         </div>
-                        <p style="color: black;">${content[i].board_title}</p></a> 
+                        <p style="color: black;" id="board_title">${content[i].board_title}</p></a> 
                         <input type="hidden" value="${content[i].board_state}" id="input_boardImage_${content[i].board_id}">
                     </div>
             `;
@@ -141,13 +141,13 @@ function makeNavigationBar(content) {
         let html = "";
         for (let i = content.start_page; i < content.end_page; i++) {
             html += `
-            <div style="float: left; width: 3%;">
+            <div style="float: left; width: 3%;" id="btn_numbers">
                 <button class="btn btn-outline-success" type="button" id="btn_nav${i}" onclick="btn_nav_arrow_click(this)" value="${i}">${i + 1}</button>
             </div>
         `;
         }
         div_new_numberbar_arrow = document.createElement("div");
-        div_new_numberbar_arrow.innerHTML = html + `<p style="color:red">페이지: [${Number(current_page) + 1}]</p>`;
+        div_new_numberbar_arrow.innerHTML = html + `<p  id="page_info">페이지: [${Number(current_page) + 1}]</p>`;
         div_new_numberbar_arrow.setAttribute("id", "btn_mypage");
         div_numberbar_arrow.appendChild(div_new_numberbar_arrow);
     } else {
