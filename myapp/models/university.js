@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 module.exports = {
     getUniversityApi: async (page, perPage) => {
        let url =
