@@ -140,16 +140,20 @@
                 if (board.result[i].board_state == "예약" || board.result[i].board_state == "판매완료") {    
             %>
                 <div style="position:relative; opacity: 0.6;" id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
-                <h2 style="position:absolute; top: 45%; left: 30%; color: violet;"><%=board.result[i].board_state%></h2>
+                <h2 style="position:absolute; top: 30%; left:30%; color: rgb(255, 255, 255);"><%=board.result[i].board_state%></h2>
             <%} else {%>
                 <div  id="board_state_div" class="row featurette" onclick="location.href='/v3/board/page/<%=board.result[i].board_id%>'">
             <%}%>
-                    <div class="col-md-7" style="width: 500px; height: 300px; text-align: center; margin-top: -5%;">
+                    <div class="col-md-7" style="width: 50%; height: auto; text-align: center;">
                         <h3 class="featurette-heading fw-normal lh-1" style="font-size: 30px;">
                             <span style="font-size: small;">조회수:<%=board.result[i].view_count%></span><br><br>
                             <%=board.result[i].board_title%> <!-- 조회수 -->
                                 <span class="text-muted" style="font-size: 15px;">
                                     <%=board.result[i].book_classification_name%> <!-- 책종류 -->
+                                </span><br>
+                                <span class="text-muted" style="font-size: 20px;">
+                                    <%=board.result[i].university_name%>
+                                    <%=board.result[i].university_major%>
                                 </span><br>
                                 <span class="lead" style="font-size: 15px;">
                                     <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>

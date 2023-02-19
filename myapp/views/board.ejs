@@ -13,8 +13,8 @@
 </head>
 
 <style>
-    #btn_chat{
-        position:fixed;
+    #btn_chat {
+        position: fixed;
         bottom: 10%;
         right: 3%;
         width: 10%;
@@ -22,23 +22,27 @@
         border-radius: 50%;
 
     }
+
     /**모든 태그들*/
-    #all_state{
+    #all_state {
         margin-top: 2%;
         margin-left: 30%;
         margin-right: 30%;
     }
+
     /**댓글 작성 버튼*/
-    #btn_comment{
+    #btn_comment {
         width: 100%;
     }
+
     /**댓글 삭제 버튼*/
-    #btn_comment_delete{
-        width:  fit-content;
+    #btn_comment_delete {
+        width: fit-content;
         height: min-content;
     }
+
     /**게시판 이미지*/
-    #board_iamge{
+    #board_iamge {
         margin-left: 20%;
         margin-right: 20%;
 
@@ -46,8 +50,9 @@
         width: auto !important;
         height: auto;
     }
+
     /**프로파일*/
-    #profile{
+    #profile {
         max-width: 10%;
         width: auto !important;
         height: auto;
@@ -56,47 +61,52 @@
 
 <body>
     <main>
-    <div id = "all_state" >
-        <div class="container marketing">
-            <hr class="featurette-divider">
-            <div>
-                <img src="/images/<%=myboard.result[0].board_image%>" id="board_iamge"/>
-                <div class="col-md-7">
-                    <h2 class="featurette-heading fw-normal lh-1">
-                        <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
-                        <%=myboard.result[0].board_title%> 
-                    </h2>
-                    <select id="select_board_state" onclick="checkUpdateBoardUser()">
-                        <optgroup>
-                            <option><%=myboard.result[0].board_state%></option>
-                        </optgroup>
-                    </select>
-                    <input id="board_satate_value" type="hidden" value="<%=myboard.result[0].board_state%>">
-                    <!--예약이거나 판매완료면 비활성화 시키기 위한 값 저장 input-->
-                    <p class="text-muted" style="font-size: 25px;">
-                        <%=myboard.result[0].book_classification_name%>
-                    </p>
-                    <p class="text-muted" style="font-size: 20px;">
-                        <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
-                        <%=price+' 원'%>
-                    </p>
-                    <hr>
-                    <a id="a_mypage" style="text-decoration-line: underline; cursor: zoom-in; color: red;">
-                        <p class="text-muted" style="font-size: 17px;">
-                            <span>
-                            <% if(myboard.result[0].user_profile) { %>
-                                <img width="10%" height="10%"; id="profile" src="/images/<%=myboard.result[0].user_profile%>">
-                                <!-- 프로파일 -->
-                            <% } else { %>
-                                <img style="width:10%; height:10%;" id="profile" src="/images/profile.png">
-                            <% } %> 
-                            </span>
-                            닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
-                            <input id="input_state_check_nickname" type="hidden" value="<%=myboard.result[0].nickname%>"> <!-- 현재 게시판 상태를 변경할때 필요한 닉네임을 담은 input태그-->
+        <div id="all_state">
+            <div class="container marketing">
+                <hr class="featurette-divider">
+                <div>
+                    <img src="/images/<%=myboard.result[0].board_image%>" id="board_iamge" />
+                    <div class="col-md-7">
+                        <h2 class="featurette-heading fw-normal lh-1">
+                            <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
+                            <%=myboard.result[0].board_title%>
+                        </h2>
+                        <select id="select_board_state" onclick="checkUpdateBoardUser()">
+                            <optgroup>
+                                <option>
+                                    <%=myboard.result[0].board_state%>
+                                </option>
+                            </optgroup>
+                        </select>
+                        <input id="board_satate_value" type="hidden" value="<%=myboard.result[0].board_state%>">
+                        <!--예약이거나 판매완료면 비활성화 시키기 위한 값 저장 input-->
+                        <p class="text-muted" style="font-size: 25px;">
+                            <%=myboard.result[0].book_classification_name%>
                         </p>
-                    </a>
-                    <p class="text-muted" style="font-size: 25px;">
-                        <% let locals=myboard.result[0].user_address.split(' ');
+                        <p class="text-muted" style="font-size: 20px;">
+                            <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
+                                <%=price+' 원'%>
+                        </p>
+                        <hr>
+                        <a id="a_mypage" style="text-decoration-line: underline; cursor: zoom-in; color: red;">
+                            <p class="text-muted" style="font-size: 17px;">
+                                <span>
+                                    <% if(myboard.result[0].user_profile) { %>
+                                        <img width="10%" height="10%" ; id="profile"
+                                            src="/images/<%=myboard.result[0].user_profile%>">
+                                        <!-- 프로파일 -->
+                                        <% } else { %>
+                                            <img style="width:10%; height:10%;" id="profile" src="/images/profile.png">
+                                            <% } %>
+                                </span>
+                                닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
+                                    <input id="input_state_check_nickname" type="hidden"
+                                        value="<%=myboard.result[0].nickname%>">
+                                    <!-- 현재 게시판 상태를 변경할때 필요한 닉네임을 담은 input태그-->
+                            </p>
+                        </a>
+                        <p class="text-muted" style="font-size: 25px;">
+                            <% let locals=myboard.result[0].user_address.split(' ');
                         locals = locals[0]+' '+locals[1]+' '+locals[2];
                      %>   
                      <%=locals%> <!-- 주소 -->
@@ -122,41 +132,43 @@
                     <input type="hidden" name="board_image" value="<%=myboard.result[0].board_image%>">
                     <input type="hidden" name="board_id" value="<%=myboard.result[0].board_id%>">
                 </form>
-                    <button type="button" class="btn btn-outline-success" onclick="location.href='/v2/home/0'">홈으로</button>
-                <hr>
-            </div>
+                    <button type="button" class="btn btn-outline-success" onclick="location.href=' /v2/home/0'">
+                                홈으로</button>
+                                <hr>
+                    </div>
 
-            <div>
-                <h4>Comment</h4>
-                <form action="#" method="get">
-                    <div style="text-align:center;">
-                        <form id="comment_form">
-                            <input type="text" id="input_comment_content" placeholder="댓글을 작성해주세요"
-                                style="height:100px; width: 100%;" maxlength="50" required><br>
-                            <button type="submit" id="btn_comment" class="btn btn-outline-primary" >댓글작성완료</button>
+                    <div>
+                        <h4>Comment</h4>
+                        <form action="#" method="get">
+                            <div style="text-align:center;">
+                                <form id="comment_form">
+                                    <input type="text" id="input_comment_content" placeholder="댓글을 작성해주세요"
+                                        style="height:100px; width: 100%;" maxlength="50" required><br>
+                                    <button type="submit" id="btn_comment"
+                                        class="btn btn-outline-primary">댓글작성완료</button>
+                                </form>
+                            </div>
+                            <div>
+                                <div id="comment_div" style="text-align:left;"></div> <!-- 댓글 -->
+                                <hr>
+                                <div id="comment_page" style="text-align:center;"></div> <!-- 댓글 페이징처리 -->
+                            </div>
                         </form>
                     </div>
-                    <div>
-                        <div id="comment_div" style="text-align:left;"></div> <!-- 댓글 -->
-                        <hr>
-                        <div id="comment_page" style="text-align:center;"></div> <!-- 댓글 페이징처리 -->
-                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="btn_chat" onclick="let_chat()">채팅하기 💬</button>
+
+                <input type="hidden" id="input_board_id" value="<%=myboard.result[0].board_id%>">
+                <!--게시판 상태를 변경하기위해 게시판 아이디를 input에 보관했다가 popup 주소로 보냄-->
+
+                <!-- 마이페이지 가기위한 form 태그 -->
+                <form style="display: none;" id="form_mypage" action="" method="post">
+                    <input id="input_nickname" type="text" value="<%=myboard.result[0].nickname%>">
                 </form>
             </div>
-        </div>
-
-        <button class="btn btn-primary" id="btn_chat" onclick="let_chat()">채팅하기 💬</button>
-
-        <input type="hidden" id="input_board_id" value="<%=myboard.result[0].board_id%>">
-        <!--게시판 상태를 변경하기위해 게시판 아이디를 input에 보관했다가 popup 주소로 보냄-->
-
-        <!-- 마이페이지 가기위한 form 태그 -->
-        <form style="display: none;" id="form_mypage" action="" method="post">
-            <input id="input_nickname" type="text" value="<%=myboard.result[0].nickname%>">
-        </form>
-    </div>
     </main>
-    <script  src="/javascripts/cookie.js" type="text/javascript"></script>
+    <script src="/javascripts/cookie.js" type="text/javascript"></script>
     <script src="/javascripts/fetch.js" type="text/javascript"></script>
     <script>
         /**token값*/

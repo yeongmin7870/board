@@ -4,7 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
-const redis_con = require('./config/redisconn');
+// const redis_con = require('./config/redisconn');
 const path = require('path');
 const port = process.env.PORT || 8001;
 const { logger } = require('./modules/logger');
@@ -20,6 +20,7 @@ const cookieRouter = require('./routes/cookieroute');
 const boardRouter = require('./routes/boardroute');
 const chat = require('./chatting/chat');
 const chatRouter = require('./routes/chatroute');
+const universityRouter = require('./routes/universityroute');
 
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -33,6 +34,7 @@ app.use('/v1', userRouter);
 app.use('/v2', viewRouter);
 app.use('/v3', boardRouter);
 app.use('/v4', chatRouter);
+app.use('/v5', universityRouter);
 
 app.use('/cookies', cookieRouter);
 

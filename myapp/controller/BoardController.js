@@ -14,7 +14,10 @@ module.exports = {
         try {
             req.body.board_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
             const decode = await jwt.verify(req.body.token); //토큰 해독
+            
             req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+
+            if (req.body.user_id == undefined) { res.send(`<script>location.href="/v2/login"; alert("로그인해주세요!"); </script>`); return; }
 
             Book.setBoard(req.body).then((result) => {
                 logger.info(`'${req.body.user_id}' 님이 '${result}' 번 게시글을 작성했습니다.`)

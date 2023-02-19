@@ -33,10 +33,14 @@ router.get('/introduce-popup', (req, res) => {
 router.get('/chageboard', boardcontroller.dochangeboard)
 // 메인 채팅 페이지
 router.get('/chatting', (req, res) => {
-    res.render('chatting', { room_name: req.body.room_name, Nickname:req.query.Nickname});
+    res.render('chatting', { room_name: req.body.room_name, Nickname: req.query.Nickname });
 })
 // 나의 채팅 리스트 페이지
 router.get('/chatting_list', (req, res) => {
     res.render('chatting_list');
 })
+// 대학및 전공선택 페이지
+router.get('/university', (req, res) => {
+    res.render('university')
+});
 module.exports = router;

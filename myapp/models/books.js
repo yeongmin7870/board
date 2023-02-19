@@ -23,9 +23,16 @@ module.exports = {
     },
     //게시글 작성
     setBoard: function (board) {
-        let { board_id, user_id, board_title, book_classification_id, board_contents, board_image, price } = board;
+        let { board_id, user_id, board_title, book_classification_id,
+            board_contents, board_image, price,
+            university_name, university_major
+        } = board;
         values = [
-            [board_id, user_id, board_title, book_classification_id, board_contents, board_image, price, 0, "판매"]
+            [
+                board_id, user_id, board_title, book_classification_id,
+                board_contents, board_image, price, 0, "판매",
+                university_name, university_major
+            ]
         ];
         // 토큰 해독
 
@@ -261,9 +268,11 @@ module.exports = {
         })
     },
     changeBoard: function (board, board_image) {
-        let sql = "UPDATE board SET board_title=?, book_classification_id=?, board_contents=?, board_image=?, price=?  WHERE board_id=?;";
-        let values = [board.board_title, board.book_classification_id, board.board_contents, board_image, board.price,board.board_id];
-        
+        let sql = "UPDATE board SET board_title=?, book_classification_id=?, board_contents=?, board_image=?, price=?,university_name=? ,university_major=?  WHERE board_id=?;";
+        let values = [board.board_title, board.book_classification_id,
+        board.board_contents, board_image, board.price, board.university_name,
+        board.university_major, board.board_id];
+
         return new Promise((resolve, reject) => {
             con.getConnection((err, con) => {
                 if (err) {

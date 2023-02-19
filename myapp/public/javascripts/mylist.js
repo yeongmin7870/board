@@ -73,7 +73,7 @@ function makeboardContent(content) {
                     <div id="div_boardImage_${content[i].board_id}" style="float: left; width: 33%;">
                         <a style="text-decoration: none;" href="/v3/board/page/${content[i].board_id}">
                         <div style="position:relative">
-                            <p style="color:gray; position: absolute; top: 50%; left: 47%;">${content[i].board_state}<p>
+                            <p style="color:white; position: absolute; top: 50%; left: 47%;">${content[i].board_state}<p>
                             <img src="/images/${content[i].board_image}" id="board_images">
                         </div>
                         <p style="color: black;" id="board_title">${content[i].board_title}</p></a> 

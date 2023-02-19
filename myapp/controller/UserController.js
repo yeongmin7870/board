@@ -1,4 +1,3 @@
-const express = require('express');
 const Users = require('../models/Users');
 const jwt = require('../modules/jwt');
 const util = require('util');
