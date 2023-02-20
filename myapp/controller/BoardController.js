@@ -7,6 +7,7 @@ const { logger } = require('../modules/logger');
 const Page = require('../modules/page');
 const Users = require('../models/Users');
 const path = require('path');
+const exception = require('../modules/exception');
 module.exports = {
 
     // 게시판 글 작성
@@ -14,7 +15,7 @@ module.exports = {
         try {
             req.body.board_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
             const decode = await jwt.verify(req.body.token); //토큰 해독
-            
+
             req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
             if (req.body.user_id == undefined) { res.send(`<script>location.href="/v2/login"; alert("로그인해주세요!"); </script>`); return; }
@@ -43,46 +44,10 @@ module.exports = {
      *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
+
         /** 게시판 상태 변수 */
-        let board_state = "";
-        let select_option = "";
-        let search = "";
+        let { board_state, select_option, search, university_name, university_major } = exception.home_search_exception(req);
 
-        /** 게시판 상태 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.board_state == undefined) {
-            /** 게시판 상태 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.board_state == "" || req.body.board_state == undefined) {
-                board_state = "전체";
-            } else {
-                board_state = req.body.board_state;
-            }
-        } else {
-            board_state = req.query.board_state;
-        }
-
-        /** 옵션 선택 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.select_option == undefined) {
-            /** 옵션 선택 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.select_option == "" || req.body.select_option == undefined) {
-                select_option = "제목";
-            } else {
-                select_option = req.body.select_option;
-            }
-        } else {
-            select_option = req.query.select_option;
-        }
-
-        /** 검색 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.search == undefined) {
-            /** 검색 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.search == "" || req.body.search == undefined) {
-                search = "";
-            } else {
-                search = req.body.search;
-            }
-        } else {
-            search = req.query.search;
-        }
         /** 검색 결과를 가공한 변수 */
         let manufacture_search = "";
         for (m of search.split(" ")) manufacture_search += m;
@@ -91,41 +56,33 @@ module.exports = {
             board_state: board_state,
             search: manufacture_search,
             select_option: select_option,
+            university_name: university_name,
+            university_major: university_major
         }
 
         /** 현재페이지 */
         let current_page = req.params.page
         /**전체 컬럼 개수  */
         let count_column = await Book.getCntFindAll(board);
-
         /** 페이지 처리함수 */
-        let showPage = await Page.showPage(current_page, 4, count_column);
-        /**전체 페이지 개수 */
-        let total_page = showPage.total_page;
-        /**시작하는 컬럼 순서 */
-        let startColumn = showPage.startColumn;
-        /**컬럼 사이즈 */
-        let columnSize = showPage.columnSize;
-        current_page = showPage.current_page;
+        let { total_page, startColumn, columnSize, current_page2 } = await Page.showPage(current_page, 4, count_column);
+
         /** 현재 페이지 컬럼 내용들 */
         let result = await Book.getAllBoard(startColumn, columnSize, board);
 
         /** pagination 처리 함수 */
-        let Pagination = await Page.Pagination(current_page, 5, total_page);
-        /** 시작 페이지 인덱스 */
-        let start_page = Pagination.start_page;
-        /** 끝페이지 인덱스 */
-        let end_page = Pagination.end_page;
-        /** 이전버튼여부 */
-        let prevPage = Pagination.prevPage;
-        /** 다음버튼 여부 */
-        let nexPage = Pagination.nexPage;
-        /** 페이지 사이즈 */
-        let page_size = Pagination.page_size;
+        let { start_page, end_page, prevPage, nexPage, page_size } = await Page.Pagination(current_page2, 5, total_page);
+
         if (search != "") {
-            logger.info(`'${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
+            logger.info(`'${university_name}, ${university_major}, ${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
+
         }
-        res.render('home', { board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }, board_state: board_state, search: search, select_option: select_option });
+        res.render('home', {
+            board: { result }, page: {
+                prevPage, nexPage, total_page, start_page,
+                end_page, current_page, page_size
+            }, board_state: board_state, search: search, select_option: select_option, university_name: university_name, university_major: university_major
+        });
     },
     /**
      * 게시판 댓글 페이지처리
@@ -139,31 +96,15 @@ module.exports = {
         let count_column = await Comment.getCountComment(req.params.board_id);
 
         /** 페이지 처리함수 */
-        let showPage = await Page.showPage(current_page, 4, count_column);
-        /**전체 페이지 개수 */
-        let total_page = showPage.total_page;
-        /**시작하는 컬럼 순서 */
-        let startColumn = showPage.startColumn;
-        /**컬럼 사이즈 */
-        let columnSize = showPage.columnSize;
-        current_page = showPage.current_page;
+        let { total_page, startColumn, columnSize, current_page2 } = await Page.showPage(current_page, 4, count_column);
+        ;
         /** 현재 페이지 컬럼 내용들 */
         let result = await Comment.getByboardComment(req.params.board_id, columnSize, startColumn);
 
         /** pagination 처리 함수 */
-        let Pagination = await Page.Pagination(current_page, 5, total_page);
-        /** 시작 페이지 인덱스 */
-        let start_page = Pagination.start_page;
-        /** 끝페이지 인덱스 */
-        let end_page = Pagination.end_page;
-        /** 이전버튼여부 */
-        let prevPage = Pagination.prevPage;
-        /** 다음버튼 여부 */
-        let nexPage = Pagination.nexPage;
-        /** 페이지 사이즈 */
-        let page_size = Pagination.page_size;
+        let { start_page, end_page, prevPage, nexPage, page_size } = await Page.Pagination(current_page2, 5, total_page);
 
-        res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size } });
+        res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page2, page_size } });
     },
     /** 마이페이지 
      *    닉네임을 입력 받으면 
@@ -199,19 +140,13 @@ module.exports = {
         let count_column = await Book.getCntFindStateBoard(mypage);
         count_column = count_column[0].cnt;
         /** 페이지 처리함수 */
-        let showPage = await Page.showPage(current_page, 6, count_column);
-        /**전체 페이지 개수 */
-        let total_page = showPage.total_page;
-        /**시작하는 컬럼 순서 */
-        let startColumn = showPage.startColumn;
-        /**컬럼 사이즈 */
-        let columnSize = showPage.columnSize;
-        current_page = showPage.current_page;
+        let { total_page, startColumn, columnSize, current_page2 } = await Page.showPage(current_page, 4, count_column);
+
 
         /** 현재 페이지 컬럼 내용들 */
         const result = await Book.FindByAllBoard(mypage, startColumn, columnSize)
         /** 숫자및 화살표 정보  */
-        const Pagination = await Page.Pagination(current_page, 4, total_page);
+        const Pagination = await Page.Pagination(current_page2, 4, total_page);
         return res.send({ board: { result }, numberbar_arrow: Pagination });
 
     },

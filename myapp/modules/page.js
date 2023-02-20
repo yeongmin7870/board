@@ -25,7 +25,7 @@ module.exports = {
 
         startColumn = (current_page * columnSize);
 
-        return { "total_page": total_page, "startColumn": startColumn, "columnSize": columnSize, "current_page": current_page }
+        return { "total_page": total_page, "startColumn": startColumn, "columnSize": columnSize, "current_page2": current_page }
     },
     /**
      * 

@@ -26,8 +26,8 @@ module.exports = {
             /** 데이터 배열에 저장 반복문 */
             for (let j = 0; j < response2.data.length; j++)
                 /** 학교명이 대학원이 아닐때만 값을 넣기 */
-                if ((response2.data[j].학교명).includes("대학원") != true) {
-                    university_dict = { "대학명": data[j]["학교명"], "학과": data[j]["학부_과(전공)명"] };
+                if ((data[j]["학교명"]).includes("대학원") != true && (data[j]["학과상태"] != "변경[폐지]" && data[j]["학과상태"] != "폐지") && data[j]["주야구분"] != "야간") {
+                    university_dict = { "대학명": data[j]["학교명"], "학과": data[j]["학부_과(전공)명"]};
                     university_array.push(university_dict);
                 }
         }

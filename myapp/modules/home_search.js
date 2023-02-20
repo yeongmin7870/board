@@ -14,7 +14,7 @@ module.exports = {
             'book_classification bc WHERE u.user_id = b.user_id AND ' +
             'b.book_classification_id = bc.book_classification_id AND ';
         let option = board.select_option;
-
+        let university_sql = 'AND b.university_name like ? AND b.university_major like ?'
         /** 검색 조건 */
         switch (option) {
             case "제목":
@@ -32,19 +32,19 @@ module.exports = {
             /** 검색조건이 있다면 */
             if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음
                 sql = 'SELECT COUNT(*) as cnt FROM board';
-            } else {    //게시판 상태: 전체 + 검색 조건: 있음
-                sql += `${option} like ?`;
+            } else {    //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
+                sql += `${option} like ? ${university_sql}`;
             }
-            sql = mysql.format(sql, [`%${board.search}%`]);
+            sql = mysql.format(sql, [`%${board.search}%`, `${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
             /** 검색조건이 있다면 */
             if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
                 sql += 'board_state = ?'
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음
-                sql += `board_state = ? AND ${option} like ?`;
+            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
+                sql += `board_state = ? AND ${option} like ? ${university_sql}`;
             }
 
-            sql = mysql.format(sql, [board.board_state, `%${board.search}%`]);
+            sql = mysql.format(sql, [board.board_state, `%${board.search}%`, `${board.university_name}`, `${board.university_major}`]);
         }
 
         return sql;
@@ -57,10 +57,11 @@ module.exports = {
      *  리턴해주는 함수 
      */
     board_content_search: function (startColumn, columnSize, board) {
-        let sql = 'SELECT * FROM board b, user u, book_classification bc '+
+        let sql = 'SELECT * FROM board b, user u, book_classification bc ' +
             'WHERE b.user_id = u.user_id AND b.book_classification_id = bc.book_classification_id ';
         let order = ' ORDER BY board_id DESC LIMIT ?  OFFSET ?;'
         let option = board.select_option;
+        let university_sql = 'AND b.university_name like ? AND b.university_major like ?'
 
         /** 검색 조건 */
         switch (option) {
@@ -79,19 +80,19 @@ module.exports = {
             /** 검색조건이 있다면 */
             if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음
                 sql = sql;
-            } else {    //게시판 상태: 전체 + 검색 조건: 있음
-                sql += `AND ${option} like ?`;
+            } else {    //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
+                sql += `AND ${option} like ? ${university_sql}`;
             }
-            sql = mysql.format(sql ,[`%${board.search}%`]);
+            sql = mysql.format(sql, [`%${board.search}%`, `${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
             /** 검색조건이 있다면 */
             if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
                 sql += 'AND board_state = ?'
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음
-                sql += `AND board_state = ? AND ${option} like ?`;
+            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
+                sql += `AND board_state = ? AND ${option} like ? ${university_sql}`;
             }
 
-            sql = mysql.format(sql, [board.board_state, `%${board.search}%`]);
+            sql = mysql.format(sql, [board.board_state, `%${board.search}%`, `${board.university_name}`, `${board.university_major}`]);
         }
         sql = mysql.format(sql + order, [columnSize, startColumn]);
         return sql;
