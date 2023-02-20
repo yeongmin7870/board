@@ -41,12 +41,12 @@
         height: min-content;
     }
 
-    /**게시판 이미지*/
+    /**게시판 메인 이미지*/
     #board_iamge {
         margin-left: 20%;
         margin-right: 20%;
 
-        max-width: 50%;
+        max-width: 100%;
         width: auto !important;
         height: auto;
     }
@@ -61,81 +61,80 @@
 
 <body>
     <main>
-        <div id="all_state">
-            <div class="container marketing">
-                <hr class="featurette-divider">
+            <div id="all_state">
+                <div class="container marketing">
+                    <hr class="featurette-divider">
                 <div>
-                    <img src="/images/<%=myboard.result[0].board_image%>" id="board_iamge" />
-                    <div class="col-md-7">
-                        <h2 class="featurette-heading fw-normal lh-1">
-                            <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
-                            <%=myboard.result[0].board_title%>
-                        </h2>
-                        <select id="select_board_state" onclick="checkUpdateBoardUser()">
-                            <optgroup>
-                                <option>
-                                    <%=myboard.result[0].board_state%>
-                                </option>
-                            </optgroup>
-                        </select>
-                        <input id="board_satate_value" type="hidden" value="<%=myboard.result[0].board_state%>">
-                        <!--예약이거나 판매완료면 비활성화 시키기 위한 값 저장 input-->
-                        <p class="text-muted" style="font-size: 25px;">
-                            <%=myboard.result[0].book_classification_name%>
-                        </p>
-                        <p class="text-muted" style="font-size: 20px;">
-                            <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
-                                <%=price+' 원'%>
-                        </p>
-                        <hr>
-                        <a id="a_mypage" style="text-decoration-line: underline; cursor: zoom-in; color: red;">
-                            <p class="text-muted" style="font-size: 17px;">
-                                <span>
-                                    <% if(myboard.result[0].user_profile) { %>
-                                        <img width="10%" height="10%" ; id="profile"
-                                            src="/images/<%=myboard.result[0].user_profile%>">
-                                        <!-- 프로파일 -->
-                                        <% } else { %>
-                                            <img style="width:10%; height:10%;" id="profile" src="/images/profile.png">
-                                            <% } %>
-                                </span>
-                                닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
-                                    <input id="input_state_check_nickname" type="hidden"
-                                        value="<%=myboard.result[0].nickname%>">
-                                    <!-- 현재 게시판 상태를 변경할때 필요한 닉네임을 담은 input태그-->
+                        <!-- 게시물 메인 이미지  -->
+                        <img src="/images/<%=myboard.result[0].board_image%>" id="board_iamge" />
+                        <div class="col-md-7">
+                            <h2 class="featurette-heading fw-normal lh-1">
+                                <span style="font-size: small;">조회수:<%=myboard.result[0].view_count%></span><br><br>
+                                <%=myboard.result[0].board_title%>
+                            </h2>
+                            <select id="select_board_state" onclick="checkUpdateBoardUser()">
+                                <optgroup>
+                                    <option>
+                                        <%=myboard.result[0].board_state%>
+                                    </option>
+                                </optgroup>
+                            </select>
+                            <input id="board_satate_value" type="hidden" value="<%=myboard.result[0].board_state%>">
+                            <!--예약이거나 판매완료면 비활성화 시키기 위한 값 저장 input-->
+                            <p class="text-muted" style="font-size: 25px;">
+                                <%=myboard.result[0].book_classification_name%>
                             </p>
-                        </a>
-                        <p class="text-muted" style="font-size: 25px;">
-                            <% let locals=myboard.result[0].user_address.split(' ');
-                        locals = locals[0]+' '+locals[1]+' '+locals[2];
-                     %>   
-                     <%=locals%> <!-- 주소 -->
-                    </p>                      
-                    <hr>
-                    <p class="lead">
-                        <%=myboard.result[0].board_contents%>
-                    </p>
-                </div>
-                <hr>
-                <form style="float: left; margin-right: 1%;" id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
-                    <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
-                    <input id="board_delete_token" name=token type="hidden" value="">
-                    <button class="btn btn-outline-danger" id="btn_delete_board"  type="submit">게시물 삭제</button>
-                </form>
-                <!-- 게시판 수정을 위한 Form 태그 -->
-                <form action="" id="update_board_form" method="post" style="float:left; margin-right: 1%;">
-                    <button id="btn_board_update" type="button" class="btn btn-outline-success">게시물 수정</button>
-                    <input type="hidden" name="board_title" value="<%=myboard.result[0].board_title%>">
-                    <input type="hidden" name="book_classification_name" value="<%=myboard.result[0].book_classification_name%>">
-                    <input type="hidden" name="board_price" value="<%=myboard.result[0].price%>">
-                    <input type="hidden" name="board_contents" value="<%=myboard.result[0].board_contents%>">
-                    <input type="hidden" name="board_image" value="<%=myboard.result[0].board_image%>">
-                    <input type="hidden" name="board_id" value="<%=myboard.result[0].board_id%>">
-                </form>
-                    <button type="button" class="btn btn-outline-success" onclick="location.href=' /v2/home/0'">
-                                홈으로</button>
-                                <hr>
+                            <p class="text-muted" style="font-size: 20px;">
+                                <% let price=myboard.result[0].price; price=Number(price).toLocaleString(); %>
+                                    <%=price+' 원'%>
+                            </p>
+                            <hr>
+                            <a id="a_mypage" style="text-decoration-line: underline; cursor: zoom-in; color: red;">
+                                <p class="text-muted" style="font-size: 17px;">
+                                    <span>
+                                        <% if(myboard.result[0].user_profile) { %>
+                                            <img width="10%" height="10%" ; id="profile"
+                                                src="/images/<%=myboard.result[0].user_profile%>">
+                                            <!-- 프로파일 -->
+                                            <% } else { %>
+                                                <img style="width:10%; height:10%;" id="profile" src="/images/profile.png">
+                                                <% } %>
+                                    </span>
+                                    닉네임 : <%=myboard.result[0].nickname%> <!--닉네임 -->
+                                        <input id="input_state_check_nickname" type="hidden"
+                                            value="<%=myboard.result[0].nickname%>">
+                                        <!-- 현재 게시판 상태를 변경할때 필요한 닉네임을 담은 input태그-->
+                                </p>
+                            </a>
+                            <p class="text-muted" style="font-size: 25px;">
+                                <% let locals=myboard.result[0].user_address.split(' ');
+                            locals = locals[0]+' '+locals[1]+' '+locals[2];
+                        %>   
+                        <%=locals%> <!-- 주소 -->
+                        </p>                      
+                        <hr>
+                        <p class="lead">
+                            <%=myboard.result[0].board_contents%>
+                        </p>
                     </div>
+                    <hr>
+                    <form style="float: left; margin-right: 1%;" id="delete_board_form"  action="/v3/board/dormboard/<%=myboard.result[0].board_id%>?_method=DELETE" method="post">
+                        <input id="board_id" type="hidden" value="<%=myboard.result[0].board_id%>" />
+                        <input id="board_delete_token" name=token type="hidden" value="">
+                        <button class="btn btn-outline-danger" id="btn_delete_board"  type="submit">게시물 삭제</button>
+                    </form>
+                    <!-- 게시판 수정을 위한 Form 태그 -->
+                    <form action="" id="update_board_form" method="post" style="float:left; margin-right: 1%;">
+                        <button id="btn_board_update" type="button" class="btn btn-outline-success">게시물 수정</button>
+                        <input type="hidden" name="board_title" value="<%=myboard.result[0].board_title%>">
+                        <input type="hidden" name="book_classification_name" value="<%=myboard.result[0].book_classification_name%>">
+                        <input type="hidden" name="board_price" value="<%=myboard.result[0].price%>">
+                        <input type="hidden" name="board_contents" value="<%=myboard.result[0].board_contents%>">
+                        <input type="hidden" name="board_image" value="<%=myboard.result[0].board_image%>">
+                        <input type="hidden" name="board_id" value="<%=myboard.result[0].board_id%>">
+                    </form>
+                        <button type="button" class="btn btn-outline-success" onclick="location.href=' /v2/home/0'">홈으로</button><hr>
+                </div>
 
                     <div>
                         <h4>Comment</h4>

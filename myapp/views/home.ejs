@@ -19,7 +19,7 @@
 </head>
 <style>
     #board_image{
-        max-width: 60%;
+        max-width: 80%;
         width: auto !important;
         height: auto;
     }
@@ -169,9 +169,9 @@
                                     <%=board.result[i].university_major%>
                                 </span><br>
                                 <span class="lead" style="font-size: 15px;">
-                                    <% let price=board.result[0].price; price=Number(price.toLocaleString()); %>
+                                    <% let price=board.result[i].price; price=Number(price.toLocaleString()); %>
                                         <!-- 가격 숫자로 변환(, 찍어줄려고 한 모양) -->
-                                        <%=price+' 원'%> <!-- 가격 -->
+                                    <%=price+' 원'%> <!-- 가격 -->
                                 </span>
                                 <hr>
                                 <span class="lead" style="font-size: 18px;">

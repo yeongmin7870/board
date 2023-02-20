@@ -53,9 +53,17 @@ select_major.addEventListener('click', () => {
 })
 
 btn_finish.addEventListener('click', () => {
+
     if (title.value == "") return alert("제목을 써주세요!");
     else if (select_major.value == "학과를 선택해주세요") return alert("전공을 선택해주세요!");
     else if (price.value == "") return alert("가격을 입력해주세요!")
     else if (board_contents.value == "") return alert("내용을 써주세요!");
-    else form_board.submit();
+    else if (board_image.value != "") {
+        const file_name = board_image.value.split("\\");
+        const e = file_name[2].split(".")[1].toUpperCase();
+
+        if (e != "BMP" && e != "JPEG" && e != "JPG" && e != "JPEG2000" && e != "GIF" && e != "PNG" && e != "SVG") { return alert("이미지 파일이 아닙니다!"); }
+        else form_board.submit();
+    } else return alert("이미지를 올려주세요!");
+
 })
