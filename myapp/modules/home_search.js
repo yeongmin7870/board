@@ -27,11 +27,13 @@ module.exports = {
     count_search: function (board) {
         let sql = 'SELECT COUNT(*) as cnt FROM board b, user u, ' +
             'book_classification bc WHERE u.user_id = b.user_id AND ' +
-            'b.book_classification_id = bc.book_classification_id AND ';
+            'b.book_classification_id = bc.book_classification_id ';
         let option = board.select_option;
+
         /** 검색 sql 문 */
         let search_sql = "";
         let university_sql = ' b.university_name like ? AND b.university_major like ? '
+
         /** 검색 조건 */
         switch (option) {
             case "제목":
@@ -52,26 +54,49 @@ module.exports = {
             search_sql = this.makeSearchSql(option, board.search);
 
         if (board.board_state == "전체") { // 게시판 상태가 전체라면
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음
-                sql = 'SELECT COUNT(*) as cnt FROM board';
-            } else {    //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
-                sql += `${university_sql}`;
+            /** 검색조건이 없다면 */
+            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음 + 학교 조건 : 있음
+                if (board.university_name) {
+                    sql += ` AND ${university_sql}`;
+                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
+                } else { // 전체 + 검색: 없음 + 학교: 없음
+                    sql = sql;
+                }
+            } else {
+                //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
+                if (board.university_name) {
+                    sql += ` AND ${university_sql}`;
+                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
+                    sql += search_sql;
+                } else { // 전체 +  검색조건: 있음 + 학교: 없음
+                    sql += search_sql;
+                }
             }
-            sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
 
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
-                sql += 'board_state = ?'
+            /** 검색조건이 없다면 */
+            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음 + 학교: 있음
+                if (board.university_name) {
+                    sql += ` AND board_state = ? AND ${university_sql}`
+                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
+                } else { // 그외 상태들 + 검색: 없음 + 학교: 없음
+                    sql += ` AND board_state = ?`
+                    sql = mysql.format(sql, [board.board_state]);
+                }
             } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                sql += `board_state = ? AND ${university_sql}`;
+                if (board.university_name) {
+                    sql += ` AND board_state = ? AND ${university_sql}`;
+                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
+                    sql += search_sql;
+                } else { /** 그외 상태들 + 검색 조건 있음 + 학교 없음 */
+                    sql += ` AND board_state = ? `;
+                    sql = mysql.format(sql, [board.board_state]);
+                    sql += search_sql;
+                }
             }
 
-            sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
         }
-        /** 검색 sql 문도 추가 */
-        sql += search_sql;
+
         return sql;
     },
     /** 
@@ -110,23 +135,43 @@ module.exports = {
             search_sql = this.makeSearchSql(option, board.search);
 
         if (board.board_state == "전체") { // 게시판 상태가 전체라면
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음
-                sql = sql;
+            /** 검색 없음 */
+            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음 + 학교: 있음
+                if (board.university_name) {
+                    sql += `${university_sql}`;
+                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
+                } else { // 전체 + 검색: 없음 + 학교: 없음
+                    sql = sql;
+                }
             } else {    //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
-                sql += `${search_sql} ${university_sql}`;
+                if (board.university_name) {
+                    sql += `${search_sql} ${university_sql}`;
+                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
+                } else { //게시판 상태 : 전체  + 검색조건: 있음 + 학교조건 없음
+                    sql += `${search_sql} `;
+                }
             }
-            sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
 
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
-                sql += 'AND board_state = ?'
+            /** 검색조건이 없다면 */
+            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음 + 학교: 있음
+                if (board.university_name) {
+                    sql += `AND board_state = ? ${university_sql}`;
+                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
+                } else { // 그외 상태들 + 검색 조건 : 없음 + 학교 없음
+                    sql += `AND board_state = ?`;
+                    sql = mysql.format(sql, [board.board_state]);
+                }
             } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                sql += `AND board_state = ? ${search_sql} ${university_sql}`;
+                if (board.university_name) {
+                    sql += `AND board_state = ? ${search_sql} ${university_sql}`;
+                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
+                } else { // 그외 상태들 + 검색 조건 : 있음 + 학교조건 : 없음
+                    sql += `AND board_state = ? ${search_sql} `;
+                    sql = mysql.format(sql, [board.board_state]);
+                }
             }
 
-            sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
         }
         sql = mysql.format(sql + order, [columnSize, startColumn]);
         return sql;

@@ -224,10 +224,7 @@
     <script src="/javascripts/writeboard.js"></script>
     <script>
         document.getElementById("btn_search").addEventListener('click',()=>{
-            if(input_university_name.value == "") return alert("학교명을 입력해주세요! 🐶");
-            else if(select_major.value == "학과를 선택해주세요") return alert("학과를 선택해주세요! 🐱");
-            else if(input_search.value == "") return alert("검색어를 입력해주세요! 🐼");
-            else document.getElementById("search_form").submit();
+            document.getElementById("search_form").submit();
         });
     </script>
 </body>
