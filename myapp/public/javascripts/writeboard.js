@@ -7,9 +7,8 @@ const form_board = document.getElementById("form_board");
 const title = document.getElementById("title");
 const price = document.getElementById("price");
 const board_contents = document.getElementById("board_contents");
-/** api에서 그냥 긁어온 정보 */
 let university = [];
-/** 필요한 대학만 학과만 가져온 정보 */
+/** 필요한 대학 학과만 가져온 정보 */
 let university_major = [];
 
 
@@ -44,8 +43,80 @@ function stateUniversity() {
         }, 1000)
     }
 }
+/** input 한번 초기화시키고 
+ *  대학교를 붙여줌
+ */
+function set_university_input(u) {
+    input_university_name.value = "";
+    for (w of u) input_university_name.value += w;
+    input_university_name.value += "대학교"
+}
+
+/**
+ *  뒤에서부터 탐색해서 
+ *  "대학교" 문자열을 뺴주는
+ *  함수
+ */
+let w_university = "";
+function delete_university(word) {
+    let word2 = [];
+    word2 = word;
+
+    /** 
+     * 뒤에서부터 대를 찾아가면서 pop 시킴 */
+    for (let i = word2.length - 1; i >= 0; i--) {
+        if (word2[i] == "대") {
+            word.pop();
+            break;
+        } else {
+            word.pop();
+        }
+    }
+    w_university = ""
+    for (w of word)
+        w_university += w;
+}
+
+/** 
+ *  대학명 입력 
+ *  보조해주는 함수
+ * 
+ */
+function autoUniversity_name() {
+    let university_name_input = input_university_name.value.trim();
+    /** 입력된 값 공백제거 후 배열에 넣기 */
+    let word = [...university_name_input];
+    /** 대라는 문자 판별  */
+    if (university_name_input.match("대")) {
+        /** 첫번쨰 문자 대 없으면  */
+        if (university_name_input.match("대").index != 0) {
+            delete_university(word);
+            set_university_input(word);
+        } else {
+            /** "대" 문자 카운트 */
+            let w_count = [];
+            for (w of word) w_count.push(w);
+            /** "대" 문자가 2개이상일때 */
+            if (w_count.length - 1 > 1) {
+                delete_university(word);
+                set_university_input(word);
+                /** "대" 문자가 2개 미만일때 */
+            } else {
+                set_university_input(university_name_input);
+            }
+        }
+
+    } else {
+        set_university_input(university_name_input);
+    }
+}
+
 /**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
 function getSelectOptionInfo() {
+
+    /** 대학 입력 자동완성 보조 */
+    autoUniversity_name();
+
     while (select_major.childNodes.length >= 1) select_major.removeChild(select_major.firstChild);
 
     for (let i = 0; i < university.length; i++) {
