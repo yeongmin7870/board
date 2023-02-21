@@ -7,7 +7,11 @@ const form_board = document.getElementById("form_board");
 const title = document.getElementById("title");
 const price = document.getElementById("price");
 const board_contents = document.getElementById("board_contents");
+/** api에서 그냥 긁어온 정보 */
 let university = [];
+/** 필요한 대학만 학과만 가져온 정보 */
+let university_major = [];
+
 
 /** 클릭 한번만 대학 정보 가져오기 */
 input_university_name.addEventListener('click', () => {
@@ -26,6 +30,9 @@ function stateUniversity() {
         loading.innerHTML = `
            <h4 id="state_ext">학교 데이터를 가져오는 중 입니다.<br>
             금방되니, 잠시만 기다렸다가 학과를 선택해주세요!🐶</h4>
+            <div style="text-align:center;">
+            <img src="/images/loading.gif">
+            </div>
         `
         /** 전공 선택 불가능 */
         const getUniversity = setInterval(() => {
@@ -34,23 +41,34 @@ function stateUniversity() {
                 select_major.disabled = false;
                 clearInterval(getUniversity);
             }
-        }, 500)
+        }, 1000)
     }
 }
 /**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
-select_major.addEventListener('click', () => {
-    let university_major = [];
-    select_major.innerHTML = ""
-    select_major.innerHTML = "<option>학과를 선택해주세요</option>"
+function getSelectOptionInfo() {
+    while (select_major.childNodes.length >= 1) select_major.removeChild(select_major.firstChild);
 
     for (let i = 0; i < university.length; i++) {
+
         if (input_university_name.value == university[i].대학명) {
+            let newOption = document.createElement('option');
             university_major.push(university[i].학과);
-            select_major.innerHTML += `<option>${university[i].학과}</option>`;
-            if (input_university_name.value != university[i].대학명) return;
+            newOption.text = `${university[i].학과}`;
+            newOption.value = `${university[i].학과}`;
+            select_major.appendChild(newOption);
         }
     }
-})
+
+
+    if (university_major == "") {
+        let newOption = document.createElement('option');
+        newOption.text = `학과를 선택해주세요`;
+        newOption.value = `학과를 선택해주세요`;
+        select_major.appendChild(newOption);
+    }
+
+}
+
 
 btn_finish.addEventListener('click', () => {
 
