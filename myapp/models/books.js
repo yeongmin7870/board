@@ -59,6 +59,7 @@ module.exports = {
      *  리턴하는 기능
      */
     getCntFindAll: function (board) {
+
         /** 검색조건, 게시물 상태에
          *  따라 sql문을 리턴해줌
          */

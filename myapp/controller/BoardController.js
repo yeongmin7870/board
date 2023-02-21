@@ -46,15 +46,13 @@ module.exports = {
     getAllBoard: async function (req, res) {
 
         /** 게시판 상태 변수 */
-        let { board_state, select_option, search, university_name, university_major } = exception.home_search_exception(req);
+        let { board_state, select_option, search, university_name, university_major } = 
+        exception.home_search_exception(req);
 
-        /** 검색 결과를 가공한 변수 */
-        let manufacture_search = "";
-        for (m of search.split(" ")) manufacture_search += m;
-
+        
         const board = {
             board_state: board_state,
-            search: manufacture_search,
+            search: search.trim(),
             select_option: select_option,
             university_name: university_name,
             university_major: university_major
