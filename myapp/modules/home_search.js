@@ -60,12 +60,9 @@ module.exports = {
             }
             sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
-                sql += 'board_state = ?'
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                sql += `board_state = ? AND ${university_sql}`;
-            }
+
+            //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
+            sql += `board_state = ? AND ${university_sql}`;
 
             sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
         }
@@ -117,12 +114,9 @@ module.exports = {
             }
             sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
         } else { // 게시판 상태가 전체가 아니면
-            /** 검색조건이 있다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음
-                sql += 'AND board_state = ?'
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                sql += `AND board_state = ? ${search_sql} ${university_sql}`;
-            }
+
+            //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
+            sql += `AND board_state = ? ${search_sql} ${university_sql}`;
 
             sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
         }
