@@ -17,7 +17,7 @@ module.exports = {
             /** 현재 공공 api count 개수 가져오기 */
             const response = await university.getUniversityApi(page, perPage);
             perPage = 7300;
-            /** 4000개 정보를 몇번 걸쳐서 찍을지 */
+            /** 7300개 정보를 몇번 걸쳐서 찍을지 */
             totalPageCount = Math.ceil(response.totalCount / perPage);
 
             /** 페이지 수 만큼 반복문 */

@@ -40,7 +40,7 @@ module.exports = {
     },
     /**
      * 메인홈 게시판 목록 출력
-     *   current_page , board_state, select_option
+     *   current_page , board_state, select_option, university_name, university_major 입력받음
      *   알맞은 페이지 내용을 출력함
      */
     getAllBoard: async function (req, res) {
