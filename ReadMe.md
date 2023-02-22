@@ -77,22 +77,61 @@
 ### :pushpin: 4.1 전체 흐름
 <img src="https://user-images.githubusercontent.com/73753121/220662399-039f30e4-dbe6-409e-88aa-f43a41a6e2dd.png">
 
-### :pushpin: 4.2 학과 정보 요청 [:flashlight: 코드확인](https://github.com/yeongmin7870/board/blob/49a91f5223f271b3e5e49c82aad1ebc63725d7a8/myapp/controller/UniversityController.js#L5)
+### :pushpin: 4.2 학과 정보 요청 
+[:flashlight: 처리함수 코드확인](https://github.com/yeongmin7870/board/blob/49a91f5223f271b3e5e49c82aad1ebc63725d7a8/myapp/controller/UniversityController.js#L5)
+[:flashlight: 공공데이터 요청 함수 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/models/university.js#L4)
 
 > 공공데이터 api를 요청할때 async, await 문법을 사용해서 동기처리 방식을 사용했습니다.
 > 유저가 대학명을 입력하고 '학과'를 요청할때, 서버는 공공데이터 사이트 api를 요청합니다.
-> 먼저 현재 총 데이터 수를 가져오고 (총데이터수/7300) 값을 올림한 값으로 몇번 api를 요청할지 구합니다,
-> 그리고 가져온 데이터를 전처리하면서 배열에 모두 담아 응답합니다.
+> 먼저 현재 총 데이터 수를 가져오고 (총데이터수/7300) 값을 올림한 값으로
+> 즉, 총페이지수 만큼 api를 요청합니다,
+> 그리고 가져온 데이터를 전처리 하면서 배열에 모두 담아 응답합니다.
 
+### :pushpin: 4.3 이메일 인증 요청
 
+[:flashlight: 이메일 인증 함수 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/controller/UserController.js#L124)
+[:flashlight: SMTP 서버에 요청 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/modules/mail.js#L6)
+
+> 이메일을 요청받으면 승인코드 랜덤 6자리를 만들고
+> Gmail SMTP 전송 수단을 이용해서 이용자에게 메일을 전송합니다.
+
+### :pushpin: 4.4 유저 비밀번호 저장방식
+
+[:flashlight: 암호화를 사용한 회원가입 함수 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/controller/UserController.js#L87)
+[:flashlight: 암호화 방식 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/modules/crypto.js#L16)
+
+> 기존 비밀번호 문자열에 새로운 문자열을 붙여서
+> sha512 알고리즘으로, 9921번 리터럴하고 64길이를 만들어서
+> 데이터베이스에 저장했습니다.
 
 </details>
 
 ## :bookmark: 5. Trouble Shooting
 ---
 
+### :pushpin: 5.1 MySQL Character set 오류
+
+<details>
+    <summary>자세히 보기</summary>
+
+> ERROR 3780 (HY000): Referencing column 'chat_room_user_id' and referenced column 'user_id' in foreign key constraint 'chat_room_ibfk_1' are incompatible.
+
+>> 채팅 방 유저 아이디를 유저아이디와 제약을 걸어 foreign key를 설정하려고 했는데 이러한 에러가 발생했다. 
+>> 처음에는 서로 타입이 맞지 않는지 확인하였지만 동일 에러 발생,
+>>  https://stackoverflow.com/questions/21526055/mysql-cannot-create-foreign-key-constraint 사이트에서
+>> character set이 서로 맞지 않으면 오류가 날 수 있다는 것을 발견했고
+>> 과거 user 테이블을 만들때 character set을 utf8로 설정했던 것이 기억 났고
+>> chat_room_user_id 를 uf8 로 설정했더니 해결되었다.
+</details>
+
+
+
 ## :bookmark: 6. 느낀 점
 ---
+> 당근마켓 처럼 같은 학교 학생들이 전공책을 중고로 팔 수 있는 사이트가<br>
+> 활성화 되었으면 좋겠다라는 생각을 가졌고 '전공책 싸게 사자' 라는 프로젝트를 만들었습니다.<br>
+> 모듈과 원리를 공부할떄마다 그동안 제가 언어와 프레임워크에만 치중했다라는 사실을 깨달았습니다, 중요한 것은 적재적소에 어떤 모듈, 언어, 프레임워크를 가져다 쓸건지를 판단하는 것이 중요하다라는 것을 알았습니다. <br>
+> 많이 고민했지만 너무 재밌었고 지금은 혼자 프로젝트를 했지만 협업을 하고 대화를 해가면서 좋은 코드와 저 자신이 끊임없이 발전 하고싶다라는 욕구가 계속해서 들었습니다.<br>
 
 
 

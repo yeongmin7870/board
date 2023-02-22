@@ -125,6 +125,7 @@ module.exports = {
         const { receiverEmail } = req.body;
         let today = new Date();
         let randCode = "";
+        
         for (let i = 0; i < 6; i++) {
             randCode += Math.floor(Math.random() * 10).toString()
         };
