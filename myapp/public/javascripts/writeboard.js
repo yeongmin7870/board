@@ -113,7 +113,7 @@ function autoUniversity_name() {
 }
 
 /**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
-function getSelectOptionInfo() {
+select_major.addEventListener('mousedown', function getSelectOptionInfo() {
 
     /** 대학 입력 자동완성 보조 */
     autoUniversity_name();
@@ -139,8 +139,8 @@ function getSelectOptionInfo() {
         select_major.appendChild(newOption);
     }
 
-}
-
+    }
+)
 
 btn_finish.addEventListener('click', () => {
 
@@ -150,7 +150,8 @@ btn_finish.addEventListener('click', () => {
     else if (board_contents.value == "") return alert("내용을 써주세요!");
     else if (board_image.value != "") {
         const file_name = board_image.value.split("\\");
-        const e = file_name[2].split(".")[1].toUpperCase();
+        const e1 = file_name[2].split(".");
+        const e = e1[e1.length - 1].toUpperCase();
 
         if (e != "BMP" && e != "JPEG" && e != "JPG" && e != "JPEG2000" && e != "GIF" && e != "PNG" && e != "SVG") { return alert("이미지 파일이 아닙니다!"); }
         else form_board.submit();
