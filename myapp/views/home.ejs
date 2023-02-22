@@ -81,7 +81,7 @@
                     <!-- 학교 선택기능 -->
                     <div class="input-group flex-nowrap">
                         <input class="form-control" type="text" id="input_university_name" name="university_name"
-                            placeholder="ex: 서울대학교" required>
+                            placeholder="ex: 서울대학교" value="<%=university_name%>" required>
                         <select class="form-select" onfocus="getSelectOptionInfo()" id="select_major" name="university_major" disabled required>
                             <option>학과를 선택해주세요</option>
                         </select>
@@ -106,12 +106,19 @@
             </div>
             <div id="btn_group" style="margin-left: 39%;">
                 <button type="button" class="btn btn-primary" id="btn_all"
-                    value="전체" onclick="btn_board_state(this)">전체</button>
+                    value="전체" onclick="location.href='/v2/home/0?board_state=전체&&select_option=<%=select_option%>'+
+                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">전체</button>
+
                 <button type="button" class="btn btn-primary" id="btn_sell"
-                    onclick="btn_board_state(this)" value="판매">판매중</button>
-                <button type="button" class="btn btn-primary" id="btn_reservation" onclick="btn_board_state(this)"
+                onclick="location.href='/v2/home/0?board_state=판매&&select_option=<%=select_option%>'+
+                '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매">판매중</button>
+
+                <button type="button" class="btn btn-primary" id="btn_reservation" onclick="location.href='/v2/home/0?board_state=예약&&select_option=<%=select_option%>'+
+                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'"
                         value="예약">예약중</button>
-                <button type="button" class="btn btn-primary" id="btn_soldout" onclick="btn_board_state(this)" value="판매완료">판매완료</button>
+
+                <button type="button" class="btn btn-primary" id="btn_soldout" onclick="location.href='/v2/home/0?board_state=판매완료&&select_option=<%=select_option%>'+
+                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매완료">판매완료</button>
             </div>
             <br>
             <!-- 네비게이션 -->

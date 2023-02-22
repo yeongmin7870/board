@@ -93,7 +93,7 @@ function buttonDisabled() {
             break;
     }
     const target = document.getElementById(btn_id);
-    target.disabled = true;
+    target.style.opacity = "0.6";
 }
 
 /** 
