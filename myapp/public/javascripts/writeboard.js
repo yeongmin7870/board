@@ -22,6 +22,7 @@ async function universityinfo() {
     const response = await fetch("/v5/find/university");
     const result = await response.json();
     university = result;
+
 }
 /** 대학정보 가져왔는지 체크해주는 함수 */
 function stateUniversity() {
@@ -40,7 +41,7 @@ function stateUniversity() {
                 select_major.disabled = false;
                 clearInterval(getUniversity);
             }
-        }, 1000)
+        }, 1)
     }
 }
 /** input 한번 초기화시키고 

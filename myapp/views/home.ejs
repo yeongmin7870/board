@@ -121,7 +121,7 @@
                 <%if(page.prevPage==true){%>
                     <button class="btn btn-outline-secondary"
                         onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-1,0)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>'">
+                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         < 이전 </button>
                 <%}%>
                 <!-- [1 2 3 4 5] -->
@@ -129,12 +129,12 @@
                     if(page.current_page==i){%>
                     <button class="btn btn-outline-primary" style="color:red"
                         onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>'">
+                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         <%=i+1%>
                     </button>
                     <%} else {%>
                     <button class="btn btn-outline-primary" onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&'+
-                    'select_option=<%=select_option%>&&search=<%=search%>'">
+                    'select_option=<%=select_option%>&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         <%=i+1%>
                     </button>
                     <%} }%>
@@ -142,7 +142,7 @@
                     <%if(page.nexPage==true){%>
                         <button class="btn btn-outline-secondary"
                         onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+1,page.total_page-1)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>'">다음 ></button>
+                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">다음 ></button>
                     <%}%>
                        <!-- /페이징 처리 -->
             </div>

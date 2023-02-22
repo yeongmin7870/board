@@ -6,4 +6,4 @@ function getCookie(cookieName) {
             cookie[key.trim()] = value;
     })
     return cookie[cookieName];
-}    
+}
