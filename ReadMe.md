@@ -111,8 +111,6 @@
 > 서버에 이미지를 업로드할 때 multer 모듈을
 > 사용했습니다.
 
-</details>
-
 ### :pushpin: 4.5 새로고침 없이 부드러운 댓글 작성
 
 [:flashlight: 댓글 작성 코드 보기](https://github.com/yeongmin7870/board/blob/89e43d5b5b0d5decb126d1c612006e2adb741fa9/myapp/public/javascripts/board.js#L39)
