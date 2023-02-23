@@ -149,6 +149,8 @@
 <details>
     <summary>자세히 보기</summary>
 
+[:flashlight: json 파싱 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/public/javascripts/fetch.js#L20)
+
     1 fetch('http://example.com/movies.json')
     2 .then((response) => response.json())
     3 .then((data) => console.log(data));
@@ -164,6 +166,8 @@
 <details>
     <summary>자세히 보기</summary>
 
+[:flashlight: method-override 활용 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/public/javascripts/board.js#L52)
+
     npm install method-override
 
 > 저는 서버를 REST API 로 설계를 했습니다.<br>
@@ -178,6 +182,8 @@
 ### :pushpin: 5.5 페이지를 랜더링 하면 채팅방 메시지가 중첩되어서 보내지는 현상
 <details>
     <summary>자세히 보기</summary>
+
+[:flashlight: 중첩 메시지 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/web.js#L41)
 
 > 채팅메시지를 보내고 나갔다가 다시 들어오거나, 새로고침하고 보내면 메시지가 
 > 중첩되면서 보내지는 문제가 있었습니다.<br>
@@ -208,11 +214,92 @@
 
 </details>
 
+### :pushpin: 5.6 Cafe24 경로 문제
+
+<details>
+    <summary>자세히 보기</summary>
+
+[:flashlight: 경로 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/middlewares/multer.js#L17)
+
+> 로컬 서버에서는 상대경로를 썼다가 cafe24로 넘어오면서  
+> '이미지 업로드' 경로 문제가 생기기 시작했습니다.<br>
+> 그래서 path 모듈중에 join() 메소드를 사용했고,
+> 같은 폴더에 있을때는 쉽지만 상위 폴더에서 다른 폴더로
+> 가야할때는 __dirname 변수를 쓰지 못하고 결국엔 
+> 경로 로그를 찍어봐야 했습니다.<br>
+> 더 좋은 방법이 없을까 고민하다가 같은 모듈에 resovle()
+> 라는 메소드도 있었고 상대경로도 사용할 수 있다는 것을 알고
+> 이를 적용하고 해결했습니다.
+</details>
+
+### :pushpin: 5.7 onclick 이벤트 os 문제
+
+<details>
+    <summary>자세히 보기</summary>
+
+[:flashlight: os 문제 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/public/javascripts/writeboard.js#L116)
+
+>윈도우는 학과 select 에서 option 클릭이 되지 않지만 
+>맥이나 핸드폰은 클릭이 되는 호환성 문제가 있었습니다.<br>
+>처음 오류를 접했을때, 크롬이나 서버에서 어떠한 오류도 뜨지 않고 
+>구글링을 해봐도 전혀 나오지 않아 당황했습니다.<br>
+>디버깅을 해본 결과 서버 문제는 아니었고 자바스크립트 os호환 문제 같았습니다.<br> 
+>html , css를 바꿔봐도 전혀 문제가 없었고 js 알고리즘이 잘못된건가 싶어서,
+>원래는 innerhtml 이였지만 appenchild() 문법으로 바꿔도 보았지만 해결되지 못했습니다.<br>
+>문득 그저 저의 생각일 뿐이지만, option태그 자체가 클릭인데 내가 select 태그에다가 클릭이벤트를 달면,
+>두 태그의 클릭 이벤트가 충돌이 되는게 아닐까라는 생각이 들었습니다.<br> 
+>그래서 select 태그에다가 클릭 이벤트 대신에 mousedown() 이벤트로 바꿔줬더니 window 에서도 정상적으로 작동했습니다.
+</details>
+
+### :pushpin: 5.8 for 문을 이용한 pop시 정상적인 결과가 나오지 않는 문제
+<details>
+    <summary>자세히 보기</summary>
+
+[:flashlight: pop 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/public/javascripts/writeboard.js#L64)
+
+    let ex = []
+    for(let i=0; i < ex.length; i++) ex.pop();
+
+>정상적으로는 배열안에 값들이 모두 없어져야 하는데 값들이 남아있는 문제가 생겨 고민하다가,
+> pop 할때 당연히 해당 배열의 길이가 줄어들 것이고
+> 그 배열의 길이로 for문을 돌렸으니 정상적인 결과가 나오지 못했다는 것을 깨달았습니다.<br>
+> 다른 변수에 해당 배열을 복제 해주고, 새로운 변수에 길이를 활용해서 해결했습니다.
+
+</details>
+
+### :pushpin: 5.9 공공데이터를 가져올때 너무 오래 걸리는 문제
+<details>
+    <summary>자세히 보기</summary>
+
+[:flashlight: 오래걸리는 문제 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/controller/UniversityController.js#L2)
+
+>공공데이터 api 구조가 페이지, 페이지당 데이터수 값을 url 쿼리로 받고있었고,
+>데이터를 나눠서 받아서 배열에 저장해준다음에 보내주는 식인 방식을 선택했습니다.<br>
+>그러나 확실히 나눠서 받아오니까 저의 서버처리가 너무 느렸습니다.<br>
+>데이터베이스를 썼으면 나눠서 받는 api 보다는 빨라서 좋았겠지만,
+>만약 공공데이터 홈페이지에서 데이터들을 업데이트 해준다면,
+>디비에도 일일이 값을 업데이트 해야하는 번거로움이 있었습니다.<br>
+>그래서, 데이터베이스를 쓰지않고 받아오는 시간을 최대한 단축시켜보고 싶었습니다.<br>
+>그래서 기존에는 4000개씩 나눠서 받던 것을,
+>7300개 씩으로 늘렸습니다.<br>
+>하필 7300 개인 이유는,
+>대략 7300 이후 부터는 공공 api 에서 데이터를 못 받아오게 막아놓았습니다.<br>
+>확실히 3300 개씩 데이터를 한번에 더 받아오면서 배열에 저장하니까
+아주 조금 빨라졌습니다.<br>
+
+>또한, res.send(university_array) 로 보내줬던 변수를 
+>지역변수가 아닌 전역변수로 만들고,
+>이전에 저장해뒀던 값이 있다면 바로 보내주는 식으로 만드니까,
+>서버에서는 최초 한 번만 공공데이터와 통신하면되고 이후로는,
+>공공데이터 통신없이 바로 데이터를 보내주면되니, 느렸던 문제가 해결되었습니다.
+
+</details>
+
 ## :bookmark: 6. 느낀 점
 ---
 > 당근마켓 처럼 같은 학교 학생들이 전공책을 중고로 팔 수 있는 사이트가<br>
 > 활성화 되었으면 좋겠다라는 생각을 가졌고 '전공책 싸게 사자' 라는 프로젝트를 만들었습니다.<br>
-> 모듈과 원리를 공부할떄마다 그동안 제가 언어와 프레임워크에만 치중했다라는 사실을 깨달았습니다, 중요한 것은 적재적소에 어떤 모듈, 언어, 프레임워크를 가져다 쓸건지를 판단하는 것이 중요하다라는 것을 알았습니다. <br>
+> 모듈과 원리를 공부할때마다 그동안 제가 언어와 프레임워크에만 치중했다라는 사실을 깨달았습니다, 중요한 것은 적재적소에 어떤 모듈, 언어, 프레임워크를 가져다 쓸건지를 판단하는 것이 중요하다라는 것을 알았습니다. <br>
 > 많이 고민했지만 너무 재밌었고 지금은 혼자 프로젝트를 했지만 협업을 하고 대화를 해가면서 좋은 코드와 저 자신이 끊임없이 발전 하고싶다라는 욕구가 계속해서 들었습니다.<br>
 
 
