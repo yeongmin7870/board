@@ -104,6 +104,23 @@
 > sha512 알고리즘으로, 9921번 리터럴하고 64길이를 만들어서
 > 데이터베이스에 저장했습니다.
 
+### :pushpin: 4.4 이미지 업로드 기능
+
+[:flashlight: multer 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/middlewares/multer.js#L4)
+
+> 서버에 이미지를 업로드할 때 multer 모듈을
+> 사용했습니다.
+
+</details>
+
+### :pushpin: 4.5 새로고침 없이 부드러운 댓글 작성
+
+[:flashlight: multer 코드 보기](https://github.com/yeongmin7870/board/blob/89e43d5b5b0d5decb126d1c612006e2adb741fa9/myapp/public/javascripts/board.js#L39)
+
+> 새로고침 없이 부드럽게 댓글 작성을 하고 싶게 구현하고 싶었습니다.<br>
+> async fetch 문법을 통해서 데이터를 가져오고,
+> 요소를 추가해줌으로써 부드럽게 만들었습니다.
+
 </details>
 
 ## :bookmark: 5. Trouble Shooting
