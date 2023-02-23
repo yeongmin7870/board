@@ -114,17 +114,99 @@
 <details>
     <summary>자세히 보기</summary>
 
-> ERROR 3780 (HY000): Referencing column 'chat_room_user_id' and referenced column 'user_id' in foreign key constraint 'chat_room_ibfk_1' are incompatible.
+    ERROR 3780 (HY000): Referencing column 'chat_room_user_id' and referenced column 'user_id' in foreign key constraint 'chat_room_ibfk_1' are incompatible.
 
->> 채팅 방 유저 아이디를 유저아이디와 제약을 걸어 foreign key를 설정하려고 했는데 이러한 에러가 발생했다. 
->> 처음에는 서로 타입이 맞지 않는지 확인하였지만 동일 에러 발생,
->>  https://stackoverflow.com/questions/21526055/mysql-cannot-create-foreign-key-constraint 사이트에서
->> character set이 서로 맞지 않으면 오류가 날 수 있다는 것을 발견했고
->> 과거 user 테이블을 만들때 character set을 utf8로 설정했던 것이 기억 났고
->> chat_room_user_id 를 uf8 로 설정했더니 해결되었다.
+> 채팅 방 유저 아이디를 유저아이디와 제약을 걸어 foreign key를 설정하려고 했는데 이러한 에러가 발생했습니다.<br>
+> 처음에는 서로 타입이 맞지 않는지 확인하였지만 동일 에러 발생,
+>  https://stackoverflow.com/questions/21526055/mysql-cannot-create-foreign-key-constraint 사이트에서<br>
+> character set이 서로 맞지 않으면 오류가 날 수 있다는 것을 발견했고<br>
+> 과거 user 테이블을 만들때 character set을 utf8로 설정했던 것이 기억 났고
+> chat_room_user_id 를 uf8 로 설정했더니 해결되었습니다.
+</details>
+
+### :pushpin: 5.2 MySQL Bad handshake
+
+<details>
+    <summary>자세히 보기</summary>
+
+    ERROR 1043 (08S01): Bad handshake
+
+> local에 있던 DB sql 파일을 cafe24 DB에 import 하려고 했는데 저런 에러가 났습니다.<br>
+> 확인해보니 로컬, cafe24 DB가 서로 버전이 달라서, db 접속 자체가 안됐습니다.<br>
+> 맥 mysql 버전을 낮추기에는 cafe24 버전이 너무 구버전이라 이후에 다른 개발할때 다시
+> 버전을 올려야 돼서 번거로웠고, putty를 설치해서 접속을 시도 했습니다.
+
+    Unknown character set: ‘uft8mb3’
+
+> 접속은 되었지만 sql 파일을 import 할때 저런에러가 나왔고 찾아보니
+> mysql5 버전에서는 uft8mb3 가 없었습니다.<br>
+> 그래서 utf8 로 변경하고 다시 import 시켰더니 정상적으로 작동했습니다.
+
+</details>
+
+### :pushpin: 5.3 fetch 통신 후 가져온 값 'undefined'
+
+<details>
+    <summary>자세히 보기</summary>
+
+    1 fetch('http://example.com/movies.json')
+    2 .then((response) => response.json())
+    3 .then((data) => console.log(data));
+
+> 2번째 코드만 적고 HTTP 응답 전체를 나타내는 객체만 받으면서, 인증코드를 추출하려고 해 
+> undefined가 나왔습니다.<br>
+> JSON 본문 내용을 추출하기 위해서는 응답 본문을 json()으로 파싱해야 했습니다.
+
+</details>
+
+### :pushpin: 5.4 HTML Form 태그 method 한계
+
+<details>
+    <summary>자세히 보기</summary>
+
+    npm install method-override
+
+> 저는 서버를 REST API 로 설계를 했습니다.<br>
+> 이때, get 이지만 body로 값을 보내줘야 할때가 있는데,
+> HTML Form 태그는 body 값을 보내줄때는 post로 해야 했습니다.<br>
+> 또한 delete 와 put은 지원하지 않기때문에, 이를 해결할 모듈을 찾기
+> 시작했고 method-override를 이용해 해결했습니다.
+
 </details>
 
 
+### :pushpin: 5.5 페이지를 랜더링 하면 채팅방 메시지가 중첩되어서 보내지는 현상
+<details>
+    <summary>자세히 보기</summary>
+
+> 채팅메시지를 보내고 나갔다가 다시 들어오거나, 새로고침하고 보내면 메시지가 
+> 중첩되면서 보내지는 문제가 있었습니다.<br>
+> 처음에는 채팅방을 떠날때 소켓 연결 끊기를 해주지 않은게 원인일 거라고 생각했습니다,
+> 그래서 서버쪽에
+
+    socket.on('disconnect', () => {});
+
+>클라이언트
+
+    socket.emit('disconnect');
+
+>을 호출했는데 
+
+    socket.js:199 Uncaught Error: "disconnect" is a reserved event name
+    at Socket.emit (socket.js:199:19)
+    at exitRoom (chatting?room=room1:142:20)
+    at HTMLButtonElement.onclick (chatting?room=room1:50:42)
+
+> 이런 문제가 발생했고 socket.io 문서를 찾아보니 disconnect 는 소켓 통신이 끊어지기만
+> 해도 disconnect 이벤트가 발생한다고 알게되었습니다.<br>
+> 그러나 이 에러를 고쳐도 원래 문제였던 채팅 충첩 보내짐은 해결되지 못했습니다.<br>
+> 소켓통신을 다시 공부해보니 소켓은 서버와 클라이언트 간에 양방향 통신인데,
+> 저는 채팅방 랜더링해주는 URI 안에다가 소켓 통신 코드를 집어넣고 있었습니다.<br>
+> 그러니 당연히 채팅방을 랜더링할때마다 서버에 소켓 응답 대기 또한 늘어나고 있던 것이였습니다.<br>
+> 코드를 서버 web.js(index.js) 파일에다가 넣고, 처음 서버가 시작될때,
+> 소켓통신을 최초 한번만 시키게 했더니 문제가 해결되었습니다.<br>
+
+</details>
 
 ## :bookmark: 6. 느낀 점
 ---
