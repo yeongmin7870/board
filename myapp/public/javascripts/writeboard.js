@@ -126,6 +126,7 @@ function createOption(value) {
 
 /**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
 select_major.addEventListener('mousedown', async function getSelectOptionInfo() {
+    autoUniversity_name();
     stateUniversity();
     await universityinfo();
 
