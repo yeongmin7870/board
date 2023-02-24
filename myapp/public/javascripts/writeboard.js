@@ -12,8 +12,8 @@ let university = [];
 let university_major = [];
 
 
-/** 클릭 한번만 대학 정보 가져오기 */
-input_university_name.addEventListener('mouseout', () => {
+/** 대학 정보 가져오기 */
+input_university_name.addEventListener('change', () => {
     /** 대학 입력 자동완성 보조 */
     autoUniversity_name();
     universityinfo();

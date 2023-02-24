@@ -69,6 +69,8 @@
 >>- 작성
 >>- 삭제
 
+> :pushpin: 채팅 (미완성)
+
 </details>
 
 <details>
@@ -118,6 +120,19 @@
 > 새로고침 없이 부드럽게 댓글 작성을 하고 싶게 구현하고 싶었습니다.<br>
 > async fetch 문법을 통해서 데이터를 가져오고,
 > 요소를 추가해줌으로써 부드럽게 만들었습니다.
+
+### :pushpin: 4.6 조합 가능한 검색 기능
+
+[:flashlight: 검색기능 코드 보기](https://github.com/yeongmin7870/board/blob/2b69a349245d8ce5e52aa4358524e33c9d11ab2f/myapp/modules/home_search.js#L67)
+
+> 학교명, 학과, 제목, 종류, 닉네임을 자유롭게 조합해서 검색할 수 있습니다.
+
+### :pushpin: 4.6 페이징 기능
+
+[:flashlight: 페이징 처리 코드 보기](https://github.com/yeongmin7870/board/blob/2b69a349245d8ce5e52aa4358524e33c9d11ab2f/myapp/modules/home_search.js#L67)
+
+> 페이지당 선택해서 보기 편하게 페이징 처리를 구현했습니다.
+> 메인페이지, 댓글, 마이페이지가 같은 함수를 사용할 수 있게 구현했습니다.
 
 </details>
 

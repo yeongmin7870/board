@@ -146,7 +146,6 @@ btn_comment.addEventListener('click', async () => {
 
     input_comment_content.value = "";
 
-    alert("댓글이 작성되었습니다.");
 })
 /** 댓글 내용, 댓글 페이징 처리 버튼 리로드 해주는 기능*/
 function reloadComment_Check() {
