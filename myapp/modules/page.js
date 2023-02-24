@@ -2,9 +2,9 @@ const Book = require('../models/books');
 
 module.exports = {
     /** 
-     * @param current_page
-     * @param columnSize
-     * @param count_column
+     * current_page
+     * columnSize
+     * count_column
      * 
      * @return 
      *  total_page, startColumn, columnSize
@@ -29,9 +29,9 @@ module.exports = {
     },
     /**
      * 
-     * @param {int} current_page 
-     * @param {int} page_size 
-     * @param {int} total_page 
+     *  current_page 
+     *  page_size 
+     * total_page 
      * @returns 
      *  start_page, end_page, prevPage, nexPage
      * 
