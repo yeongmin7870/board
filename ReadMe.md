@@ -5,8 +5,8 @@
 > :cd: URL : http://yeongmin.cafe24app.com/v2/home/0
 
 > 테스트 계정
-    >>ID : test123 <br>
-    >>PASSWORDS : test123
+>>ID : test123 <br>
+>>PASSWORDS : test123
  
 ## :bookmark: 1. 제작기간 & 참여 인원
 >- 2022 년 12 월 21일 ~ 2033 년 2 월 22일
