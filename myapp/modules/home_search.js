@@ -11,91 +11,49 @@ module.exports = {
         /** 검색하는 sql 조건문 */
         let sql = "";
         for (let i = 0; i < word_array.length; i++)
+            /** 공백이 아닐시F */
             if (word_array[i] != " ")
-                sql += `AND ${option} like "%${word_array[i]}%" `;
+                if (i == 0) { sql += `${option} like "%${word_array[i]}%"`; } else { sql += ` AND ${option} like "%${word_array[i]}%" `; }
         return sql;
+    },
+    /** 검색 조건 */
+    getSearchOption: function (o) {
+        let option = "";
+        /** 검색 조건 */
+        if (o == "제목") return option = "b.board_title";
+        if (o == "종류") return option = "bc.book_classification_name";
+        if (o == "닉네임") return option = "u.nickname";
     },
 
     /** 
      *  메인페이지 count 세기 
      * 
      * @param {*} board 
-     *  board_state, select_option , search 입력받으면 
-     *  알맞은 알고리즘으로 sql문을 리턴시켜주는 함수
      *
      */
     count_search: function (board) {
-        let sql = 'SELECT COUNT(*) as cnt FROM board b, user u, ' +
-            'book_classification bc WHERE u.user_id = b.user_id AND ' +
-            'b.book_classification_id = bc.book_classification_id ';
-        let option = board.select_option;
+        const and = " AND ";
+        /** 고정 sql 문 */
+        let sql = 'SELECT COUNT(*) as cnt FROM board b, user u, book_classification bc' +
+            ' WHERE u.user_id = b.user_id AND b.book_classification_id = bc.book_classification_id';
 
-        /** 검색 sql 문 */
-        let search_sql = "";
-        let university_sql = ' b.university_name like ? AND b.university_major like ? '
+        /** 대학명 */
+        let university_name_sql = board.university_name ? 'b.university_name like ?' : "";
+        /** 대학 전공 */
+        let university_major_sql = board.university_major != "학과를 선택해주세요" ? 'b.university_major like ?' : "";
+        if (university_major_sql == "") { board.university_major = "" };
+        /** 게시물 상태 : 전체가 맞다면 빈값을 넣어줌 */
+        let board_state_sql = board.board_state != "전체" ? "board_state = ?" : "";
+        if (board_state_sql == "") { board.board_state = "" };
+        /** 검색 옵션 */
+        const option = this.getSearchOption(board.select_option);
+        /** 검색 */
+        let search_word_sql = board.search_word ? this.makeSearchSql(option, board.search_word) : "";
 
-        /** 검색 조건 */
-        switch (option) {
-            case "제목":
-                option = "b.board_title";
-                break;
-            case "종류":
-                option = "bc.book_classification_name";
-                break;
-            case "닉네임":
-                option = "u.nickname";
-                break;
-        }
+        const b = ["university_name", "university_major", "board_state", "search_word"];
+        const b_sql = { university_name: university_name_sql, university_major: university_major_sql, board_state: board_state_sql, search_word: search_word_sql };
 
-        /** 
-         * 만약 검색조건이 있다면
-         * 검색조건을 가공해서 sql문을 리턴하는 함수 */
-        if (board.search != "")
-            search_sql = this.makeSearchSql(option, board.search);
-
-        if (board.board_state == "전체") { // 게시판 상태가 전체라면
-            /** 검색조건이 없다면 */
-            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음 + 학교 조건 : 있음
-                if (board.university_name) {
-                    sql += ` AND ${university_sql}`;
-                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
-                } else { // 전체 + 검색: 없음 + 학교: 없음
-                    sql = sql;
-                }
-            } else {
-                //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
-                if (board.university_name) {
-                    sql += ` AND ${university_sql}`;
-                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
-                    sql += search_sql;
-                } else { // 전체 +  검색조건: 있음 + 학교: 없음
-                    sql += search_sql;
-                }
-            }
-        } else { // 게시판 상태가 전체가 아니면
-
-            /** 검색조건이 없다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음 + 학교: 있음
-                if (board.university_name) {
-                    sql += ` AND board_state = ? AND ${university_sql}`
-                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
-                } else { // 그외 상태들 + 검색: 없음 + 학교: 없음
-                    sql += ` AND board_state = ?`
-                    sql = mysql.format(sql, [board.board_state]);
-                }
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                if (board.university_name) {
-                    sql += ` AND board_state = ? AND ${university_sql}`;
-                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
-                    sql += search_sql;
-                } else { /** 그외 상태들 + 검색 조건 있음 + 학교 없음 */
-                    sql += ` AND board_state = ? `;
-                    sql = mysql.format(sql, [board.board_state]);
-                    sql += search_sql;
-                }
-            }
-
-        }
+        for (i of b) if (board[i]) { sql += and + b_sql[i]; sql = mysql.format(sql, [board[i]]) };
 
         return sql;
     },
@@ -107,73 +65,30 @@ module.exports = {
      *  리턴해주는 함수 
      */
     board_content_search: function (startColumn, columnSize, board) {
+        const and = " AND ";
         let sql = 'SELECT * FROM board b, user u, book_classification bc ' +
             'WHERE b.user_id = u.user_id AND b.book_classification_id = bc.book_classification_id ';
-        let order = ' ORDER BY board_id DESC LIMIT ?  OFFSET ?;'
-        let option = board.select_option;
-        let university_sql = 'AND b.university_name like ? AND b.university_major like ?'
-        /** 검색 sql 문 */
-        let search_sql = "";
 
-        /** 검색 조건 */
-        switch (option) {
-            case "제목":
-                option = "b.board_title";
-                break;
-            case "종류":
-                option = "bc.book_classification_name";
-                break;
-            case "닉네임":
-                option = "u.nickname";
-                break;
-        }
+        /** 대학명 */
+        let university_name_sql = board.university_name ? 'b.university_name like ?' : "";
+        /** 대학 전공 */
+        let university_major_sql = board.university_major != "학과를 선택해주세요" ? 'b.university_major like ?' : "";
+        if (university_major_sql == "") { board.university_major = "" };
+        /** 게시물 상태 : 전체가 맞다면 빈값을 넣어줌 */
+        let board_state_sql = board.board_state != "전체" ? "board_state = ?" : "";
+        if (board_state_sql == "") { board.board_state = "" };
+        /** 검색 옵션 <옵션값은 무조건 "전체"가 있음> */
+        const option = this.getSearchOption(board.select_option);
+        /** 검색 */
+        let search_word_sql = board.search_word ? this.makeSearchSql(option, board.search_word) : "";
+        let order_sql = ' ORDER BY board_id DESC LIMIT ?  OFFSET ?;'
 
-        /** 
-        * 만약 검색조건이 있다면
-        * 검색조건을 가공해서 sql문을 리턴하는 함수 */
-        if (board.search != "")
-            search_sql = this.makeSearchSql(option, board.search);
+        const b = ["university_name", "university_major", "board_state", "search_word"];
+        const b_sql = { university_name: university_name_sql, university_major: university_major_sql, board_state: board_state_sql, search_word: search_word_sql };
 
-        if (board.board_state == "전체") { // 게시판 상태가 전체라면
-            /** 검색 없음 */
-            if (board.search == "") { // 게시판 상태: 전체 + 검색 조건: 없음 + 학교: 있음
-                if (board.university_name) {
-                    sql += `${university_sql}`;
-                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
-                } else { // 전체 + 검색: 없음 + 학교: 없음
-                    sql = sql;
-                }
-            } else {    //게시판 상태: 전체 + 검색 조건: 있음 + 학교조건 있음
-                if (board.university_name) {
-                    sql += `${search_sql} ${university_sql}`;
-                    sql = mysql.format(sql, [`${board.university_name}`, `${board.university_major}`]);
-                } else { //게시판 상태 : 전체  + 검색조건: 있음 + 학교조건 없음
-                    sql += `${search_sql} `;
-                }
-            }
-        } else { // 게시판 상태가 전체가 아니면
+        for (i of b) if (board[i]) { sql += and + b_sql[i]; sql = mysql.format(sql, [board[i]]) };
+        sql = mysql.format(sql + order_sql, [columnSize, startColumn]);
 
-            /** 검색조건이 없다면 */
-            if (board.search == "") { // 게시판 상태: 그외 상태들 + 검색 조건: 없음 + 학교: 있음
-                if (board.university_name) {
-                    sql += `AND board_state = ? ${university_sql}`;
-                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
-                } else { // 그외 상태들 + 검색 조건 : 없음 + 학교 없음
-                    sql += `AND board_state = ?`;
-                    sql = mysql.format(sql, [board.board_state]);
-                }
-            } else {    //게시판 상태: 그외 상태들 + 검색 조건: 있음 + 학교조건 있음
-                if (board.university_name) {
-                    sql += `AND board_state = ? ${search_sql} ${university_sql}`;
-                    sql = mysql.format(sql, [board.board_state, `${board.university_name}`, `${board.university_major}`]);
-                } else { // 그외 상태들 + 검색 조건 : 있음 + 학교조건 : 없음
-                    sql += `AND board_state = ? ${search_sql} `;
-                    sql = mysql.format(sql, [board.board_state]);
-                }
-            }
-
-        }
-        sql = mysql.format(sql + order, [columnSize, startColumn]);
         return sql;
     },
 }

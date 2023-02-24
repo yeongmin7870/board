@@ -1,63 +1,27 @@
 module.exports = {
-    home_search_exception(req, board_state, select_option, search, university_name, university_major) {
-        /** 게시판 상태 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.board_state == undefined) {
-            /** 게시판 상태 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.board_state == "" || req.body.board_state == undefined) {
-                board_state = "전체";
-            } else {
-                board_state = req.body.board_state;
-            }
-        } else {
-            board_state = req.query.board_state;
-        }
+    /** 
+     *  body, query, 빈값 , 체크후
+     *  알맞은 값으로 넣어주는 함수
+      */
+    home_search_exception: (req) => {
 
-        /** 옵션 선택 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.select_option == undefined) {
-            /** 옵션 선택 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.select_option == "" || req.body.select_option == undefined) {
-                select_option = "제목";
-            } else {
-                select_option = req.body.select_option;
-            }
-        } else {
-            select_option = req.query.select_option;
-        }
+        let { board_state, select_option, search_word, university_name, university_major } = "";
 
-        /** 검색 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.search == undefined) {
-            /** 검색 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.search == "" || req.body.search == undefined) {
-                search = "";
-            } else {
-                search = req.body.search;
-            }
-        } else {
-            search = req.query.search;
-        }
+        const b = req.body;
+        const q = req.query;
+        let r = "";
 
-        /** 학교명 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.university_name == undefined) {
-            /** 검색 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.university_name == "" || req.body.university_name == undefined) {
-                university_name = "";
-            } else {
-                university_name = req.body.university_name;
-            }
-        } else {
-            university_name = req.query.university_name;
-        }
-        /** 학과 변수가 쿼리로 넘어오지 않았다면 */
-        if (req.query.university_major == undefined) {
-            /** 검색 변수가 쿼리, body 둘다 넘어오지 않았다면 */
-            if (req.body.university_major == "" || req.body.university_major == undefined) {
-                university_major = "";
-            } else {
-                university_major = req.body.university_major;
-            }
-        } else {
-            university_major = req.query.university_major;
-        }
-        return { board_state: board_state, select_option: select_option, search: search, university_name: university_name, university_major: university_major };
+
+        if (Object.keys(b).length > 1) { r = b };
+        if (Object.keys(q).length > 1) { r = q };
+
+        if (r.board_state) { board_state = r.board_state; } else { board_state = "전체" }
+        if (r.select_option) { select_option = r.select_option } else { select_option = "제목" }
+        if (r.search_word) { search_word = r.search_word } else { search_word = ""; }
+        if (r.university_name) { university_name = r.university_name } else { university_name = ""; }
+        if (r.university_major) { university_major = r.university_major } else { university_major = ""; }
+
+
+        return { board_state, select_option, search_word, university_name, university_major };
     },
 }

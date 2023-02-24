@@ -45,18 +45,10 @@ module.exports = {
      */
     getAllBoard: async function (req, res) {
 
-        /** 게시판 상태 변수 */
-        let { board_state, select_option, search, university_name, university_major } = 
-        exception.home_search_exception(req);
-
-        
-        const board = {
-            board_state: board_state,
-            search: search.trim(),
-            select_option: select_option,
-            university_name: university_name,
-            university_major: university_major
-        }
+        let { board_state, select_option, search_word, university_name, university_major } =
+            exception.home_search_exception(req);
+        /** 게시판 검색 값 객체 */
+        const board = { board_state: board_state, search_word: search_word.trim(), select_option: select_option, university_name: university_name, university_major: university_major }
 
         /** 현재페이지 */
         let current_page = req.params.page
@@ -71,15 +63,11 @@ module.exports = {
         /** pagination 처리 함수 */
         let { start_page, end_page, prevPage, nexPage, page_size } = await Page.Pagination(current_page2, 5, total_page);
 
-        if (search != "") {
-            logger.info(`'${university_name}, ${university_major}, ${board_state}', '${select_option}', "${search}" 을(를) 검색했습니다.`);
+        logger.info(`'${university_name}, ${university_major}, ${board_state}', '${select_option}', "${search_word}" 을(를) 검색했습니다.`);
 
-        }
         res.render('home', {
-            board: { result }, page: {
-                prevPage, nexPage, total_page, start_page,
-                end_page, current_page, page_size
-            }, board_state: board_state, search: search, select_option: select_option, university_name: university_name, university_major: university_major
+            board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }
+            , board_state: board_state, search_word: search_word, select_option: select_option, university_name: university_name, university_major: university_major
         });
     },
     /**

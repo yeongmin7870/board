@@ -32,31 +32,35 @@
         background-color: rgb(97, 97, 100);
         color: white;
     }
+    #navbar{
+        background-color: rgb(64,67,63);
+    }
+
 </style>
 
 <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
     <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/v2/home/0">전공책 싸게 사자</a>
+        <nav id="navbar" class="navbar navbar-expand-md fixed-top">
+            <div class="container-fluid" id="university_nav_font">
+                <a class="navbar-brand" href="/v2/home/0" style="color:white">📚 전공책 싸게 사자</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0" >
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/v2/home/0">홈으로</a>
+                            <a class="nav-link active" aria-current="page" href="/v2/home/0" style="color:white">홈으로</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="mypage"
+                            <a class="nav-link" id="mypage" style="color:white"
                                 style="cursor: pointer;">마이페이지</a>
                         </li>
                         <li id="write" class="nav-item">
-                            <a class="nav-link" style="cursor: pointer;">게시판 작성</a>
+                            <a class="nav-link" style="cursor: pointer; color:white;">게시판 작성</a>
                         </li>
                         <li id="chatting" class="nav-item">
-                            <a class="nav-link" style="cursor: pointer;">채팅(준비중)</a>
+                            <a class="nav-link" style="cursor: pointer; color:white;">채팅(준비중)</a>
                         </li>
                     </ul>
 
@@ -82,7 +86,7 @@
                     <div class="input-group flex-nowrap">
                         <input class="form-control" type="text" id="input_university_name" name="university_name"
                             placeholder="ex: 서울대학교" value="<%=university_name%>" required>
-                        <select class="form-select"  id="select_major" name="university_major" disabled required>
+                        <select class="form-select"  id="select_major" name="university_major" required>
                             <option>학과를 선택해주세요</option>
                         </select>
                     </div>
@@ -99,7 +103,7 @@
                             <option value="닉네임">닉네임</option>
                         </select>
                         <input id="input_select_option" type="hidden" value="<%=select_option%>">
-                        <input name="search" value="<%=search%>" id="input_search" type="text" class="form-control" aria-label="Text input with dropdown button" style="width: 50%;" required>
+                        <input name="search_word" value="<%=search_word%>" id="input_search" type="text" class="form-control" aria-label="Text input with dropdown button" style="width: 50%;" required>
                         <button style="width: auto; height: 1%;" class="btn btn-outline-success" id="btn_search" type="button">Search</button>
                     </div>  
                 </form>
@@ -107,18 +111,18 @@
             <div id="btn_group" style="margin-left: 39%;">
                 <button type="button" class="btn btn-primary" id="btn_all"
                     value="전체" onclick="location.href='/v2/home/0?board_state=전체&&select_option=<%=select_option%>'+
-                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">전체</button>
+                    '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">전체</button>
 
                 <button type="button" class="btn btn-primary" id="btn_sell"
                 onclick="location.href='/v2/home/0?board_state=판매&&select_option=<%=select_option%>'+
-                '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매">판매중</button>
+                '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매">판매중</button>
 
                 <button type="button" class="btn btn-primary" id="btn_reservation" onclick="location.href='/v2/home/0?board_state=예약&&select_option=<%=select_option%>'+
-                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'"
+                    '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'"
                         value="예약">예약중</button>
 
                 <button type="button" class="btn btn-primary" id="btn_soldout" onclick="location.href='/v2/home/0?board_state=판매완료&&select_option=<%=select_option%>'+
-                    '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매완료">판매완료</button>
+                    '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'" value="판매완료">판매완료</button>
             </div>
             <br>
             <!-- 네비게이션 -->
@@ -128,7 +132,7 @@
                 <%if(page.prevPage==true){%>
                     <button class="btn btn-outline-secondary"
                         onclick="location.href='/v2/home/<%=Math.max(Number(page.current_page)-1,0)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
+                        '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         < 이전 </button>
                 <%}%>
                 <!-- [1 2 3 4 5] -->
@@ -136,12 +140,12 @@
                     if(page.current_page==i){%>
                     <button class="btn btn-outline-primary" style="color:red"
                         onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
+                        '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         <%=i+1%>
                     </button>
                     <%} else {%>
                     <button class="btn btn-outline-primary" onclick="location.href='/v2/home/<%=i%>?board_state=<%=board_state%>&&'+
-                    'select_option=<%=select_option%>&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
+                    'select_option=<%=select_option%>&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">
                         <%=i+1%>
                     </button>
                     <%} }%>
@@ -149,7 +153,7 @@
                     <%if(page.nexPage==true){%>
                         <button class="btn btn-outline-secondary"
                         onclick="location.href='/v2/home/<%=Math.min(Number(page.current_page)+1,page.total_page-1)%>?board_state=<%=board_state%>&&select_option=<%=select_option%>'+
-                        '&&search=<%=search%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">다음 ></button>
+                        '&&search_word=<%=search_word%>&&university_name=<%=university_name%>&&university_major=<%=university_major%>'">다음 ></button>
                     <%}%>
                        <!-- /페이징 처리 -->
             </div>

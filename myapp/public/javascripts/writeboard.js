@@ -13,8 +13,12 @@ let university_major = [];
 
 
 /** 클릭 한번만 대학 정보 가져오기 */
-input_university_name.addEventListener('click', () => {
-    if (oneClickctl.value == "yes") { universityinfo(); stateUniversity(); oneClickctl.value = "no" }
+input_university_name.addEventListener('mouseout', () => {
+    /** 대학 입력 자동완성 보조 */
+    autoUniversity_name();
+    universityinfo();
+    stateUniversity();
+
 })
 
 /**먼저 대학 관련 정보 가져오기 */
@@ -38,10 +42,9 @@ function stateUniversity() {
         const getUniversity = setInterval(() => {
             if (university != "") {
                 loading.innerHTML = "";
-                select_major.disabled = false;
                 clearInterval(getUniversity);
             }
-        }, 1)
+        }, 1000)
     }
 }
 /** input 한번 초기화시키고 
@@ -50,7 +53,8 @@ function stateUniversity() {
 function set_university_input(u) {
     input_university_name.value = "";
     for (w of u) input_university_name.value += w;
-    input_university_name.value += "대학교"
+    /** 대학명 입력칸이 빈킨이 아닐때만 */
+    if (input_university_name.value) input_university_name.value += "대학교"
 }
 
 /**
@@ -112,35 +116,27 @@ function autoUniversity_name() {
     }
 }
 
-/**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
-select_major.addEventListener('mousedown', function getSelectOptionInfo() {
+function createOption(value) {
+    let newOption = document.createElement('option');
+    university_major.push(value);
+    newOption.text = value;
+    newOption.value = value;
+    select_major.appendChild(newOption);
+}
 
-    /** 대학 입력 자동완성 보조 */
-    autoUniversity_name();
+/**select 박스를 누르면 관련학교 데이터를 검색해서 보여주게하는 함수*/
+select_major.addEventListener('mousedown', async function getSelectOptionInfo() {
+    stateUniversity();
+    await universityinfo();
 
     while (select_major.childNodes.length >= 1) select_major.removeChild(select_major.firstChild);
 
+    createOption("학과를 선택해주세요");
     for (let i = 0; i < university.length; i++) {
-
-        if (input_university_name.value == university[i].대학명) {
-            let newOption = document.createElement('option');
-            university_major.push(university[i].학과);
-            newOption.text = `${university[i].학과}`;
-            newOption.value = `${university[i].학과}`;
-            select_major.appendChild(newOption);
-        }
+        if (input_university_name.value == university[i].대학명) createOption(university[i].학과);
     }
 
-
-    if (university_major == "") {
-        let newOption = document.createElement('option');
-        newOption.text = `학과를 선택해주세요`;
-        newOption.value = `학과를 선택해주세요`;
-        select_major.appendChild(newOption);
-    }
-
-    }
-)
+})
 
 btn_finish.addEventListener('click', () => {
 
