@@ -115,7 +115,7 @@
 
 ### :pushpin: 4.5 새로고침 없이 부드러운 댓글 작성
 
-[:flashlight: 댓글 작성 코드 보기](https://github.com/yeongmin7870/board/blob/89e43d5b5b0d5decb126d1c612006e2adb741fa9/myapp/public/javascripts/board.js#L39)
+[:flashlight: 댓글 작성 코드 보기](https://github.com/yeongmin7870/board/blob/94f68de63e0c11095071b4be1ca2776e4761ecb0/myapp/public/javascripts/board.js#L122)
 
 > 새로고침 없이 부드럽게 댓글 작성을 하고 싶게 구현하고 싶었습니다.<br>
 > async fetch 문법을 통해서 데이터를 가져오고,
@@ -129,7 +129,8 @@
 
 ### :pushpin: 4.6 페이징 기능
 
-[:flashlight: 페이징 처리 코드 보기](https://github.com/yeongmin7870/board/blob/2b69a349245d8ce5e52aa4358524e33c9d11ab2f/myapp/modules/home_search.js#L67)
+[:flashlight: 페이징 처리 controller 함수 코드 보기](https://github.com/yeongmin7870/board/blob/94f68de63e0c11095071b4be1ca2776e4761ecb0/myapp/controller/BoardController.js#L46)
+[:flashlight: 페이징 처리 함수 코드 보기](https://github.com/yeongmin7870/board/blob/94f68de63e0c11095071b4be1ca2776e4761ecb0/myapp/modules/page.js#L14)
 
 > 페이지당 선택해서 보기 편하게 페이징 처리를 구현했습니다.
 > 메인페이지, 댓글, 마이페이지가 같은 함수를 사용할 수 있게 구현했습니다.
@@ -267,7 +268,7 @@
 <details>
     <summary>자세히 보기</summary>
 
-[:flashlight: os 문제 해결 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/public/javascripts/writeboard.js#L116)
+[:flashlight: os 문제 해결 코드 보기](https://github.com/yeongmin7870/board/blob/94f68de63e0c11095071b4be1ca2776e4761ecb0/myapp/public/javascripts/writeboard.js#L128)
 
 >윈도우는 학과 select 에서 option 클릭이 되지 않지만 
 >맥이나 핸드폰은 클릭이 되는 호환성 문제가 있었습니다.<br>
