@@ -22,7 +22,7 @@ module.exports = {
 
         Book.setBoard(req.body).then((result) => {
             logger.info(`'${req.body.user_id}' 님이 '${result}' 번 게시글을 작성했습니다.`)
-            res.status(200).send(
+            return res.status(200).send(
                 `
                     <script>
                         alert("게시글이 올라갔어요!");
@@ -59,7 +59,7 @@ module.exports = {
 
         logger.info(`'${university_name}, ${university_major}, ${board_state}', '${select_option}', "${search_word}" 을(를) 검색했습니다.`);
 
-        res.render('home', {
+        return res.render('home', {
             board: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page, page_size }
             , board_state: board_state, search_word: search_word, select_option: select_option, university_name: university_name, university_major: university_major
         });
@@ -84,7 +84,7 @@ module.exports = {
         /** pagination 처리 함수 */
         let { start_page, end_page, prevPage, nexPage, page_size } = await Page.Pagination(current_page2, 5, total_page);
 
-        res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page2, page_size } });
+        return res.send({ comment: { result }, page: { prevPage, nexPage, total_page, start_page, end_page, current_page2, page_size } });
     },
     /** 마이페이지 
      *    닉네임을 입력 받으면 

@@ -28,7 +28,6 @@ router.put('/upload-profile', (req, res) => {
         if (err) {
             if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); window.close();</script>`);
             if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); window.close();</script>`);
-            return res.send(err);
         } else UserController.uploadProfile(req, res);
     })
 })

@@ -142,7 +142,7 @@ select_major.addEventListener('mousedown', async function getSelectOptionInfo() 
 btn_finish.addEventListener('click', () => {
 
     if (title.value == "") return alert("제목을 써주세요!");
-    else if (select_major.value == "학과를 선택해주세요") return alert("전공을 선택해주세요!");
+    else if (select_major.value == "학과를 선택해주세요" || select_major.value == "") return alert("학과를 선택해주세요!");
     else if (price.value == "") return alert("가격을 입력해주세요!")
     else if (board_contents.value == "") return alert("내용을 써주세요!");
     else if (board_image.value != "") {

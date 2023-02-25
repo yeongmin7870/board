@@ -5,14 +5,14 @@ const authUtil = require('../middlewares/auth').checkToken;
 const boardcontroller = require('../controller/BoardController');
 /**파일 업로드 하기 위한 Multer 라이브러리*/
 const multer = require('../middlewares/multer').upload;
-const upload = multer.single("profile");
+const upload = multer.single("board_image");
 
 // 게시판 작성하기
 router.post('/board', (req, res) => {
     upload(req, res, (err) => {
         if (err) {
-            if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); </script>`);
-            if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); </script>`);
+            if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); history.back();</script>`);
+            if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); history.back();</script>`);
             return res.send(err);
         } else boardcontroller.doWriteBoard(req, res);
     })
@@ -20,8 +20,8 @@ router.post('/board', (req, res) => {
     .put('/board', (req, res) => {
         upload(req, res, (err) => {
             if (err) {
-                if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); </script>`);
-                if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); </script>`);
+                if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); history.back();</script>`);
+                if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); history.back();</script>`);
                 return res.send(err);
             } else boardcontroller.updateBoard(req, res);
         })
