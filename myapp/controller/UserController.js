@@ -204,7 +204,6 @@ module.exports = {
 
         /** 프로필 수정하는 알고리즘 */
         let result = await Users.uploadProfile(user);
-        console.log(result);
         if (result.msg == "ok") {
             logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
             res.status(200).send(
