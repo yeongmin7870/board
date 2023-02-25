@@ -125,7 +125,7 @@ module.exports = {
         const { receiverEmail } = req.body;
         let today = new Date();
         let randCode = "";
-        
+
         for (let i = 0; i < 6; i++) {
             randCode += Math.floor(Math.random() * 10).toString()
         };
@@ -174,65 +174,57 @@ module.exports = {
     },
     /** 유저 프로필 업로드 함수*/
     uploadProfile: async function (req, res) {
-        try {
-            const decode = await jwt.verify(req.body.token); //토큰 해독
-            let user_id = decode.user_id;
-            let filename = req.file.filename;
-            let user = {
-                user_id: user_id,
-                user_profile: filename
-            }
 
-            /** 프로필 수정하기 전에 이전에 프로필이 있는지 확인하고 결과를 변수에 저장 */
-            const findProfile = await Users.findProfilePath(user);
-            /** 이전에 프로파일이 있엇다면 이미지를 삭제해줌 */
-            if (findProfile[0].user_profile != null) {
+        const decode = await jwt.verify(req.body.token); //토큰 해독
+        let user_id = decode.user_id;
+        let filename = req.file.filename;
+        let user = {
+            user_id: user_id,
+            user_profile: filename
+        }
 
-                const image_name = findProfile[0].user_profile;
-                let file_path = path.resolve(__dirname, "../public/images", image_name);
+        /** 프로필 수정하기 전에 이전에 프로필이 있는지 확인하고 결과를 변수에 저장 */
+        const findProfile = await Users.findProfilePath(user);
+        /** 이전에 프로파일이 있엇다면 이미지를 삭제해줌 */
+        if (findProfile[0].user_profile != null) {
 
-                if (fs.existsSync(file_path)) {
-                    try {
-                        fs.unlinkSync(file_path);
-                        logger.info(`'${user_id}' 님이 ' 프로필 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
-                    } catch (e) {
-                        logger.error(e);
-                        res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
-                    }
+            const image_name = findProfile[0].user_profile;
+            let file_path = path.resolve(__dirname, "../public/images", image_name);
+
+            if (fs.existsSync(file_path)) {
+                try {
+                    fs.unlinkSync(file_path);
+                    logger.info(`'${user_id}' 님이 ' 프로필 삭제 수행중에 '${image_name}' 이미지를 삭제했습니다.`);
+                } catch (e) {
+                    logger.error(e);
+                    res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
                 }
             }
+        }
 
-            /** 프로필 수정하는 알고리즘 */
-            let result = await Users.uploadProfile(user);
-            console.log(result);
-            if (result.msg == "ok") {
-                logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
-                res.status(200).send(
-                    `
+        /** 프로필 수정하는 알고리즘 */
+        let result = await Users.uploadProfile(user);
+        console.log(result);
+        if (result.msg == "ok") {
+            logger.info(`'${user_id}' 님이 '${filename}' 프로파일을 수정했습니다.`)
+            res.status(200).send(
+                `
                 <script>
                     alert("프로파일을 성공적으로 수정했어요!");
                     opener.parent.location.reload();
                     window.close();
                 </script>
                 `
-                );
-            } else {
-                res.status(200).send(
-                    `
+            );
+        } else {
+            res.status(200).send(
+                `
                 <script>
                     alert("프로파일 수정을 실패했습니다!");
                     window.close();
                 </script>
                 `
-                );
-            }
-
-
-        } catch (err) {
-            res.status(404).send(`<script>
-            alert('이미지 파일이 아닙니다 🐱');
-            window.close();
-            </script>`);
+            );
         }
     },
     /** 토큰을 입력받고 

@@ -1,14 +1,16 @@
 const multer = require('multer');
 const path = require('path');
 
+const file_size_set = 3 * 1024 * 1024;
+
 const fileFilter = (req, file, cb) => {
     const reg = new RegExp('\.jpg|\.png|\.jpeg|\.gif$', 'i'); // i: 대소문자 구분하지말고, 이미지 확장자를 찾아라
-    if (reg.test(file.originalname) == true) {
-        cb(null, true);
-    } else {
-        req.fileValidationError = 'error';
-        cb(null, false);
-    }
+    const file_size = parseInt(req.headers["content-length"])
+
+    if (reg.test(file.originalname) == true) cb(null, true);
+    else cb(new Error("not image extension"))
+    if (file_size <= file_size_set) cb(null, true)
+    else cb(new Error("File too large"));
 };
 
 const upload = multer({
@@ -22,7 +24,10 @@ const upload = multer({
         },
     }),
     fileFilter: fileFilter,
-    limits: { fileSize: 3 * 1024 * 1024 },
-});
+    limits: { fileSize: file_size_set } // 3MB 
+},
+);
+
+
 
 module.exports = { upload };

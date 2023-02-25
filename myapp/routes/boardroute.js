@@ -4,11 +4,28 @@ const authUtil = require('../middlewares/auth').checkToken;
 /**게시판 Controller */
 const boardcontroller = require('../controller/BoardController');
 /**파일 업로드 하기 위한 Multer 라이브러리*/
-const { upload } = require('../middlewares/multer');
+const multer = require('../middlewares/multer').upload;
+const upload = multer.single("profile");
 
 // 게시판 작성하기
-router.post('/board', upload.single("board_image"), boardcontroller.doWriteBoard)
-.put('/board', upload.single("board_image"), boardcontroller.updateBoard); // 게시판 수정
+router.post('/board', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); </script>`);
+            if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); </script>`);
+            return res.send(err);
+        } else boardcontroller.doWriteBoard(req, res);
+    })
+})  // 게시판 수정
+    .put('/board', (req, res) => {
+        upload(req, res, (err) => {
+            if (err) {
+                if (err.message == "File too large") return res.send(`<script>alert("이미지는 3MB 이하로만 올릴 수 있습니다."); </script>`);
+                if (err.message == "not image extension") return res.send(`<script>alert("이미지 파일이 아닙니다."); </script>`);
+                return res.send(err);
+            } else boardcontroller.updateBoard(req, res);
+        })
+    })
 // 게시판 삭제하기
 router.delete('/board/dormboard/:board_id', authUtil, boardcontroller.doRmByBoard)
 // 메인홈페이지 게시판 보여줄 정보만 가져오기

@@ -12,31 +12,25 @@ module.exports = {
 
     // 게시판 글 작성
     doWriteBoard: async function (req, res) {
-        try {
-            req.body.board_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
-            const decode = await jwt.verify(req.body.token); //토큰 해독
 
-            req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
+        req.body.board_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
+        const decode = await jwt.verify(req.body.token); //토큰 해독
 
-            if (req.body.user_id == undefined) { res.send(`<script>location.href="/v2/login"; alert("로그인해주세요!"); </script>`); return; }
+        req.body.user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
-            Book.setBoard(req.body).then((result) => {
-                logger.info(`'${req.body.user_id}' 님이 '${result}' 번 게시글을 작성했습니다.`)
-                res.status(200).send(
-                    `
+        if (req.body.user_id == undefined) { res.send(`<script>location.href="/v2/login"; alert("로그인해주세요!"); </script>`); return; }
+
+        Book.setBoard(req.body).then((result) => {
+            logger.info(`'${req.body.user_id}' 님이 '${result}' 번 게시글을 작성했습니다.`)
+            res.status(200).send(
+                `
                     <script>
                         alert("게시글이 올라갔어요!");
                         location.href="/v2/home/0";
                     </script>
                     `
-                );
-            });
-        } catch (e) {
-            res.status(404).send(`<script>
-            location.href='/v2/home/0';
-            alert('이미지 파일이 아닙니다 🐱');
-            </script>`);
-        }
+            );
+        });
     },
     /**
      * 메인홈 게시판 목록 출력
@@ -315,49 +309,39 @@ module.exports = {
      */
     updateBoard: async function (req, res) {
         let board = req.body;
-        try {
-            const next_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
-            const decode = await jwt.verify(req.body.token); //토큰 해독
-            const user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
-            /** 게시판 수정하기 전에 게시판 이미지 삭제 수행 하는 모델 */
-            const findProfile = await Users.getBoardImage(board.board_id);
-            let preImage = findProfile[0].board_image;
-            let file_path = path.resolve(__dirname, "../public/images", preImage);
+        const next_image = req.file.filename; // multer middleware에서 확장자가 이미지가 아니면 파일이 생성되지 않기 때문에 req에 file 존재가 없음 따라서 catch에 걸리게 됨
+        const decode = await jwt.verify(req.body.token); //토큰 해독
+        const user_id = decode.user_id; // 토큰 오브젝트에서 고객 아이디만 꺼내기
 
-            if (fs.existsSync(file_path)) {
-                try {
-                    fs.unlinkSync(file_path);
-                    logger.info(`'${user_id}' 님이 ' 게시물 이미지 삭제 수행중에 '${preImage}' 이미지를 삭제했습니다.`);
-                } catch (e) {
-                    logger.error(e);
-                    res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
-                }
+        /** 게시판 수정하기 전에 게시판 이미지 삭제 수행 하는 모델 */
+        const findProfile = await Users.getBoardImage(board.board_id);
+        let preImage = findProfile[0].board_image;
+        let file_path = path.resolve(__dirname, "../public/images", preImage);
+
+        if (fs.existsSync(file_path)) {
+            try {
+                fs.unlinkSync(file_path);
+                logger.info(`'${user_id}' 님이 ' 게시물 이미지 삭제 수행중에 '${preImage}' 이미지를 삭제했습니다.`);
+            } catch (e) {
+                logger.error(e);
+                res.send({ msg: '서버 이미지 삭제 실패했습니다.' });
             }
+        }
 
-            const result = await Book.changeBoard(board, next_image);
+        const result = await Book.changeBoard(board, next_image);
 
-            if (result != "") {
+        if (result != "") {
 
-                logger.info(`'${user_id}' 님이 '${board.board_id}' 번 게시글을 수정했습니다.`)
-                res.status(200).send(
-                    `
+            logger.info(`'${user_id}' 님이 '${board.board_id}' 번 게시글을 수정했습니다.`)
+            res.status(200).send(
+                `
                     <script>
                         alert("게시글이 수정되었습니다!");
                         location.href="/v2/home/0";
                     </script>
                     `
-                );
-            }
-        } catch (err) {
-            {
-                console.log(err);
-                res.status(404).send(`<script>
-                    location.href='/v2/home/0';
-                    alert('이미지 파일이 아닙니다 🐱');
-                    </script>`);
-            }
+            );
         }
-
     },
 }
