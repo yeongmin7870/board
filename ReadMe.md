@@ -112,7 +112,7 @@
 
 ### :pushpin: 4.4 이미지 업로드 기능
 
-[:flashlight: multer 코드 보기](https://github.com/yeongmin7870/board/blob/d0546a73ea2c7081dafdb26c028d823448c76af0/myapp/middlewares/multer.js#L4)
+[:flashlight: multer 코드 보기](https://github.com/yeongmin7870/board/blob/df4768c9928e718f6031fbf0402c243ccaf2b651/myapp/middlewares/multer.js#L6)
 
 > 서버에 이미지를 업로드할 때 multer 모듈을
 > 사용했습니다.
