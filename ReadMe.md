@@ -18,7 +18,7 @@
 >- Node.js(18.12.0)
 >>- Node.js_cafe24(14)
 >- Express(4.18.2)
->- Javascript(ECMAScript 2018)
+>- Javascript(es6+)
 
 >### 2-1. Front
 >- ejs (3.1.8)
