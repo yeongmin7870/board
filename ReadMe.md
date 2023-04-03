@@ -107,7 +107,7 @@
 [:flashlight: 암호화 방식 코드확인](https://github.com/yeongmin7870/board/blob/97b3ccc933757612476406029a3afc708c4d6401/myapp/modules/crypto.js#L16)
 
 > 기존 비밀번호 문자열에 새로운 문자열을 붙여
-> sha512 알고리즘으로, 9921번 리터럴하고 64길이를 만들어
+> sha512 알고리즘으로, 9921 리터럴하고 64길이를 만들어
 > 데이터베이스에 저장했습니다.
 
 ### :pushpin: 4.4 이미지 업로드 기능
