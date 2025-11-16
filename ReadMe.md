@@ -2,11 +2,6 @@
 
      "졸업 후 자리만 차지하고 보지도 않는 '전공 책', 같은 학교 후배들에게 '중고'로 파는 것 어떠신가요?"
 
-> :cd: URL : http://yeongmin.cafe24app.com/v2/home/0
-
-> 테스트 계정
->>ID : test123 <br>
->>PASSWORDS : test123
  
 ## :bookmark: 1. 제작기간 & 참여 인원
 >- 2022 년 12 월 21일 ~ 2033 년 2 월 22일
